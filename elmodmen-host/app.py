@@ -57,6 +57,10 @@ ADMIN_TELEGRAM_ID = os.environ.get("ADMIN_TELEGRAM_ID", "")
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "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")
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 GROQ_MODELS = {"smart": "llama-3.3-70b-versatile", "fast": "llama-3.1-8b-instant"}
+# معلومات الدفع (تظهر للمستخدم عند الترقية) — عدّلها من Environment Variables
+PAY_VODAFONE = os.environ.get("PAY_VODAFONE", "01000000000")
+PAY_INSTAPAY = os.environ.get("PAY_INSTAPAY", "batman@instapay")
+PAY_NOTE = os.environ.get("PAY_NOTE", "بعد التحويل اضغط (أرسلت الدفع) وابعت صورة الإيصال للأدمن على تيليجرام لتفعيل الباقة فورًا.")
 
 PORT_RANGE_START = 8100
 PORT_RANGE_END = 9100
@@ -100,6 +104,7 @@ def _seed_db():
         "servers": {},
         "plans": dict(DEFAULT_PLANS),
         "logs": [],
+        "payments": [],
     }
     save_db(db_data)
     return db_data
@@ -114,6 +119,7 @@ def load_db():
             data.setdefault("servers", {})
             data.setdefault("plans", dict(DEFAULT_PLANS))
             data.setdefault("logs", [])
+            data.setdefault("payments", [])
             # تأكد من وجود الأدمن
             if ADMIN_USER not in data["users"]:
                 data["users"][ADMIN_USER] = {
@@ -362,16 +368,47 @@ def _is_pid_alive(pid):
         return False
 
 
+SERVER_HISTORY = {}
+PROC_CACHE = {}
+HISTORY_MAX = 80
+
+
+def _sample_server(folder, srv):
+    pid = srv.get("pid")
+    if not pid:
+        return
+    cpu = 0.0
+    mem = 0.0
+    if HAS_PSUTIL:
+        try:
+            p = PROC_CACHE.get(pid)
+            if p is None or p.pid != pid or not p.is_running():
+                p = psutil.Process(pid)
+                PROC_CACHE[pid] = p
+            cpu = p.cpu_percent()
+            mem = p.memory_info().rss / (1024 * 1024)
+        except Exception:
+            PROC_CACHE.pop(pid, None)
+            return
+    hist = SERVER_HISTORY.setdefault(folder, [])
+    hist.append({"t": int(time.time()), "cpu": round(cpu, 1), "mem": round(mem, 1)})
+    if len(hist) > HISTORY_MAX:
+        del hist[: len(hist) - HISTORY_MAX]
+
+
 def process_monitor():
     while True:
         try:
             for folder, srv in list(db["servers"].items()):
-                if srv.get("status") == "Running" and srv.get("auto_restart", True):
+                if srv.get("status") == "Running":
                     if not _is_pid_alive(srv.get("pid")):
-                        srv["restart_count"] = srv.get("restart_count", 0) + 1
-                        srv["last_restart"] = _now()
-                        save_db(db)
-                        restart_server(folder)
+                        if srv.get("auto_restart", True):
+                            srv["restart_count"] = srv.get("restart_count", 0) + 1
+                            srv["last_restart"] = _now()
+                            save_db(db)
+                            restart_server(folder)
+                    else:
+                        _sample_server(folder, srv)
         except Exception:
             pass
         time.sleep(15)
@@ -581,6 +618,24 @@ def link_telegram():
     return jsonify(success=True, message="\u062a\u0645 \u0631\u0628\u0637 \u062d\u0633\u0627\u0628 \u0627\u0644\u062a\u064a\u0644\u064a\u062c\u0631\u0627\u0645")
 
 
+@app.route("/api/user/change-password", methods=["POST"])
+@login_required
+def change_password():
+    data = request.get_json(silent=True) or {}
+    current = (data.get("current") or "").strip()
+    new = (data.get("new") or "").strip()
+    u = db["users"].get(session["username"])
+    if not u:
+        return jsonify(success=False, message="\u0645\u0633\u062a\u062e\u062f\u0645 \u063a\u064a\u0631 \u0645\u0648\u062c\u0648\u062f")
+    if not check_password_hash(u["password"], current):
+        return jsonify(success=False, message="\u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631 \u0627\u0644\u062d\u0627\u0644\u064a\u0629 \u063a\u064a\u0631 \u0635\u062d\u064a\u062d\u0629")
+    if len(new) < 4:
+        return jsonify(success=False, message="\u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631 \u0627\u0644\u062c\u062f\u064a\u062f\u0629 \u0642\u0635\u064a\u0631\u0629 (4 \u0623\u062d\u0631\u0641 \u0639\u0644\u0649 \u0627\u0644\u0623\u0642\u0644)")
+    u["password"] = generate_password_hash(new)
+    save_db(db)
+    return jsonify(success=True, message="\u2705 \u062a\u0645 \u062a\u063a\u064a\u064a\u0631 \u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631 \u0628\u0646\u062c\u0627\u062d")
+
+
 # ----------------------------------------------------------------------
 #  الخطط
 # ----------------------------------------------------------------------
@@ -603,6 +658,71 @@ def upgrade_plan():
     save_db(db)
     notify_admin(f"\U0001f48e *\u062a\u0631\u0642\u064a\u0629*\n\U0001f464 `{session['username']}` \u2192 {plan['name']}")
     return jsonify(success=True, message=f"\u2705 \u062a\u0645 \u0627\u0644\u062a\u0631\u0642\u064a\u0629 \u0625\u0644\u0649 {plan['name']}")
+
+
+@app.route("/api/payment/info")
+@login_required
+def payment_info():
+    return jsonify(success=True, vodafone=PAY_VODAFONE, instapay=PAY_INSTAPAY, note=PAY_NOTE)
+
+
+@app.route("/api/user/request-upgrade", methods=["POST"])
+@login_required
+def request_upgrade():
+    data = request.get_json(silent=True) or {}
+    plan_id = data.get("plan_id")
+    method = (data.get("method") or "").strip()
+    if not plan_id or plan_id not in db.get("plans", {}):
+        return jsonify(success=False, message="\u062e\u0637\u0629 \u063a\u064a\u0631 \u0645\u0648\u062c\u0648\u062f\u0629")
+    plan = db["plans"][plan_id]
+    req = {
+        "id": secrets.token_hex(6),
+        "username": session["username"],
+        "plan_id": plan_id,
+        "plan_name": plan.get("name", plan_id),
+        "price": plan.get("price", 0),
+        "method": method,
+        "status": "pending",
+        "created_at": _now(),
+    }
+    db.setdefault("payments", []).insert(0, req)
+    save_db(db)
+    notify_admin(f"\U0001f4b3 *\u0637\u0644\u0628 \u062a\u0631\u0642\u064a\u0629 \u062c\u062f\u064a\u062f*\n\U0001f464 `{session['username']}`\n\U0001f48e {plan.get('name')}\n\U0001f4b0 ${plan.get('price')}\n\U0001f4b3 {method or '\u2014'}")
+    return jsonify(success=True, message="\u2705 \u062a\u0645 \u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0637\u0644\u0628\u060c \u0647\u064a\u062a\u0641\u0639\u0651\u0644 \u0628\u0639\u062f \u062a\u0623\u0643\u064a\u062f \u0627\u0644\u062f\u0641\u0639")
+
+
+@app.route("/api/admin/payments")
+def admin_payments():
+    if not admin_access():
+        return jsonify(success=False), 403
+    return jsonify(success=True, payments=db.get("payments", []))
+
+
+@app.route("/api/admin/payment-action", methods=["POST"])
+def admin_payment_action():
+    if not admin_access():
+        return jsonify(success=False), 403
+    data = request.get_json(silent=True) or {}
+    pid = data.get("id")
+    action = data.get("action")
+    pay = next((p for p in db.get("payments", []) if p.get("id") == pid), None)
+    if not pay:
+        return jsonify(success=False, message="\u0627\u0644\u0637\u0644\u0628 \u063a\u064a\u0631 \u0645\u0648\u062c\u0648\u062f")
+    if action == "approve":
+        u = db["users"].get(pay["username"])
+        plan = db["plans"].get(pay["plan_id"])
+        if u and plan:
+            u["plan"] = pay["plan_id"]
+            u["max_servers"] = plan["max_servers"]
+            u["storage_limit"] = plan["storage"]
+        pay["status"] = "approved"
+        notify_admin(f"\u2705 \u062a\u0645 \u062a\u0641\u0639\u064a\u0644 \u062a\u0631\u0642\u064a\u0629 `{pay['username']}` \u2192 {pay['plan_name']}")
+    elif action == "reject":
+        pay["status"] = "rejected"
+    else:
+        return jsonify(success=False, message="\u0625\u062c\u0631\u0627\u0621 \u063a\u064a\u0631 \u0635\u0627\u0644\u062d")
+    save_db(db)
+    return jsonify(success=True, message="\u062a\u0645")
 
 
 @app.route("/api/admin/add-plan", methods=["POST"])
@@ -973,6 +1093,15 @@ def server_stats(folder):
                    port=srv.get("port", "--"), ip=get_public_ip(), type=srv.get("type", "Python"))
 
 
+@app.route("/api/server/history/<folder>")
+@login_required
+def server_history(folder):
+    srv = owned_server(folder)
+    if not srv:
+        return jsonify(success=False, history=[])
+    return jsonify(success=True, history=SERVER_HISTORY.get(folder, []))
+
+
 @app.route("/api/server/set-startup/<folder>", methods=["POST"])
 @login_required
 def set_startup(folder):
@@ -1039,6 +1168,19 @@ def file_content(folder, filename):
             return jsonify(content=f.read())
     except Exception:
         return jsonify(content="[\u0645\u0644\u0641 \u062b\u0646\u0627\u0626\u064a]")
+
+
+@app.route("/api/files/raw/<folder>/<path:filename>")
+@login_required
+def file_raw(folder, filename):
+    from flask import send_file
+    srv = owned_server(folder)
+    if not srv or ".." in filename:
+        return ("", 404)
+    fp = os.path.join(srv["path"], filename)
+    if not os.path.exists(fp) or os.path.isdir(fp):
+        return ("", 404)
+    return send_file(fp)
 
 
 @app.route("/api/files/save/<folder>/<path:filename>", methods=["POST"])

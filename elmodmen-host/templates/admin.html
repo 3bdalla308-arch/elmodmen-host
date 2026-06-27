@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#040910">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16.png">
-<link rel="shortcut icon" href="/static/favicon.ico">
-<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=5">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16.png?v=5">
+<link rel="shortcut icon" href="/static/favicon.ico?v=5">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png?v=5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -52,7 +52,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(6,12,20,.85);backdrop-fi
 .hwrap{max-width:1200px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}
 .logo{display:flex;align-items:center;gap:11px;font-weight:900;font-size:19px}
 .logo .ic{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--primary));display:grid;place-items:center;color:#fff;font-size:18px;box-shadow:0 6px 22px rgba(124,58,237,.4);overflow:hidden}
-.logo .ic img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:12px;display:block}
+.logo .ic img{width:100%;height:100%;object-fit:cover;object-position:center;border-radius:12px;display:block}
 @keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 .logo .ic{animation:logoFloat 2.6s ease-in-out infinite}
 .logo span{background:linear-gradient(90deg,var(--accent-light),var(--primary));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -72,6 +72,14 @@ header{position:sticky;top:0;z-index:50;background:rgba(6,12,20,.85);backdrop-fi
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:26px}
 .stat{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:18px;padding:20px 22px;position:relative;overflow:hidden}
 .stat .lbl{color:var(--muted);font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:7px}
+@keyframes icoAlive{0%,100%{transform:translateY(0) rotate(-6deg) scale(1)}25%{transform:translateY(-4px) rotate(0) scale(1.1)}50%{transform:translateY(-5px) rotate(6deg) scale(1.06)}75%{transform:translateY(-2px) rotate(0) scale(1.1)}}
+@keyframes icoWobble{0%,100%{transform:rotate(-10deg) scale(1.02)}50%{transform:rotate(10deg) scale(1.08)}}
+@keyframes icoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.16)}}
+.stat .lbl i{display:inline-block;animation:icoAlive 3s ease-in-out infinite}
+.stat:nth-child(2n) .lbl i{animation-name:icoWobble;animation-duration:2.6s}
+.stat:nth-child(3n) .lbl i{animation-name:icoPulse;animation-duration:2.7s}
+.section-h h2 i,.box-h h3 i{display:inline-block;animation:icoPulse 2.8s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.stat .lbl i,.section-h h2 i,.box-h h3 i{animation:none!important}}
 .stat .val{font-size:26px;font-weight:900}
 .stat .val small{font-size:14px;color:var(--muted)}
 .bar{height:7px;border-radius:6px;background:rgba(255,255,255,.07);margin-top:12px;overflow:hidden}
@@ -147,7 +155,7 @@ html[data-theme="light"] .bnav{background:rgba(255,255,255,.94)}
 
 <header>
   <div class="hwrap">
-    <div class="logo"><div class="ic"><img src="/static/logo.png" alt="BATMAN Dev"></div>𝑩𝑨𝑻𝑴𝑨𝑵 <span>𝑫𝒆𝒗𓃠</span></div>
+    <div class="logo"><div class="ic"><img src="/static/logo.png?v=5" alt="BATMAN Dev"></div>𝑩𝑨𝑻𝑴𝑨𝑵 <span>𝑫𝒆𝒗𓃠</span></div>
     <div style="display:flex;align-items:center;gap:12px">
       <div class="pill"><i class="fas fa-user-shield"></i><span id="adminName">admin</span></div>
       <button class="btn btn-ghost btn-sm" onclick="logout()"><i class="fas fa-right-from-bracket"></i></button>
@@ -180,6 +188,9 @@ html[data-theme="light"] .bnav{background:rgba(255,255,255,.94)}
 
   <div class="section-h"><h2><i class="fas fa-bell"></i> طلبات التسجيل</h2></div>
   <div id="pendingList"></div>
+
+  <div class="section-h"><h2><i class="fas fa-credit-card"></i> طلبات الدفع والترقية</h2></div>
+  <div id="paymentsList"></div>
 <nav class="bnav">
   <button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-gauge-high"></i><span>لوحة</span></button>
   <button onclick="var p=document.getElementById('pendingList');if(p)p.scrollIntoView({behavior:'smooth'})"><i class="fas fa-bell"></i><span>الطلبات</span></button>
@@ -246,13 +257,15 @@ function closeM(id){$(id).classList.remove('open');}
 async function logout(){await fetch('/api/logout',{method:'POST'});location.href='/login';}
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-async function loadAll(){const me=await api('/api/current_user');if(!me.success||!me.is_admin){location.href='/login';return;}$('adminName').textContent=me.username;await loadPlans();await loadUsers();await loadPending();loadMetrics();}
+async function loadAll(){const me=await api('/api/current_user');if(!me.success||!me.is_admin){location.href='/login';return;}$('adminName').textContent=me.username;await loadPlans();await loadUsers();await loadPending();await loadPayments();loadMetrics();}
 async function loadPlans(){const d=await api('/api/plans');PLANS=d.plans||{};}
 async function loadUsers(){const d=await api('/api/admin/users');if(!d.success)return;USERS=d.users;$('stUsers').textContent=USERS.length;renderUsers();}
 async function loadPending(){const d=await api('/api/admin/pending');if(!d.success)return;const reqs=d.requests||[];$('stPending').textContent=reqs.length;const el=$('pendingList');if(!reqs.length){el.innerHTML='<div class="empty"><i class="fas fa-circle-check"></i><p>لا توجد طلبات معلقة</p></div>';return;}el.innerHTML=reqs.map(r=>`<div class="pending-card"><div class="u"><div class="av"><i class="fas fa-user-clock"></i></div><div>${esc(r.username)}<div style="font-size:12px;color:var(--muted);font-weight:400">${r.created_at||''}</div></div></div><div style="display:flex;gap:8px"><button class="btn btn-green btn-sm" onclick="approve('${esc(r.username)}')"><i class="fas fa-check"></i> قبول</button><button class="btn btn-red btn-sm" onclick="reject('${esc(r.username)}')"><i class="fas fa-xmark"></i> رفض</button></div></div>`).join('');}
 
 function renderUsers(){const body=$('usersBody');body.innerHTML=USERS.map(u=>{const cnt=0;const st=u.is_admin?'<span class="tag adm">أدمن</span>':(u.status==='approved'?'<span class="tag app">مفعّل</span>':(u.status==='pending'?'<span class="tag pen">معلق</span>':'<span class="tag rej">مرفوض</span>'));return `<tr><td><b>${esc(u.username)}</b></td><td>${st}</td><td>${esc(u.plan)}</td><td>${u.max_servers}</td><td style="color:var(--muted)">${u.last_login||'—'}</td><td><div style="display:flex;gap:6px">${u.is_admin?'':`<button class="icon-btn" title="تعديل" onclick='editUser(${JSON.stringify(u)})'><i class="fas fa-pen"></i></button><button class="icon-btn danger" title="حذف" onclick="delUser('${esc(u.username)}')"><i class="fas fa-trash"></i></button>`}</div></td></tr>`;}).join('');}
 
+async function loadPayments(){const d=await api('/api/admin/payments');if(!d.success)return;const ps=(d.payments||[]).filter(p=>p.status==='pending');const el=$('paymentsList');if(!el)return;if(!ps.length){el.innerHTML='<div class="empty"><i class="fas fa-circle-check"></i><p>لا توجد طلبات دفع معلقة</p></div>';return;}el.innerHTML=ps.map(p=>`<div class="pending-card"><div class="u"><div class="av"><i class="fas fa-credit-card"></i></div><div>${esc(p.username)} — <b>${esc(p.plan_name)}</b> ($${p.price})<div style="font-size:12px;color:var(--muted);font-weight:400">${esc(p.method||'')} • ${p.created_at||''}</div></div></div><div style="display:flex;gap:8px"><button class="btn btn-green btn-sm" onclick="payAction('${p.id}','approve')"><i class="fas fa-check"></i> تفعيل</button><button class="btn btn-red btn-sm" onclick="payAction('${p.id}','reject')"><i class="fas fa-xmark"></i> رفض</button></div></div>`).join('');}
+async function payAction(id,action){const d=await api('/api/admin/payment-action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,action:action})});toast(d.message,d.success);loadPayments();loadUsers();}
 async function approve(u){const d=await api('/api/admin/approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});toast(d.message,d.success);loadPending();loadUsers();}
 async function reject(u){const d=await api('/api/admin/reject',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});toast(d.message,d.success);loadPending();loadUsers();}
 
@@ -275,12 +288,12 @@ window.addEventListener('resize',drawChart);
 /* dark / light theme toggle */
 (function(){var K='bm_theme';var mc=document.querySelector('meta[name="theme-color"]');function ap(t){document.documentElement.setAttribute('data-theme',t);if(mc)mc.setAttribute('content',t==='light'?'#eef1f8':'#040910');}var s=localStorage.getItem(K)||'dark';ap(s);function mk(){var b=document.createElement('button');b.id='themeToggle';b.type='button';b.title='تبديل الوضع';b.innerHTML=(localStorage.getItem(K)||'dark')==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';b.addEventListener('click',function(){var c=localStorage.getItem(K)||'dark';var n=c==='light'?'dark':'light';localStorage.setItem(K,n);ap(n);b.innerHTML=n==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';if(window.drawChart)try{window.drawChart()}catch(e){}});document.body.appendChild(b);}if(document.body)mk();else document.addEventListener('DOMContentLoaded',mk);})();
 /* PWA: service worker + install prompt */
-(function(){if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}var st=document.createElement('style');st.textContent='@keyframes pwaPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}#pwaInstall:hover{filter:brightness(1.12)}';document.head.appendChild(st);var deferred=null;var btn=document.createElement('button');btn.id='pwaInstall';btn.type='button';btn.innerHTML='<i class="fa-solid fa-download"></i> ثبّت التطبيق';btn.style.cssText='position:fixed;bottom:18px;left:18px;z-index:99998;display:none;align-items:center;gap:8px;padding:11px 16px;border:none;border-radius:13px;cursor:pointer;font-family:inherit;font-weight:800;font-size:14px;color:#fff;background:linear-gradient(135deg,#7c3aed,#00e676);box-shadow:0 10px 30px rgba(124,58,237,.45);animation:pwaPulse 2.4s infinite';if(document.body)document.body.appendChild(btn);window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;btn.style.display='inline-flex';});btn.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.finally(function(){deferred=null;btn.style.display='none';});});window.addEventListener('appinstalled',function(){btn.style.display='none';});})();
+(function(){if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}})();
 /* light anti-copy guard */
 (function(){document.addEventListener('contextmenu',function(e){e.preventDefault()});document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(k==='i'||k==='j'||k==='c'))||(e.ctrlKey&&(k==='u'||k==='s'))){e.preventDefault();return false;}});})();
 /* smooth page transitions + ripple */
 (function(){var f=document.createElement('div');f.className='pgfade';document.body.appendChild(f);requestAnimationFrame(function(){f.classList.add('gone')});setTimeout(function(){f.style.display='none'},650);window.__pageLeave=function(cb){f.style.display='block';void f.offsetWidth;f.classList.remove('gone');setTimeout(cb,420)};document.body.classList.add('boot');setTimeout(function(){document.body.classList.remove('boot')},2200);document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var href=a.getAttribute('href');var ext=/^(https?:)?\/\//.test(href)&&a.host!==location.host;if(href&&href[0]!=='#'&&a.target!=='_blank'&&!ext){e.preventDefault();window.__pageLeave(function(){location.href=href});return}}var b=e.target.closest('.btn');if(b){var r=b.getBoundingClientRect();var rp=document.createElement('span');rp.className='ripple';var sz=Math.max(r.width,r.height);rp.style.width=rp.style.height=sz+'px';rp.style.left=(e.clientX-r.left-sz/2)+'px';rp.style.top=(e.clientY-r.top-sz/2)+'px';b.appendChild(rp);setTimeout(function(){rp.remove()},600)}});})();
-loadAll();setInterval(loadMetrics,5000);setInterval(loadPending,15000);
+loadAll();setInterval(loadMetrics,5000);setInterval(loadPending,15000);setInterval(loadPayments,15000);
 </script>
 </body>
 </html>

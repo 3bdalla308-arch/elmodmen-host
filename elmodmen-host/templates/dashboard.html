@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#040910">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16.png">
-<link rel="shortcut icon" href="/static/favicon.ico">
-<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=5">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16.png?v=5">
+<link rel="shortcut icon" href="/static/favicon.ico?v=5">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png?v=5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,6 +16,15 @@
 <title>𝑩𝑨𝑻𝑴𝑨𝑵 𝑫𝒆𝒗𓃠 — لوحة التحكم</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html[data-theme="light"]{--bg:#eef1f8;--card:rgba(255,255,255,.92);--line:rgba(124,58,237,.16);--txt:#10182a;--muted:rgba(16,24,42,.55)}
@@ -54,7 +63,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(6,12,20,.85);backdrop-fi
 .hwrap{max-width:1200px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}
 .logo{display:flex;align-items:center;gap:11px;font-weight:900;font-size:19px}
 .logo .ic{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--accent));display:grid;place-items:center;color:#04210f;font-size:19px;box-shadow:0 6px 22px rgba(0,230,118,.4);overflow:hidden}
-.logo .ic img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:12px;display:block}
+.logo .ic img{width:100%;height:100%;object-fit:cover;object-position:center;border-radius:12px;display:block}
 @keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 .logo .ic{animation:logoFloat 2.6s ease-in-out infinite}
 .logo span{background:linear-gradient(90deg,var(--primary),var(--accent-light));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -171,7 +180,18 @@ select option{background:#0a1422}
 .type-c.py i{color:var(--blue)}.type-c.node i{color:var(--primary)}
 .type-c .type-img{width:34px;height:34px;object-fit:contain;margin-bottom:8px;display:inline-block;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
 @keyframes premBob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.08)}}
-.type-c i,.type-c .type-img{animation:premBob 1.8s ease-in-out infinite}
+@keyframes icoAlive{0%,100%{transform:translateY(0) rotate(-6deg) scale(1)}25%{transform:translateY(-4px) rotate(0) scale(1.1)}50%{transform:translateY(-5px) rotate(6deg) scale(1.06)}75%{transform:translateY(-2px) rotate(0) scale(1.1)}}
+@keyframes icoWobble{0%,100%{transform:rotate(-10deg) scale(1.02)}50%{transform:rotate(10deg) scale(1.08)}}
+@keyframes icoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.16)}}
+.type-c i,.type-c .type-img{animation:icoAlive 2.6s ease-in-out infinite}
+.qi i{display:inline-block;animation:icoAlive 2.8s ease-in-out infinite}
+.qcard:nth-child(2n) .qi i{animation-name:icoWobble;animation-duration:2.4s}
+.qcard:nth-child(3n) .qi i{animation-name:icoPulse;animation-duration:2.6s}
+.qcard:hover .qi i{animation-name:premBob;animation-duration:.9s}
+.stat .lbl i{display:inline-block;animation:icoAlive 3s ease-in-out infinite}
+.stat:nth-child(2n) .lbl i{animation-name:icoWobble;animation-duration:2.6s}
+.g-lbl i{display:inline-block;animation:icoPulse 2.4s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.type-c i,.type-c .type-img,.qi i,.stat .lbl i,.g-lbl i{animation:none!important}}
 .srv .ti{overflow:hidden}
 .srv .ti .ti-img{width:18px;height:18px;object-fit:contain;display:block}
 .type-c b{font-size:14px}
@@ -208,9 +228,32 @@ select option{background:#0a1422}
 .toast.bad{border-color:rgba(255,84,112,.4)}.toast.bad i{color:var(--red)}
 .api-box{background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:12px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:13px;word-break:break-all;display:flex;align-items:center;gap:10px;margin-top:8px}
 .api-box code{flex:1;color:var(--primary)}
+.set-acc{display:flex;align-items:center;gap:12px;padding:14px;background:rgba(124,58,237,.08);border:1px solid var(--line);border-radius:14px;margin-bottom:6px}
+.set-av{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:20px;color:#fff;background:linear-gradient(135deg,var(--accent),var(--primary));flex:none}
+.theme-row{display:flex;gap:10px}
+.theme-opt{flex:1;cursor:pointer;padding:12px;border-radius:13px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--txt);font-family:inherit;font-weight:700;font-size:13.5px;display:flex;align-items:center;justify-content:center;gap:8px;transition:.16s}
+.theme-opt:hover{background:rgba(124,58,237,.12)}
+.theme-opt.on{border-color:var(--primary);background:rgba(0,230,118,.14);color:var(--primary)}
 .spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--primary);border-radius:50%;animation:sp .7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 @media(max-width:680px){.fm{grid-template-columns:1fr;height:auto}.fm-list{max-height:180px}.srv-actions{justify-content:center}}
+.CodeMirror{height:auto;direction:ltr;text-align:left;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;background:#060d16;color:#e6edf3}
+.fm-edit .CodeMirror{flex:1;min-height:300px;border-radius:0}
+.savestat{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.savestat.saved{color:var(--primary)}.savestat.saving{color:var(--amber)}
+.fm{position:relative}
+.fm.drag{outline:2px dashed var(--primary);outline-offset:-6px}
+.dropmask{position:absolute;inset:0;background:rgba(0,230,118,.10);border:2px dashed var(--primary);border-radius:14px;display:none;place-items:center;font-weight:800;font-size:15px;color:var(--primary);z-index:30;pointer-events:none;backdrop-filter:blur(2px)}
+.imgprev{flex:1;display:none;place-items:center;background:#060d16;overflow:auto;padding:14px}
+.imgprev img{max-width:100%;max-height:380px;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.perf-head{display:flex;gap:18px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.perf-kpi{font-size:12px;color:var(--muted)}.perf-kpi b{font-size:18px;color:var(--txt);display:block;font-weight:900}
+.perf-wrap{background:#070f1a;border:1px solid var(--line);border-radius:14px;padding:14px;height:380px;position:relative}
+.pay-methods{display:grid;gap:10px;margin:14px 0}
+.pay-m{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid var(--line);border-radius:13px;background:rgba(0,0,0,.2)}
+.pay-m i{font-size:22px;color:var(--primary)}.pay-m .pm-v{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px}
+.plan-c.pop{border-color:var(--accent-light);box-shadow:0 0 0 1px var(--accent-light)}
+.plan-c .pop-b{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;font-size:11px;font-weight:800;padding:3px 12px;border-radius:20px}
 </style>
 </head>
 <body>
@@ -218,10 +261,11 @@ select option{background:#0a1422}
 
 <header>
   <div class="hwrap">
-    <div class="logo"><div class="ic"><img src="/static/logo.png" alt="BATMAN Dev"></div>𝑩𝑨𝑻𝑴𝑨𝑵 <span>𝑫𝒆𝒗𓃠</span></div>
+    <div class="logo"><div class="ic"><img src="/static/logo.png?v=5" alt="BATMAN Dev"></div>𝑩𝑨𝑻𝑴𝑨𝑵 <span>𝑫𝒆𝒗𓃠</span></div>
     <div class="huser">
       <div class="pill"><i class="fas fa-user"></i><span id="uName">...</span></div>
       <div class="pill" id="planPill"><i class="fas fa-gem"></i><span id="uPlan">free</span></div>
+      <button class="btn btn-ghost btn-sm" onclick="openSettings()"><i class="fas fa-gear"></i></button>
       <button class="btn btn-ghost btn-sm" onclick="logout()"><i class="fas fa-right-from-bracket"></i></button>
     </div>
   </div>
@@ -233,6 +277,7 @@ select option{background:#0a1422}
     <button class="qcard" onclick="openCreate()"><div class="qi"><i class="fas fa-plus"></i></div><span>سيرفر جديد</span></button>
     <button class="qcard" onclick="openPlans()"><div class="qi" style="background:rgba(0,230,118,.14);color:var(--primary)"><i class="fas fa-gem"></i></div><span>الخطط</span></button>
     <button class="qcard" onclick="openApi()"><div class="qi" style="background:rgba(56,189,248,.14);color:var(--blue)"><i class="fas fa-robot"></i></div><span>API وتليجرام</span></button>
+    <button class="qcard" onclick="openSettings()"><div class="qi" style="background:rgba(255,255,255,.07)"><i class="fas fa-gear"></i></div><span>الإعدادات</span></button>
     <a class="qcard" id="qAdmin" href="/admin" style="display:none"><div class="qi" style="background:rgba(255,176,32,.14);color:var(--amber)"><i class="fas fa-shield-halved"></i></div><span>لوحة الأدمن</span></a>
   </div>
   <div class="gauges">
@@ -277,6 +322,7 @@ select option{background:#0a1422}
       <div class="tab active" data-tab="files" onclick="switchTab('files')"><i class="fas fa-folder-tree"></i> الملفات</div>
       <div class="tab" data-tab="console" onclick="switchTab('console')"><i class="fas fa-terminal"></i> الكونسول</div>
       <div class="tab" data-tab="errors" onclick="switchTab('errors')"><i class="fas fa-bug"></i> الأخطاء</div>
+      <div class="tab" data-tab="perf" onclick="switchTab('perf')"><i class="fas fa-chart-line"></i> الأداء</div>
     </div>
     <div id="tabFiles">
       <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
@@ -286,6 +332,7 @@ select option{background:#0a1422}
         <input type="file" id="upInput" multiple style="display:none" onchange="uploadFiles()">
       </div>
       <div class="fm">
+        <div class="dropmask" id="dropMask"><span>📂 أفلت الملفات هنا للرفع</span></div>
         <div class="fm-list" id="fmList"></div>
         <div class="fm-edit">
           <div class="toolbar">
@@ -296,9 +343,10 @@ select option{background:#0a1422}
             <button class="btn btn-ghost btn-sm" onclick="setStartup()"><i class="fas fa-play"></i> ملف التشغيل</button>
             <button class="btn btn-ghost btn-sm" onclick="renameFile()"><i class="fas fa-pen"></i></button>
             <button class="btn btn-red btn-sm" onclick="deleteFile()"><i class="fas fa-trash"></i></button>
-            <span class="fname" id="curFile">اختر ملف</span>
+            <span class="fname" id="curFile">اختر ملف</span><span class="savestat" id="saveStat"></span>
           </div>
           <textarea id="editor" placeholder="اختر ملف لعرض محتواه..." spellcheck="false"></textarea>
+          <div class="imgprev" id="imgPrev"></div>
         </div>
       </div>
     </div>
@@ -311,6 +359,16 @@ select option{background:#0a1422}
       <button class="btn btn-primary btn-sm" style="margin-bottom:10px" onclick="diagnoseErrors()"><i class="fas fa-stethoscope"></i> شخّص بالـ AI</button>
       <div class="console err" id="errorsOut">...</div>
     </div>
+    <div id="tabPerf" style="display:none">
+      <div class="perf-head">
+        <div class="perf-kpi">المعالج <b id="pfCpu">0%</b></div>
+        <div class="perf-kpi">الذاكرة <b id="pfMem">0 MB</b></div>
+        <div class="perf-kpi">آخر تحديث <b id="pfTime">--</b></div>
+        <button class="btn btn-ghost btn-sm" style="margin-right:auto" onclick="loadPerf()"><i class="fas fa-rotate"></i> تحديث</button>
+      </div>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:10px">📈 يتم تسجيل الأداء كل 15 ثانية أثناء تشغيل السيرفر.</p>
+      <div class="perf-wrap"><canvas id="perfChart"></canvas></div>
+    </div>
   </div>
 </div>
 
@@ -318,6 +376,19 @@ select option{background:#0a1422}
   <div class="box wide">
     <div class="box-h"><h3><i class="fas fa-gem"></i> الخطط</h3><div class="x" onclick="closeM('mPlans')"><i class="fas fa-xmark"></i></div></div>
     <div class="plan-grid" id="plansGrid"></div>
+  </div>
+</div>
+
+<div class="modal" id="mPay">
+  <div class="box">
+    <div class="box-h"><h3><i class="fas fa-credit-card"></i> إتمام الاشتراك</h3><div class="x" onclick="closeM('mPay')"><i class="fas fa-xmark"></i></div></div>
+    <p style="color:var(--muted);font-size:13.5px;line-height:1.7">حوّل المبلغ <b id="payAmount" style="color:var(--primary)">$0</b> على أحد الوسائل التالية، وبعدها اضغط (أرسلت الدفع) وهيتفعّل اشتراكك بعد المراجعة.</p>
+    <div class="pay-methods">
+      <div class="pay-m"><i class="fas fa-mobile-screen"></i><div style="flex:1"><div style="font-size:12px;color:var(--muted)">فودافون كاش</div><div class="pm-v" id="payVod">--</div></div><button class="icon-btn" onclick="copyPay('payVod')"><i class="fas fa-copy"></i></button></div>
+      <div class="pay-m"><i class="fas fa-bolt"></i><div style="flex:1"><div style="font-size:12px;color:var(--muted)">إنستا باي</div><div class="pm-v" id="payInsta">--</div></div><button class="icon-btn" onclick="copyPay('payInsta')"><i class="fas fa-copy"></i></button></div>
+    </div>
+    <p id="payNote" style="color:var(--amber);font-size:12.5px;line-height:1.6"></p>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:10px" onclick="sendPay('تحويل')"><i class="fas fa-paper-plane"></i> أرسلت الدفع — فعّل الباقة</button>
   </div>
 </div>
 
@@ -330,6 +401,32 @@ select option{background:#0a1422}
     <button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="genApi()"><i class="fas fa-key"></i> إنشاء / تجديد المفتاح</button>
     <label style="margin-top:20px">ربط معرف تيليجرام</label>
     <div style="display:flex;gap:8px"><input id="tgId" placeholder="Telegram ID"><button class="btn btn-primary" onclick="linkTg()">ربط</button></div>
+  </div>
+</div>
+
+<div class="modal" id="mSettings">
+  <div class="box">
+    <div class="box-h"><h3><i class="fas fa-gear"></i> الإعدادات</h3><div class="x" onclick="closeM('mSettings')"><i class="fas fa-xmark"></i></div></div>
+    <div class="set-acc"><div class="set-av"><i class="fas fa-user-astronaut"></i></div><div><div style="font-weight:800" id="setUser">--</div><div style="font-size:12.5px;color:var(--muted)">الباقة: <span id="setPlan">free</span></div></div></div>
+
+    <label>المظهر</label>
+    <div class="theme-row">
+      <button class="theme-opt" data-th="dark" onclick="setTheme('dark')"><i class="fas fa-moon"></i> داكن</button>
+      <button class="theme-opt" data-th="light" onclick="setTheme('light')"><i class="fas fa-sun"></i> فاتح</button>
+    </div>
+
+    <label style="margin-top:20px">تغيير كلمة المرور</label>
+    <input id="curPass" type="password" placeholder="كلمة المرور الحالية">
+    <input id="newPass" type="password" placeholder="كلمة المرور الجديدة" style="margin-top:8px">
+    <input id="newPass2" type="password" placeholder="تأكيد كلمة المرور الجديدة" style="margin-top:8px">
+    <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px" onclick="changePass()"><i class="fas fa-lock"></i> حفظ كلمة المرور</button>
+
+    <label style="margin-top:20px">إجراءات سريعة</label>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-green btn-sm" id="installBtn" style="display:none" onclick="installApp()"><i class="fas fa-download"></i> تثبيت التطبيق على الجهاز</button>
+      <button class="btn btn-ghost btn-sm" onclick="closeM('mSettings');openApi()"><i class="fas fa-robot"></i> API وتيليجرام</button>
+      <button class="btn btn-red btn-sm" onclick="logout()"><i class="fas fa-right-from-bracket"></i> تسجيل الخروج</button>
+    </div>
   </div>
 </div>
 
@@ -376,36 +473,45 @@ function openCreate(){$('cName').value='';selType(document.querySelector('.type-
 function selType(el){document.querySelectorAll('.type-c').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');selectedType=el.dataset.type;}
 async function createServer(){const name=$('cName').value.trim();if(!name){toast('أدخل اسمًا',false);return;}const b=$('createBtn');b.innerHTML='<span class="spin"></span>';const d=await api('/api/server/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,server_type:selectedType})});b.innerHTML='<i class="fas fa-rocket"></i> إنشاء';toast(d.message,d.success);if(d.success){closeM('mCreate');loadServers();}}
 
-function openManage(f,name){CURF=f;$('mgName').textContent=name;switchTab('files');CURFILE=null;$('editor').value='';$('curFile').textContent='اختر ملف';loadFiles();$('mManage').classList.add('open');}
+function openManage(f,name){CURF=f;$('mgName').textContent=name;switchTab('files');CURFILE=null;setCode('');$('curFile').textContent='اختر ملف';setSaveStat('','');showEditor();loadFiles();$('mManage').classList.add('open');setTimeout(function(){initCM();if(CM)CM.refresh();},80);}
 function closeManage(){closeM('mManage');loadServers();}
-function switchTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===t));$('tabFiles').style.display=t==='files'?'block':'none';$('tabConsole').style.display=t==='console'?'block':'none';$('tabErrors').style.display=t==='errors'?'block':'none';if(t==='console')loadConsole();if(t==='errors')loadErrors();}
+function switchTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===t));$('tabFiles').style.display=t==='files'?'block':'none';$('tabConsole').style.display=t==='console'?'block':'none';$('tabErrors').style.display=t==='errors'?'block':'none';var tp=$('tabPerf');if(tp)tp.style.display=t==='perf'?'block':'none';if(t==='console')loadConsole();if(t==='errors')loadErrors();if(t==='perf')loadPerf();if(t==='files'&&CM)setTimeout(function(){CM.refresh();},40);}
 
 async function loadFiles(){const files=await api(`/api/files/list/${CURF}`);const el=$('fmList');if(!Array.isArray(files)||!files.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">لا توجد ملفات</div>';return;}el.innerHTML=files.map(f=>{const ic=f.is_dir?'fa-folder':(f.is_zip?'fa-file-zipper':'fa-file-code');return `<div class="fm-item" onclick="openFile('${esc(f.name)}',${f.is_dir},${f.is_zip})"><i class="fas ${ic}"></i><span>${esc(f.name)}</span><span class="meta">${f.size}</span></div>`;}).join('');}
-async function openFile(name,isDir,isZip){if(isDir){toast('المجلدات غير قابلة للفتح',false);return;}if(isZip){if(confirm('فك ضغط '+name+'؟')){const d=await api(`/api/files/unzip/${CURF}/${encodeURIComponent(name)}`,{method:'POST'});toast(d.message,d.success);loadFiles();}return;}CURFILE=name;document.querySelectorAll('.fm-item').forEach(i=>i.classList.toggle('active',i.textContent.includes(name)));$('curFile').textContent=name;$('editor').value='جاري التحميل...';const d=await api(`/api/files/content/${CURF}/${encodeURIComponent(name)}`);$('editor').value=d.content||'';}
-async function saveFile(){if(!CURFILE){toast('اختر ملف أولًا',false);return;}const d=await api(`/api/files/save/${CURF}/${encodeURIComponent(CURFILE)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:$('editor').value})});toast(d.message,d.success);}
+async function openFile(name,isDir,isZip){if(isDir){toast('المجلدات غير قابلة للفتح',false);return;}if(isZip){if(confirm('فك ضغط '+name+'؟')){const d=await api(`/api/files/unzip/${CURF}/${encodeURIComponent(name)}`,{method:'POST'});toast(d.message,d.success);loadFiles();}return;}CURFILE=name;document.querySelectorAll('.fm-item').forEach(i=>i.classList.toggle('active',i.textContent.includes(name)));$('curFile').textContent=name;setSaveStat('','');if(/\.(png|jpe?g|gif|webp|svg|bmp|ico)$/i.test(name)){showImg(name);return;}showEditor();setCode('جاري التحميل...');const d=await api(`/api/files/content/${CURF}/${encodeURIComponent(name)}`);setCode(d.content||'');if(CM)CM.setOption('mode',cmMode(name));}
+async function saveFile(){if(!CURFILE){toast('اختر ملف أولًا',false);return;}const d=await api(`/api/files/save/${CURF}/${encodeURIComponent(CURFILE)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:getCode()})});toast(d.message,d.success);if(d.success)setSaveStat('saved','<i class="fas fa-circle-check"></i> تم الحفظ');}
 async function setStartup(){if(!CURFILE){toast('اختر ملف أولًا',false);return;}const d=await api(`/api/server/set-startup/${CURF}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:CURFILE})});toast(d.message,d.success);}
 async function renameFile(){if(!CURFILE)return;const nn=prompt('الاسم الجديد:',CURFILE);if(!nn||nn===CURFILE)return;const d=await api(`/api/files/rename/${CURF}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({old_name:CURFILE,new_name:nn})});toast(d.message,d.success);if(d.success){CURFILE=nn;$('curFile').textContent=nn;loadFiles();}}
-async function deleteFile(){if(!CURFILE)return;if(!confirm('حذف '+CURFILE+'؟'))return;const d=await api(`/api/files/delete/${CURF}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({names:[CURFILE]})});toast(d.message,d.success);if(d.success){CURFILE=null;$('editor').value='';$('curFile').textContent='اختر ملف';loadFiles();}}
+async function deleteFile(){if(!CURFILE)return;if(!confirm('حذف '+CURFILE+'؟'))return;const d=await api(`/api/files/delete/${CURF}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({names:[CURFILE]})});toast(d.message,d.success);if(d.success){CURFILE=null;setCode('');showEditor();$('curFile').textContent='اختر ملف';loadFiles();}}
 async function newFile(){const n=prompt('اسم الملف الجديد:');if(!n)return;const d=await api(`/api/files/create/${CURF}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:n,content:''})});toast(d.message,d.success);if(d.success)loadFiles();}
 async function uploadFiles(){const inp=$('upInput');if(!inp.files.length)return;const fd=new FormData();for(const f of inp.files)fd.append('files[]',f);toast('جاري الرفع...');const r=await fetch(`/api/files/upload/${CURF}`,{method:'POST',body:fd});const d=await r.json();toast(d.message,d.success);inp.value='';loadFiles();}
 async function installDeps(){const d=await api(`/api/server/install/${CURF}`,{method:'POST'});toast(d.message,d.success);}
 async function loadConsole(){const d=await api(`/api/server/stats/${CURF}`);$('consoleOut').textContent=d.logs||'لا توجد مخرجات';$('consoleOut').scrollTop=$('consoleOut').scrollHeight;}
 async function loadErrors(){const d=await api(`/api/server/stats/${CURF}`);$('errorsOut').textContent=d.errors||'✅ لا توجد أخطاء';}
 
-async function openPlans(){const d=await api('/api/plans');const g=$('plansGrid');g.innerHTML=Object.entries(d.plans).filter(([k])=>k!=='admin').map(([k,p])=>`<div class="plan-c ${ME&&ME.plan===k?'cur':''}"><div class="pn">${p.name}</div><div class="pp">$${p.price}<small>/شهر</small></div><ul><li><i class="fas fa-hard-drive"></i> ${p.storage} MB تخزين</li><li><i class="fas fa-memory"></i> ${p.ram} MB رام</li><li><i class="fas fa-microchip"></i> ${p.cpu} CPU</li><li><i class="fas fa-server"></i> ${p.max_servers} سيرفر</li></ul>${ME&&ME.plan===k?'<button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center" disabled>الخطة الحالية</button>':`<button class="btn btn-primary btn-sm" style="width:100%;justify-content:center" onclick="upgrade('${k}')">ترقية</button>`}</div>`).join('');$('mPlans').classList.add('open');}
+async function openPlans(){const d=await api('/api/plans');const g=$('plansGrid');g.innerHTML=Object.entries(d.plans).filter(([k])=>k!=='admin').map(([k,p])=>`<div class="plan-c ${ME&&ME.plan===k?'cur':''}"><div class="pn">${p.name}</div><div class="pp">$${p.price}<small>/شهر</small></div><ul><li><i class="fas fa-hard-drive"></i> ${p.storage} MB تخزين</li><li><i class="fas fa-memory"></i> ${p.ram} MB رام</li><li><i class="fas fa-microchip"></i> ${p.cpu} CPU</li><li><i class="fas fa-server"></i> ${p.max_servers} سيرفر</li></ul>${ME&&ME.plan===k?'<button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center" disabled>الخطة الحالية</button>':`<button class="btn btn-primary btn-sm" style="width:100%;justify-content:center" onclick="goUpgrade('${k}',${p.price||0})"><i class="fas ${p.price>0?'fa-credit-card':'fa-bolt'}"></i> ${p.price>0?'اشترك الآن':'تفعيل'}</button>`}</div>`).join('');$('mPlans').classList.add('open');}
 async function upgrade(pid){const d=await api('/api/user/upgrade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan_id:pid})});toast(d.message,d.success);if(d.success){closeM('mPlans');await loadMe();loadServers();}}
 
 function openApi(){$('mApi').classList.add('open');}
 async function genApi(){const d=await api('/api/create_api_key',{method:'POST'});if(d.success){$('apiKey').textContent=d.api_key;toast(d.message);}else toast(d.message||'خطأ',false);}
 function copyApi(){const t=$('apiKey').textContent;if(t.includes('لم'))return;navigator.clipboard.writeText(t);toast('تم النسخ');}
 async function linkTg(){const id=$('tgId').value.trim();if(!id){toast('أدخل المعرف',false);return;}const d=await api('/api/link_telegram',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_id:id})});toast(d.message,d.success);}
+function openSettings(){if(ME){$('setUser').textContent=ME.username;$('setPlan').textContent=ME.plan;}markTheme();$('mSettings').classList.add('open');}
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');var mc=document.querySelector('meta[name="theme-color"]');if(mc)mc.setAttribute('content',t==='light'?'#eef1f8':'#040910');}
+function markTheme(){var c=localStorage.getItem('bm_theme')||'dark';document.querySelectorAll('.theme-opt').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-th')===c);});}
+function setTheme(t){localStorage.setItem('bm_theme',t);applyTheme(t);markTheme();toast(t==='light'?'تم تفعيل الوضع الفاتح':'تم تفعيل الوضع الداكن');}
+async function changePass(){var c=$('curPass').value.trim(),n=$('newPass').value.trim(),n2=$('newPass2').value.trim();if(!c||!n){toast('املأ الحقول',false);return;}if(n!==n2){toast('كلمتا المرور غير متطابقتين',false);return;}if(n.length<4){toast('كلمة المرور قصيرة جدًا',false);return;}const d=await api('/api/user/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({current:c,new:n})});toast(d.message,d.success);if(d.success){$('curPass').value='';$('newPass').value='';$('newPass2').value='';}}
 
 /* 3D tilt for cards: mouse (PC) + touch (mobile) */
 (function(){function apply(el,pt,max){if(!el.querySelector(':scope>.glow')){var g=document.createElement('div');g.className='glow';el.appendChild(g)}var r=el.getBoundingClientRect();var px=(pt.clientX-r.left)/r.width,py=(pt.clientY-r.top)/r.height;el.style.setProperty('--mx',(px*100)+'%');el.style.setProperty('--my',(py*100)+'%');el.style.transform='perspective(900px) rotateX('+((.5-py)*max)+'deg) rotateY('+((px-.5)*max)+'deg) translateY(-3px)'}function bind(sel,max){document.addEventListener('mousemove',function(e){var el=e.target.closest(sel);if(el)apply(el,e,max)});document.addEventListener('mouseout',function(e){var el=e.target.closest(sel);if(el&&!el.contains(e.relatedTarget))el.style.transform=''});document.addEventListener('touchmove',function(e){var t=e.touches[0];if(!t)return;var el=document.elementFromPoint(t.clientX,t.clientY);el=el&&el.closest(sel);if(el)apply(el,t,max)},{passive:true});document.addEventListener('touchend',function(){document.querySelectorAll(sel).forEach(function(el){el.style.transform=''})});}bind('.srv',7);bind('.stat',5);})();
 /* dark / light theme toggle */
 (function(){var K='bm_theme';var mc=document.querySelector('meta[name="theme-color"]');function ap(t){document.documentElement.setAttribute('data-theme',t);if(mc)mc.setAttribute('content',t==='light'?'#eef1f8':'#040910');}var s=localStorage.getItem(K)||'dark';ap(s);function mk(){var b=document.createElement('button');b.id='themeToggle';b.type='button';b.title='تبديل الوضع';b.innerHTML=(localStorage.getItem(K)||'dark')==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';b.addEventListener('click',function(){var c=localStorage.getItem(K)||'dark';var n=c==='light'?'dark':'light';localStorage.setItem(K,n);ap(n);b.innerHTML=n==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';if(window.drawChart)try{window.drawChart()}catch(e){}});document.body.appendChild(b);}if(document.body)mk();else document.addEventListener('DOMContentLoaded',mk);})();
-/* PWA: service worker + install prompt */
-(function(){if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}var st=document.createElement('style');st.textContent='@keyframes pwaPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}#pwaInstall:hover{filter:brightness(1.12)}';document.head.appendChild(st);var deferred=null;var btn=document.createElement('button');btn.id='pwaInstall';btn.type='button';btn.innerHTML='<i class="fa-solid fa-download"></i> ثبّت التطبيق';btn.style.cssText='position:fixed;bottom:18px;left:18px;z-index:99998;display:none;align-items:center;gap:8px;padding:11px 16px;border:none;border-radius:13px;cursor:pointer;font-family:inherit;font-weight:800;font-size:14px;color:#fff;background:linear-gradient(135deg,#7c3aed,#00e676);box-shadow:0 10px 30px rgba(124,58,237,.45);animation:pwaPulse 2.4s infinite';if(document.body)document.body.appendChild(btn);window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;btn.style.display='inline-flex';});btn.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.finally(function(){deferred=null;btn.style.display='none';});});window.addEventListener('appinstalled',function(){btn.style.display='none';});})();
+/* PWA: service worker + install option inside settings */
+let DEFERRED_PWA=null;
+(function(){if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}})();
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();DEFERRED_PWA=e;var b=document.getElementById('installBtn');if(b)b.style.display='inline-flex';});
+window.addEventListener('appinstalled',function(){DEFERRED_PWA=null;var b=document.getElementById('installBtn');if(b)b.style.display='none';toast('تم تثبيت التطبيق ✅');});
+async function installApp(){if(!DEFERRED_PWA){toast('افتح من المتصفح واستخدم قائمة المتصفح ▸ تثبيت التطبيق',false);return;}DEFERRED_PWA.prompt();try{await DEFERRED_PWA.userChoice;}catch(e){}DEFERRED_PWA=null;}
 /* light anti-copy guard */
 (function(){document.addEventListener('contextmenu',function(e){e.preventDefault()});document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(k==='i'||k==='j'||k==='c'))||(e.ctrlKey&&(k==='u'||k==='s'))){e.preventDefault();return false;}});})();
 /* smooth page transitions + ripple + reveal */
@@ -420,9 +526,33 @@ function aiTyping(){var t=document.createElement('div');t.className='ai-typing';
 function openAiChat(){$('mAi').classList.add('open');if(!$('aiMsgs').dataset.init){$('aiMsgs').dataset.init='1';aiBubble('assistant','أهلًا 🦇 أنا مساعد BATMAN AI. اسألني عن الأكواد، البوتات، أو أي مشكلة في الاستضافة.',true);}setTimeout(function(){var i=$('aiInput');if(i)i.focus();},120);}
 async function aiAsk(payload,userLabel){openAiChat();if(userLabel)aiBubble('user',userLabel,false);var tip=aiTyping();var d=await api('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});tip.remove();if(!d.success){aiBubble('assistant','⚠️ '+(d.message||'خطأ'),false);return;}aiBubble('assistant',d.reply,true);}
 async function chatSend(){var inp=$('aiInput');var t=inp.value.trim();if(!t)return;inp.value='';aiBubble('user',t,false);var tip=aiTyping();var d=await api('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'chat',text:t,history:AI_HISTORY})});tip.remove();if(!d.success){aiBubble('assistant','⚠️ '+(d.message||'خطأ'),false);return;}aiBubble('assistant',d.reply,true);AI_HISTORY.push({role:'user',content:t});AI_HISTORY.push({role:'assistant',content:d.reply});}
-function aiCode(action){var code=$('editor').value;if(!code.trim()){toast('افتح ملف فيه كود الأول',false);return;}var labels={explain:'🧑‍💻 اشرح الكود',fix:'🩹 صلّح الأخطاء',feature:'✨ زوّد ميزة'};var extra='';if(action==='feature'){extra=prompt('اكتب الميزة اللي عايزها:')||'';if(!extra)return;}aiAsk({mode:'code',action:action,code:code,text:extra},labels[action]+(extra?(' — '+extra):''));}
+function aiCode(action){var code=getCode();if(!code.trim()){toast('افتح ملف فيه كود الأول',false);return;}var labels={explain:'🧑‍💻 اشرح الكود',fix:'🩹 صلّح الأخطاء',feature:'✨ زوّد ميزة'};var extra='';if(action==='feature'){extra=prompt('اكتب الميزة اللي عايزها:')||'';if(!extra)return;}aiAsk({mode:'code',action:action,code:code,text:extra},labels[action]+(extra?(' — '+extra):''));}
 function diagnoseErrors(){var logs=($('errorsOut').textContent||'');if(!logs.trim()||logs.indexOf('لا توجد')>-1){toast('مفيش أخطاء لتشخيصها',false);return;}aiAsk({mode:'diagnose',logs:logs},'🩺 شخّص الأخطاء دي');}
-loadMe();loadServers();loadMetrics();setInterval(loadServers,12000);setInterval(loadMetrics,5000);
+/* ===== Pro code editor (CodeMirror) + autosave ===== */
+var CM=null,_saveT=null;
+function getCode(){return CM?CM.getValue():(($('editor')||{}).value||'');}
+function setCode(v){if(CM){CM.setValue(v||'');}else if($('editor')){$('editor').value=v||'';}}
+function cmMode(n){n=(n||'').toLowerCase();if(n.endsWith('.py'))return 'python';if(n.endsWith('.json'))return {name:'javascript',json:true};if(n.endsWith('.js'))return 'javascript';if(n.endsWith('.css'))return 'css';if(n.endsWith('.html')||n.endsWith('.htm'))return 'htmlmixed';if(n.endsWith('.xml'))return 'xml';return 'text/plain';}
+function initCM(){if(CM||typeof CodeMirror==='undefined'||!$('editor'))return;CM=CodeMirror.fromTextArea($('editor'),{lineNumbers:true,theme:'material-darker',mode:'python',lineWrapping:true,tabSize:4,indentUnit:4});CM.setSize('100%','100%');CM.on('change',scheduleAutosave);}
+function setSaveStat(s,t){var e=$('saveStat');if(!e)return;e.className='savestat '+(s||'');e.innerHTML=t||'';}
+function scheduleAutosave(){if(!CURFILE)return;setSaveStat('saving','<i class="fas fa-circle-notch fa-spin"></i> حفظ تلقائي...');if(_saveT)clearTimeout(_saveT);_saveT=setTimeout(autoSave,1400);}
+async function autoSave(){if(!CURFILE)return;var d=await api(`/api/files/save/${CURF}/${encodeURIComponent(CURFILE)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:getCode()})});setSaveStat(d.success?'saved':'',d.success?'<i class="fas fa-circle-check"></i> تم الحفظ':'');}
+function showImg(name){var ip=$('imgPrev');var cm=document.querySelector('.fm-edit .CodeMirror');var ed=$('editor');if(cm)cm.style.display='none';if(ed)ed.style.display='none';if(ip){ip.style.display='grid';ip.innerHTML='<img src="/api/files/raw/'+CURF+'/'+encodeURIComponent(name)+'" alt="">';}}
+function showEditor(){var ip=$('imgPrev');if(ip){ip.style.display='none';ip.innerHTML='';}var cm=document.querySelector('.fm-edit .CodeMirror');if(cm){cm.style.display='';}else{var ed=$('editor');if(ed)ed.style.display='';}}
+/* ===== Drag & drop upload ===== */
+async function uploadFileList(files){if(!CURF){toast('افتح سيرفر أولًا',false);return;}var fd=new FormData();for(var i=0;i<files.length;i++)fd.append('files[]',files[i]);toast('جاري الرفع...');var r=await fetch(`/api/files/upload/${CURF}`,{method:'POST',body:fd});var d=await r.json();toast(d.message,d.success);loadFiles();}
+(function(){var fm=document.querySelector('.fm');var mask=$('dropMask');if(!fm)return;['dragenter','dragover'].forEach(function(ev){fm.addEventListener(ev,function(e){e.preventDefault();e.stopPropagation();fm.classList.add('drag');if(mask)mask.style.display='grid';});});['dragleave','dragend'].forEach(function(ev){fm.addEventListener(ev,function(e){e.preventDefault();if(!fm.contains(e.relatedTarget)){fm.classList.remove('drag');if(mask)mask.style.display='none';}});});fm.addEventListener('drop',function(e){e.preventDefault();e.stopPropagation();fm.classList.remove('drag');if(mask)mask.style.display='none';var files=e.dataTransfer&&e.dataTransfer.files;if(files&&files.length)uploadFileList(files);});})();
+/* ===== Per-server performance charts ===== */
+var PERF_CHART=null;
+async function loadPerf(){if(!CURF)return;var d=await api(`/api/server/history/${CURF}`);if(!d||!d.success)return;var h=d.history||[];var labels=h.map(function(p){var dt=new Date(p.t*1000);return ('0'+dt.getHours()).slice(-2)+':'+('0'+dt.getMinutes()).slice(-2);});var cpu=h.map(function(p){return p.cpu;});var mem=h.map(function(p){return p.mem;});var last=h[h.length-1]||{cpu:0,mem:0};$('pfCpu').textContent=last.cpu+'%';$('pfMem').textContent=last.mem+' MB';$('pfTime').textContent=labels[labels.length-1]||'--';drawPerf(labels,cpu,mem);}
+function drawPerf(labels,cpu,mem){var ctx=$('perfChart');if(!ctx||typeof Chart==='undefined')return;if(PERF_CHART){PERF_CHART.data.labels=labels;PERF_CHART.data.datasets[0].data=cpu;PERF_CHART.data.datasets[1].data=mem;PERF_CHART.update('none');return;}PERF_CHART=new Chart(ctx,{type:'line',data:{labels:labels,datasets:[{label:'CPU %',data:cpu,borderColor:'#a855f7',backgroundColor:'rgba(168,85,247,.15)',fill:true,tension:.35,pointRadius:0,borderWidth:2},{label:'RAM MB',data:mem,borderColor:'#00e676',backgroundColor:'rgba(0,230,118,.12)',fill:true,tension:.35,pointRadius:0,borderWidth:2,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#9fb0c0',usePointStyle:true}}},scales:{x:{ticks:{color:'#6b7a8c',maxTicksLimit:8},grid:{color:'rgba(255,255,255,.05)'}},y:{position:'left',ticks:{color:'#a855f7'},grid:{color:'rgba(255,255,255,.05)'},title:{display:true,text:'CPU %',color:'#a855f7'}},y1:{position:'right',ticks:{color:'#00e676'},grid:{drawOnChartArea:false},title:{display:true,text:'RAM MB',color:'#00e676'}}}}});}
+/* ===== Payments / upgrade ===== */
+var PAY_PID=null;
+function goUpgrade(pid,price){if(!price||price<=0){upgrade(pid);return;}openPay(pid,price);}
+async function openPay(pid,price){PAY_PID=pid;closeM('mPlans');var info=await api('/api/payment/info');$('payAmount').textContent='$'+price;$('payVod').textContent=(info&&info.vodafone)||'--';$('payInsta').textContent=(info&&info.instapay)||'--';$('payNote').textContent=(info&&info.note)||'';$('mPay').classList.add('open');}
+async function sendPay(method){if(!PAY_PID)return;var d=await api('/api/user/request-upgrade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan_id:PAY_PID,method:method})});toast(d.message,d.success);if(d.success)closeM('mPay');}
+function copyPay(id){var t=$(id).textContent;if(!t||t==='--')return;navigator.clipboard.writeText(t);toast('تم النسخ');}
+applyTheme(localStorage.getItem('bm_theme')||'dark');loadMe();loadServers();loadMetrics();setInterval(loadServers,12000);setInterval(loadMetrics,5000);setInterval(function(){var tp=$('tabPerf');if(tp&&tp.style.display!=='none'&&$('mManage').classList.contains('open'))loadPerf();},15000);
 </script>
 </body>
 </html>
