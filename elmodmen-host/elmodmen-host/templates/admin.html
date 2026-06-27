@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f17">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=8">
+<link rel="shortcut icon" href="/static/favicon.ico?v=8">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png?v=8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>BATMAN Dev — لوحة الإدارة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --primary:#00c46a;--primary-2:#00a85a;--accent:#8b5cf6;--accent-2:#7c3aed;
+  --bg:#0b0f17;--surface:#141a25;--surface-2:#1a2230;--surface-3:#202a3a;
+  --border:#222b3a;--text:#e6edf3;--muted:#8b95a7;
+  --red:#ef4444;--warn:#f59e0b;--blue:#38bdf8;
+  --safe-top:env(safe-area-inset-top);--safe-bot:env(safe-area-inset-bottom);
+}
+html[data-theme="light"]{--bg:#f5f7fa;--surface:#fff;--surface-2:#f0f3f7;--surface-3:#e8ecf2;--border:#e4e7eb;--text:#1a202c;--muted:#64748b}
+html,body{height:100%;overscroll-behavior-y:contain}
+body{font-family:'Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;font-size:14.5px}
+
+header{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--border);padding-top:var(--safe-top)}
+.hwrap{padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px;min-width:0}
+.logo .ic{width:34px;height:34px;border-radius:10px;overflow:hidden;flex:none}
+.logo .ic img{width:100%;height:100%;object-fit:cover;display:block}
+.logo .accent{color:var(--accent)}
+.user-chip{display:flex;align-items:center;gap:7px;padding:5px 10px 5px 5px;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:99px;font-size:12px;font-weight:700;max-width:140px}
+.user-chip .av{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;
+  display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}
+.user-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.btn{cursor:pointer;border:none;border-radius:11px;font-family:inherit;font-weight:700;font-size:14px;
+  padding:12px 16px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  white-space:nowrap;color:var(--text);min-height:44px;transition:.15s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-green{background:var(--primary);color:#fff}
+.btn-ghost{background:var(--surface-2);color:var(--text);border:1px solid var(--border)}
+.btn-red{background:rgba(239,68,68,.13);color:var(--red);border:1px solid rgba(239,68,68,.25)}
+.btn-sm{padding:8px 12px;font-size:12.5px;min-height:36px}
+.btn-block{width:100%}
+.icon-btn{cursor:pointer;width:40px;height:40px;border-radius:11px;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--text);display:grid;place-items:center;font-size:14px;transition:.15s}
+.icon-btn:active{transform:scale(.94)}
+.icon-btn.danger{color:var(--red);border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
+
+.wrap{padding:14px 14px calc(96px + var(--safe-bot));max-width:1200px;margin:0 auto}
+
+.welcome h1{font-size:18px;font-weight:800;margin-bottom:2px}
+.welcome p{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:14px}
+
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:14px}
+.stat .lbl{color:var(--muted);font-size:11.5px;font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.stat .val{font-size:20px;font-weight:800}
+
+.gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.gauge{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:11px 4px;text-align:center}
+.gwrap{position:relative;width:78px;height:78px;margin:0 auto 6px}
+.gwrap svg{width:78px;height:78px;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--border);stroke-width:7}
+.ring-fg{fill:none;stroke-width:7;stroke-linecap:round;stroke-dasharray:326.726;stroke-dashoffset:326.726;transition:stroke-dashoffset .7s ease}
+.ring-fg.cpu{stroke:var(--accent)}
+.ring-fg.mem{stroke:var(--primary)}
+.ring-fg.disk{stroke:var(--blue)}
+.g-center{position:absolute;inset:0;display:grid;place-items:center}
+.g-val{font-size:14px;font-weight:800}
+.g-lbl{color:var(--muted);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px;margin-top:2px}
+
+.section-h{display:flex;align-items:center;justify-content:space-between;margin:18px 0 11px;gap:8px;flex-wrap:wrap}
+.section-h h2{font-size:15.5px;font-weight:800;display:flex;align-items:center;gap:7px}
+.section-h h2 i{color:var(--accent);font-size:13px}
+.section-h .count{background:var(--surface-2);border:1px solid var(--border);color:var(--muted);font-size:11px;font-weight:800;padding:3px 8px;border-radius:99px}
+.section-h .acts{display:flex;gap:7px}
+
+.card-p{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px}
+#resChart{width:100%;height:160px;display:block}
+
+/* Pending / Payment cards */
+.pcard{background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.22);border-radius:13px;padding:13px;margin-bottom:9px}
+.pcard.pay{background:rgba(0,196,106,.05);border-color:rgba(0,196,106,.2)}
+.pcard .row1{display:flex;align-items:center;gap:11px;margin-bottom:11px}
+.pcard .av{width:38px;height:38px;border-radius:10px;background:rgba(245,158,11,.13);color:var(--warn);display:grid;place-items:center;flex:none;font-size:14px}
+.pcard.pay .av{background:rgba(0,196,106,.13);color:var(--primary)}
+.pcard .name{font-weight:800;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pcard .meta{font-size:11.5px;color:var(--muted);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pcard .row2{display:flex;gap:7px}
+.pcard .row2 .btn{flex:1}
+
+/* Users — cards on mobile */
+.users{display:grid;grid-template-columns:1fr;gap:9px}
+.ucard{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px}
+.ucard .top{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.ucard .av{width:40px;height:40px;border-radius:11px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:800;flex:none}
+.ucard .name{font-weight:800;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ucard .meta{font-size:11.5px;color:var(--muted);font-weight:600}
+.ucard .info{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;font-size:11.5px}
+.ucard .info span{background:var(--surface-2);padding:4px 9px;border-radius:7px;color:var(--muted);font-weight:600}
+.ucard .info span b{color:var(--text);font-weight:800}
+.ucard .ops{display:flex;gap:6px;flex-wrap:wrap}
+.ucard .ops .btn{flex:1}
+.ucard .ops .icon-btn{flex:none}
+
+.tag{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:4px}
+.tag.app{background:rgba(0,196,106,.13);color:var(--primary)}
+.tag.pen{background:rgba(245,158,11,.13);color:var(--warn)}
+.tag.rej{background:rgba(239,68,68,.13);color:var(--red)}
+.tag.adm{background:rgba(139,92,246,.13);color:var(--accent)}
+
+.empty{text-align:center;padding:34px 16px;color:var(--muted);background:var(--surface);border:1px dashed var(--border);border-radius:13px}
+.empty i{font-size:34px;opacity:.35;margin-bottom:10px;display:block}
+.empty p{font-size:13px;font-weight:600}
+
+/* Bottom-sheet modal */
+.modal{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center}
+.modal.open{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.box{width:100%;max-width:520px;max-height:92vh;max-height:92dvh;overflow:auto;-webkit-overflow-scrolling:touch;
+  background:var(--surface);border:1px solid var(--border);border-radius:20px 20px 0 0;
+  padding:18px 18px calc(22px + var(--safe-bot));animation:slideUp .28s cubic-bezier(.2,.9,.3,1.2);position:relative}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.box::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:40px;height:4px;background:var(--surface-3);border-radius:99px}
+.box-h{display:flex;align-items:center;justify-content:space-between;margin:14px 0 16px}
+.box-h h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}
+.box-h h3 i{color:var(--accent);font-size:14px}
+.x{cursor:pointer;width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);display:grid;place-items:center;font-size:14px}
+.x:active{background:rgba(239,68,68,.1);color:var(--red)}
+
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
+input,select{width:100%;padding:13px 14px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;color:var(--text);font-family:inherit;font-size:16px;min-height:48px}
+input:focus,select:focus{outline:none;border-color:var(--accent);background:var(--surface-3)}
+select option{background:var(--surface)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.toast{position:fixed;bottom:calc(80px + var(--safe-bot));left:50%;transform:translateX(-50%) translateY(120px);
+  z-index:500;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 18px;
+  font-weight:700;font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.32);display:flex;align-items:center;gap:9px;
+  transition:.3s ease;max-width:92%}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:rgba(0,196,106,.35)}
+.toast.ok i{color:var(--primary)}
+.toast.bad{border-color:rgba(239,68,68,.35)}
+.toast.bad i{color:var(--red)}
+
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--surface);
+  border-top:1px solid var(--border);padding:4px 2px calc(4px + var(--safe-bot));
+  display:flex;align-items:center;justify-content:space-around}
+.bnav button,.bnav a{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--muted);
+  font-size:10px;font-weight:700;cursor:pointer;border:none;background:none;font-family:inherit;
+  padding:8px 4px;border-radius:9px;flex:1;text-decoration:none;min-height:54px;transition:.15s}
+.bnav i{font-size:17px;transition:.15s}
+.bnav .active,.bnav button:active,.bnav a:active{color:var(--accent)}
+.bnav .active i{transform:translateY(-1px) scale(1.08)}
+
+#themeToggle{position:fixed;bottom:calc(78px + var(--safe-bot));right:18px;z-index:55;width:46px;height:46px;
+  border-radius:13px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;
+  display:grid;place-items:center;font-size:15px;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+
+/* Desktop */
+@media (min-width:768px){
+  .hwrap{padding:14px 22px}
+  .logo{font-size:17px}
+  .logo .ic{width:38px;height:38px}
+  .wrap{padding:22px 22px 40px}
+  .welcome h1{font-size:22px}
+  .stats{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .stat{padding:18px}
+  .stat .val{font-size:24px}
+  .gauges{gap:12px}
+  .gauge{padding:18px 14px}
+  .gwrap{width:110px;height:110px}
+  .gwrap svg{width:110px;height:110px}
+  .ring-bg,.ring-fg{stroke-width:9}
+  .g-val{font-size:22px}
+  .g-lbl{font-size:12.5px}
+  .section-h h2{font-size:18px}
+  .users{grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:12px}
+  .ucard{padding:16px}
+  #resChart{height:220px}
+  .bnav{display:none}
+  #themeToggle{bottom:22px;right:22px}
+  .modal{align-items:center;padding:18px}
+  .box{border-radius:16px;max-height:88vh;padding:22px;animation:rise .25s}
+  .box::before{display:none}
+  @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  .toast{bottom:24px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <div class="logo"><div class="ic"><img src="/static/logo.png?v=8" alt="BATMAN Dev"></div>BATMAN <span class="accent">Dev</span></div>
+    <div class="user-chip"><div class="av"><i class="fas fa-user-shield" style="font-size:11px"></i></div><span id="adminName">admin</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="welcome">
+    <h1>لوحة الإدارة</h1>
+    <p>إدارة المستخدمين والخطط والدفعات</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="lbl"><i class="fas fa-users"></i> المستخدمين</div><div class="val" id="stUsers">0</div></div>
+    <div class="stat"><div class="lbl"><i class="fas fa-clock"></i> طلبات معلقة</div><div class="val" id="stPending">0</div></div>
+  </div>
+
+  <div class="gauges">
+    <div class="gauge"><div class="gwrap"><svg viewBox="0 0 118 118"><circle class="ring-bg" cx="59" cy="59" r="52"></circle><circle class="ring-fg cpu" id="ringCpu" cx="59" cy="59" r="52"></circle></svg><div class="g-center"><div class="g-val" id="gCpu">0%</div></div></div><div class="g-lbl"><i class="fas fa-microchip"></i> CPU</div></div>
+    <div class="gauge"><div class="gwrap"><svg viewBox="0 0 118 118"><circle class="ring-bg" cx="59" cy="59" r="52"></circle><circle class="ring-fg mem" id="ringMem" cx="59" cy="59" r="52"></circle></svg><div class="g-center"><div class="g-val" id="gMem">0%</div></div></div><div class="g-lbl"><i class="fas fa-memory"></i> RAM</div></div>
+    <div class="gauge"><div class="gwrap"><svg viewBox="0 0 118 118"><circle class="ring-bg" cx="59" cy="59" r="52"></circle><circle class="ring-fg disk" id="ringDisk" cx="59" cy="59" r="52"></circle></svg><div class="g-center"><div class="g-val" id="gDisk">0%</div></div></div><div class="g-lbl"><i class="fas fa-hard-drive"></i> Disk</div></div>
+  </div>
+
+  <div class="card-p">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <h2 style="font-size:14px;font-weight:800;display:flex;align-items:center;gap:7px"><i class="fas fa-chart-area" style="color:var(--accent);font-size:12px"></i> الأداء مباشر</h2>
+      <div style="display:flex;gap:11px;font-size:11px;font-weight:700">
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:9px;height:9px;border-radius:3px;background:#8b5cf6"></span>CPU <span id="lblCpu" style="color:var(--muted)">0%</span></span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:9px;height:9px;border-radius:3px;background:#00c46a"></span>RAM <span id="lblMem" style="color:var(--muted)">0%</span></span>
+      </div>
+    </div>
+    <canvas id="resChart"></canvas>
+  </div>
+
+  <div class="section-h"><h2><i class="fas fa-bell"></i> طلبات التسجيل <span class="count" id="penCount">0</span></h2></div>
+  <div id="pendingList"></div>
+
+  <div class="section-h"><h2><i class="fas fa-credit-card"></i> طلبات الدفع</h2></div>
+  <div id="paymentsList"></div>
+
+  <div class="section-h">
+    <h2><i class="fas fa-users-gear"></i> المستخدمون</h2>
+    <div class="acts">
+      <button class="btn btn-ghost btn-sm" onclick="openPlan()"><i class="fas fa-gem"></i> خطة</button>
+      <button class="btn btn-primary btn-sm" onclick="openCreate()"><i class="fas fa-user-plus"></i> جديد</button>
+    </div>
+  </div>
+  <div class="users" id="usersBody"></div>
+</main>
+
+<!-- Create user -->
+<div class="modal" id="mCreate">
+  <div class="box">
+    <div class="box-h"><h3><i class="fas fa-user-plus"></i> إنشاء مستخدم</h3><div class="x" onclick="closeM('mCreate')"><i class="fas fa-xmark"></i></div></div>
+    <label>اسم المستخدم</label><input id="nuUser">
+    <label>كلمة المرور</label><input id="nuPass" type="text">
+    <div class="row2"><div><label>السيرفرات</label><input id="nuServers" type="number" value="2"></div><div><label>التخزين (MB)</label><input id="nuStorage" type="number" value="512"></div></div>
+    <button class="btn btn-primary btn-block" style="margin-top:18px" onclick="createUser()"><i class="fas fa-check"></i> إنشاء</button>
+  </div>
+</div>
+
+<!-- Edit user -->
+<div class="modal" id="mEdit">
+  <div class="box">
+    <div class="box-h"><h3><i class="fas fa-user-pen"></i> <span id="edTitle"></span></h3><div class="x" onclick="closeM('mEdit')"><i class="fas fa-xmark"></i></div></div>
+    <div class="row2"><div><label>السيرفرات</label><input id="edServers" type="number"></div><div><label>التخزين (MB)</label><input id="edStorage" type="number"></div></div>
+    <label>الخطة</label><select id="edPlan"></select>
+    <button class="btn btn-primary btn-block" style="margin-top:18px" onclick="saveUser()"><i class="fas fa-floppy-disk"></i> حفظ</button>
+  </div>
+</div>
+
+<!-- Add plan -->
+<div class="modal" id="mPlan">
+  <div class="box">
+    <div class="box-h"><h3><i class="fas fa-gem"></i> إضافة خطة</h3><div class="x" onclick="closeM('mPlan')"><i class="fas fa-xmark"></i></div></div>
+    <div class="row2"><div><label>المعرف</label><input id="plId" placeholder="20gb"></div><div><label>الاسم</label><input id="plName" placeholder="20 جيجا"></div></div>
+    <div class="row2"><div><label>تخزين (MB)</label><input id="plStorage" type="number" value="20480"></div><div><label>RAM (MB)</label><input id="plRam" type="number" value="2048"></div></div>
+    <div class="row2"><div><label>CPU</label><input id="plCpu" type="number" step="0.5" value="2"></div><div><label>السيرفرات</label><input id="plServers" type="number" value="10"></div></div>
+    <label>السعر ($)</label><input id="plPrice" type="number" value="15">
+    <button class="btn btn-green btn-block" style="margin-top:18px" onclick="addPlan()"><i class="fas fa-plus"></i> إضافة</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="fas fa-circle-check"></i><span id="toastMsg"></span></div>
+
+<button id="themeToggle" type="button" aria-label="المظهر"><i class="fas fa-moon"></i></button>
+
+<nav class="bnav">
+  <button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-gauge-high"></i><span>لوحة</span></button>
+  <button onclick="var p=document.getElementById('pendingList');if(p)p.scrollIntoView({behavior:'smooth',block:'start'})"><i class="fas fa-bell"></i><span>طلبات</span></button>
+  <button onclick="var p=document.getElementById('usersBody');if(p)p.scrollIntoView({behavior:'smooth',block:'start'})"><i class="fas fa-users"></i><span>مستخدمين</span></button>
+  <a href="/dashboard"><i class="fas fa-house"></i><span>الرئيسية</span></a>
+  <button onclick="logout()"><i class="fas fa-right-from-bracket"></i><span>خروج</span></button>
+</nav>
+
+<script>
+let USERS=[], PLANS={}, EDIT=null;
+const $=id=>document.getElementById(id);
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function toast(msg,ok){if(ok===undefined)ok=true;const t=$('toast');$('toastMsg').textContent=msg;t.className='toast show '+(ok?'ok':'bad');t.querySelector('i').className=ok?'fas fa-circle-check':'fas fa-circle-exclamation';setTimeout(()=>t.className='toast',2800);}
+async function api(url,opt){try{const r=await fetch(url,opt);return await r.json();}catch(e){return{success:false,message:'خطأ'};}}
+function closeM(id){$(id).classList.remove('open');}
+async function logout(){await fetch('/api/logout',{method:'POST'});location.href='/login';}
+function ini(s){return (s||'?').charAt(0).toUpperCase();}
+
+async function loadAll(){const me=await api('/api/current_user');if(!me.success||!me.is_admin){location.href='/login';return;}$('adminName').textContent=me.username;await loadPlans();await loadUsers();await loadPending();await loadPayments();loadMetrics();}
+async function loadPlans(){const d=await api('/api/plans');PLANS=d.plans||{};}
+async function loadUsers(){const d=await api('/api/admin/users');if(!d.success)return;USERS=d.users;$('stUsers').textContent=USERS.length;renderUsers();}
+async function loadPending(){const d=await api('/api/admin/pending');if(!d.success)return;const reqs=d.requests||[];$('stPending').textContent=reqs.length;$('penCount').textContent=reqs.length;const el=$('pendingList');if(!reqs.length){el.innerHTML='<div class="empty"><i class="fas fa-circle-check"></i><p>لا توجد طلبات معلقة</p></div>';return;}el.innerHTML=reqs.map(r=>`<div class="pcard"><div class="row1"><div class="av"><i class="fas fa-user-clock"></i></div><div style="min-width:0;flex:1"><div class="name">${esc(r.username)}</div><div class="meta"><i class="far fa-clock"></i> ${esc(r.created_at||'')}</div></div></div><div class="row2"><button class="btn btn-green btn-sm" onclick="approve('${esc(r.username)}')"><i class="fas fa-check"></i> قبول</button><button class="btn btn-red btn-sm" onclick="reject('${esc(r.username)}')"><i class="fas fa-xmark"></i> رفض</button></div></div>`).join('');}
+async function loadPayments(){const d=await api('/api/admin/payments');if(!d.success)return;const ps=(d.payments||[]).filter(p=>p.status==='pending');const el=$('paymentsList');if(!el)return;if(!ps.length){el.innerHTML='<div class="empty"><i class="fas fa-circle-check"></i><p>لا توجد طلبات دفع</p></div>';return;}el.innerHTML=ps.map(p=>`<div class="pcard pay"><div class="row1"><div class="av"><i class="fas fa-credit-card"></i></div><div style="min-width:0;flex:1"><div class="name">${esc(p.username)} — ${esc(p.plan_name)} <span style="color:var(--primary)">$${p.price||0}</span></div><div class="meta">${esc(p.method||'')} • ${esc(p.created_at||'')}</div></div></div><div class="row2"><button class="btn btn-green btn-sm" onclick="payAction('${p.id}','approve')"><i class="fas fa-check"></i> تفعيل</button><button class="btn btn-red btn-sm" onclick="payAction('${p.id}','reject')"><i class="fas fa-xmark"></i> رفض</button></div></div>`).join('');}
+async function payAction(id,action){const d=await api('/api/admin/payment-action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,action:action})});toast(d.message,d.success);loadPayments();loadUsers();}
+async function approve(u){const d=await api('/api/admin/approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});toast(d.message,d.success);loadPending();loadUsers();}
+async function reject(u){const d=await api('/api/admin/reject',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});toast(d.message,d.success);loadPending();loadUsers();}
+
+function renderUsers(){const el=$('usersBody');if(!USERS.length){el.innerHTML='<div class="empty"><i class="fas fa-users-slash"></i><p>لا يوجد مستخدمون</p></div>';return;}el.innerHTML=USERS.map(u=>{const st=u.is_admin?'<span class="tag adm"><i class="fas fa-shield"></i> أدمن</span>':(u.status==='approved'?'<span class="tag app"><i class="fas fa-check"></i> مفعّل</span>':(u.status==='pending'?'<span class="tag pen"><i class="fas fa-clock"></i> معلق</span>':'<span class="tag rej"><i class="fas fa-ban"></i> مرفوض</span>'));return `<div class="ucard"><div class="top"><div class="av">${ini(u.username)}</div><div style="flex:1;min-width:0"><div class="name">${esc(u.username)} ${st}</div><div class="meta"><i class="far fa-clock"></i> ${esc(u.last_login||'لم يدخل')}</div></div></div><div class="info"><span><i class="fas fa-gem"></i> <b>${esc(u.plan)}</b></span><span><i class="fas fa-server"></i> <b>${u.max_servers}</b></span><span><i class="fas fa-hard-drive"></i> <b>${u.storage_limit} MB</b></span></div>${u.is_admin?'':`<div class="ops"><button class="btn btn-ghost btn-sm" onclick='editUser(${JSON.stringify(u)})'><i class="fas fa-pen"></i> تعديل</button><button class="icon-btn danger" onclick="delUser('${esc(u.username)}')" title="حذف"><i class="fas fa-trash"></i></button></div>`}</div>`;}).join('');}
+
+function openCreate(){$('nuUser').value='';$('nuPass').value='';$('nuServers').value=2;$('nuStorage').value=512;$('mCreate').classList.add('open');}
+async function createUser(){const d=await api('/api/admin/create-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:$('nuUser').value.trim(),password:$('nuPass').value.trim(),max_servers:+$('nuServers').value,storage_limit:+$('nuStorage').value})});toast(d.message,d.success);if(d.success){closeM('mCreate');loadUsers();}}
+function editUser(u){EDIT=u.username;$('edTitle').textContent=u.username;$('edServers').value=u.max_servers;$('edStorage').value=u.storage_limit;$('edPlan').innerHTML=Object.keys(PLANS).map(k=>`<option value="${k}" ${u.plan===k?'selected':''}>${esc(PLANS[k].name||k)}</option>`).join('');$('mEdit').classList.add('open');}
+async function saveUser(){const d=await api('/api/admin/update-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:EDIT,max_servers:+$('edServers').value,storage_limit:+$('edStorage').value,plan:$('edPlan').value})});toast(d.message,d.success);if(d.success){closeM('mEdit');loadUsers();}}
+async function delUser(u){if(!confirm('حذف '+u+' وكل سيرفراته؟'))return;const d=await api('/api/admin/delete-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});toast(d.message,d.success);loadUsers();}
+function openPlan(){$('mPlan').classList.add('open');}
+async function addPlan(){const d=await api('/api/admin/add-plan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:$('plId').value.trim(),name:$('plName').value.trim(),storage:+$('plStorage').value,ram:+$('plRam').value,cpu:+$('plCpu').value,max_servers:+$('plServers').value,price:+$('plPrice').value})});toast(d.message,d.success);if(d.success){closeM('mPlan');loadPlans();}}
+
+/* Metrics + chart */
+const CPU_HIST=[],MEM_HIST=[],HIST_MAX=40;
+function setGauge(id,pct){var c=$('ring'+id);pct=Math.max(0,Math.min(100,Number(pct)||0));if(c)c.style.strokeDashoffset=(326.726*(1-pct/100)).toFixed(2);var v=$('g'+id);if(v)v.textContent=Math.round(pct)+'%';}
+async function loadMetrics(){const d=await api('/api/system/metrics');const cpu=Math.round(d.cpu||0),mem=Math.round(d.memory||0),disk=Math.round(d.disk||0);setGauge('Cpu',cpu);setGauge('Mem',mem);setGauge('Disk',disk);var lc=$('lblCpu'),lm=$('lblMem');if(lc)lc.textContent=cpu+'%';if(lm)lm.textContent=mem+'%';CPU_HIST.push(cpu);MEM_HIST.push(mem);if(CPU_HIST.length>HIST_MAX)CPU_HIST.shift();if(MEM_HIST.length>HIST_MAX)MEM_HIST.shift();drawChart();}
+function drawChart(){const cv=$('resChart');if(!cv)return;const dpr=window.devicePixelRatio||1;const w=cv.clientWidth||600,h=cv.clientHeight||160;cv.width=w*dpr;cv.height=h*dpr;const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);const pad=4;const light=document.documentElement.getAttribute('data-theme')==='light';ctx.strokeStyle=light?'rgba(0,0,0,.07)':'rgba(255,255,255,.06)';ctx.lineWidth=1;for(let i=0;i<=4;i++){const y=pad+(h-2*pad)*i/4;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}const n=HIST_MAX-1;function line(arr,col,fill){if(arr.length<2)return;ctx.beginPath();arr.forEach(function(v,i){const x=w*(i/n);const y=pad+(h-2*pad)*(1-v/100);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.strokeStyle=col;ctx.lineWidth=2.2;ctx.lineJoin='round';ctx.stroke();ctx.lineTo(w*((arr.length-1)/n),h);ctx.lineTo(0,h);ctx.closePath();ctx.fillStyle=fill;ctx.fill();}line(MEM_HIST,'#00c46a','rgba(0,196,106,.10)');line(CPU_HIST,'#8b5cf6','rgba(139,92,246,.12)');}
+window.addEventListener('resize',drawChart);
+
+/* Theme */
+(function(){var K='bm_theme',mc=document.querySelector('meta[name="theme-color"]');function ap(t){document.documentElement.setAttribute('data-theme',t);if(mc)mc.setAttribute('content',t==='light'?'#f5f7fa':'#0b0f17');}var s=localStorage.getItem(K)||'dark';ap(s);var b=document.getElementById('themeToggle');b.innerHTML=s==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';b.addEventListener('click',function(){var c=localStorage.getItem(K)||'dark',n=c==='light'?'dark':'light';localStorage.setItem(K,n);ap(n);b.innerHTML=n==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';drawChart();});})();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}
+loadAll();setInterval(loadMetrics,5000);setInterval(loadPending,15000);setInterval(loadPayments,15000);
+</script>
+</body>
+</html>

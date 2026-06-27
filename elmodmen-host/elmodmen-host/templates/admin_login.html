@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0b0f17">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=8">
+<title>دخول الأدمن</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--accent:#8b5cf6;--bg:#0b0f17;--surface:#141a25;--surface-2:#1a2230;--surface-3:#202a3a;--border:#222b3a;--text:#e6edf3;--muted:#8b95a7;--red:#ef4444}
+html,body{height:100%;overscroll-behavior:none}
+body{font-family:'Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;
+  min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.card{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px 22px}
+.h{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:22px;text-align:center}
+.ic{width:64px;height:64px;border-radius:16px;background:rgba(139,92,246,.13);color:var(--accent);display:grid;place-items:center;font-size:25px}
+.h h1{font-size:20px;font-weight:800}
+.h p{font-size:13px;color:var(--muted);font-weight:600}
+label{display:block;font-size:13.5px;font-weight:700;margin:14px 0 7px}
+.in-wrap{position:relative}
+.in-wrap i{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+input{width:100%;padding:14px 42px 14px 14px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;color:var(--text);font-family:inherit;font-size:16px;min-height:50px}
+input:focus{outline:none;border-color:var(--accent);background:var(--surface-3)}
+.btn{width:100%;border:none;font-family:inherit;font-weight:800;font-size:15.5px;cursor:pointer;border-radius:12px;padding:15px;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#fff;margin-top:22px;min-height:52px}
+.btn:active{transform:scale(.98)}
+.err{margin-top:14px;padding:11px 13px;border-radius:10px;font-size:13.5px;font-weight:700;background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.25);display:flex;align-items:center;gap:8px}
+.back{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);color:var(--muted);font-size:13px;text-decoration:none;font-weight:700;background:var(--surface);border:1px solid var(--border);padding:10px 16px;border-radius:11px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="h">
+    <div class="ic"><i class="fas fa-user-shield"></i></div>
+    <h1>دخول الأدمن</h1>
+    <p>دخول محدود للمسؤولين فقط</p>
+  </div>
+  __ERROR__
+  <form method="POST">
+    <label>اسم المستخدم</label>
+    <div class="in-wrap"><i class="fas fa-user"></i><input name="username" autocomplete="username" required></div>
+    <label>كلمة المرور</label>
+    <div class="in-wrap"><i class="fas fa-lock"></i><input name="password" type="password" autocomplete="current-password" required></div>
+    <button class="btn" type="submit"><i class="fas fa-right-to-bracket"></i> دخول</button>
+  </form>
+</div>
+<a class="back" href="/login"><i class="fas fa-arrow-right-long"></i> العودة للدخول العادي</a>
+</body>
+</html>

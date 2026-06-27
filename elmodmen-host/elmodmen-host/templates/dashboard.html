@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f17">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=8">
+<link rel="shortcut icon" href="/static/favicon.ico?v=8">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png?v=8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BATMAN Dev">
+<title>BATMAN Dev — لوحة التحكم</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ============ MOBILE-FIRST RESET + TOKENS ============ */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --primary:#00c46a;--primary-2:#00a85a;--accent:#8b5cf6;--accent-2:#7c3aed;
+  --bg:#0b0f17;--surface:#141a25;--surface-2:#1a2230;--surface-3:#202a3a;
+  --border:#222b3a;--text:#e6edf3;--muted:#8b95a7;
+  --red:#ef4444;--warn:#f59e0b;--blue:#38bdf8;
+  --safe-top:env(safe-area-inset-top);
+  --safe-bot:env(safe-area-inset-bottom);
+}
+html[data-theme="light"]{--bg:#f5f7fa;--surface:#fff;--surface-2:#f0f3f7;--surface-3:#e8ecf2;--border:#e4e7eb;--text:#1a202c;--muted:#64748b}
+html,body{height:100%;overscroll-behavior-y:contain}
+body{font-family:'Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;font-size:14.5px}
+
+/* ============ HEADER (MOBILE) ============ */
+header{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--border);
+  padding-top:var(--safe-top)}
+.hwrap{padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px;min-width:0}
+.logo .ic{width:34px;height:34px;border-radius:10px;overflow:hidden;flex:none;background:var(--surface-2)}
+.logo .ic img{width:100%;height:100%;object-fit:cover;display:block}
+.logo .accent{color:var(--primary)}
+.huser{display:flex;align-items:center;gap:8px}
+.pill{display:none;align-items:center;gap:6px;padding:6px 11px;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:9px;font-size:12px;font-weight:700;color:var(--text)}
+.pill i{color:var(--muted);font-size:11px}
+.user-chip{display:flex;align-items:center;gap:7px;padding:5px 10px 5px 5px;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;max-width:140px}
+.user-chip .av{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;
+  display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}
+.user-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+
+/* ============ BUTTONS ============ */
+.btn{cursor:pointer;border:none;border-radius:11px;font-family:inherit;font-weight:700;font-size:14px;
+  padding:12px 16px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  transition:.15s;white-space:nowrap;color:var(--text);min-height:44px}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-ghost{background:var(--surface-2);color:var(--text);border:1px solid var(--border)}
+.btn-red{background:rgba(239,68,68,.13);color:var(--red);border:1px solid rgba(239,68,68,.25)}
+.btn-sm{padding:8px 12px;font-size:12.5px;min-height:36px}
+.btn-block{width:100%}
+.icon-btn{cursor:pointer;width:40px;height:40px;border-radius:11px;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--text);display:grid;place-items:center;font-size:14px;
+  text-decoration:none;transition:.15s}
+.icon-btn:active{transform:scale(.94)}
+.icon-btn.danger{color:var(--red);border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
+.icon-btn.green{color:var(--primary);border-color:rgba(0,196,106,.25);background:rgba(0,196,106,.08)}
+
+.wrap{padding:14px 14px calc(96px + var(--safe-bot)) 14px;max-width:1200px;margin:0 auto}
+
+/* ============ WELCOME ROW ============ */
+.welcome{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px}
+.welcome h1{font-size:18px;font-weight:800}
+.welcome p{font-size:12px;color:var(--muted);font-weight:600;margin-top:2px}
+
+/* ============ QUICK ACTIONS GRID (MOBILE 3-COL) ============ */
+.qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 6px;
+  display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;color:var(--text);
+  text-decoration:none;font-family:inherit;font-weight:700;font-size:11.5px;text-align:center;min-height:78px}
+.qcard:active{transform:scale(.96);background:var(--surface-2)}
+.qi{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:15px;
+  background:rgba(0,196,106,.13);color:var(--primary)}
+.qcard:nth-child(2) .qi{background:rgba(139,92,246,.13);color:var(--accent)}
+.qcard:nth-child(3) .qi{background:rgba(56,189,248,.13);color:var(--blue)}
+.qcard:nth-child(4) .qi{background:rgba(245,158,11,.13);color:var(--warn)}
+.qcard:nth-child(5) .qi{background:var(--surface-2);color:var(--muted)}
+
+/* ============ STATS ROW ============ */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px}
+.stat .lbl{color:var(--muted);font-size:11.5px;font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.stat .lbl i{font-size:10px}
+.stat .val{font-size:18px;font-weight:800;line-height:1.1}
+.stat .val small{font-size:11px;color:var(--muted);font-weight:600}
+.bar{height:5px;border-radius:3px;background:var(--surface-3);margin-top:9px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--primary);transition:.5s;border-radius:3px}
+
+/* ============ GAUGES ROW ============ */
+.gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.gauge{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:11px 4px;text-align:center}
+.gwrap{position:relative;width:78px;height:78px;margin:0 auto 6px}
+.gwrap svg{width:78px;height:78px;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--border);stroke-width:7}
+.ring-fg{fill:none;stroke-width:7;stroke-linecap:round;stroke-dasharray:326.726;stroke-dashoffset:326.726;transition:stroke-dashoffset .7s ease}
+.ring-fg.cpu{stroke:var(--accent)}
+.ring-fg.mem{stroke:var(--primary)}
+.ring-fg.disk{stroke:var(--blue)}
+.g-center{position:absolute;inset:0;display:grid;place-items:center}
+.g-val{font-size:14px;font-weight:800}
+.g-lbl{color:var(--muted);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px;margin-top:2px}
+
+/* ============ SECTION HEADER ============ */
+.section-h{display:flex;align-items:center;justify-content:space-between;margin:18px 0 11px;gap:10px;flex-wrap:wrap}
+.section-h h2{font-size:15.5px;font-weight:800;display:flex;align-items:center;gap:7px}
+.section-h h2 i{color:var(--primary);font-size:13px}
+.section-h .count{background:var(--surface-2);border:1px solid var(--border);color:var(--muted);font-size:11px;font-weight:800;padding:3px 8px;border-radius:99px}
+
+/* ============ SERVERS LIST (MOBILE = SINGLE COL) ============ */
+.servers{display:grid;grid-template-columns:1fr;gap:10px}
+.srv{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px}
+.srv-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
+.srv-name{font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+.srv-name .stype{width:32px;height:32px;border-radius:9px;background:var(--surface-2);display:grid;place-items:center;font-size:14px;flex:none;color:var(--primary)}
+.srv-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.stt{font-size:10.5px;font-weight:800;padding:4px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;flex:none}
+.stt.on{background:rgba(0,196,106,.13);color:var(--primary)}
+.stt.off{background:rgba(239,68,68,.13);color:var(--red)}
+.stt.run i{animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.srv-info{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px;color:var(--muted);font-size:11.5px;font-weight:600}
+.srv-info span{display:inline-flex;align-items:center;gap:4px;background:var(--surface-2);padding:4px 9px;border-radius:7px}
+.srv-act{display:flex;gap:6px;flex-wrap:wrap}
+.srv-act .btn{flex:1;min-width:0;padding:9px 8px;font-size:12px;min-height:38px}
+.srv-act .icon-btn{width:38px;height:38px;flex:none}
+
+/* ============ EMPTY STATE ============ */
+.empty{text-align:center;padding:40px 20px;color:var(--muted);background:var(--surface);border:1px dashed var(--border);border-radius:14px}
+.empty i{font-size:38px;opacity:.35;margin-bottom:12px;display:block}
+.empty p{font-size:13px;font-weight:600;margin-bottom:14px}
+
+/* ============ FLOATING ACTION BUTTON (FAB) ============ */
+.fab{position:fixed;bottom:calc(78px + var(--safe-bot));left:18px;z-index:55;width:54px;height:54px;
+  border-radius:50%;border:none;background:var(--primary);color:#fff;cursor:pointer;font-size:20px;
+  display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,196,106,.4)}
+.fab:active{transform:scale(.92)}
+
+/* ============ THEME TOGGLE ============ */
+#themeToggle{position:fixed;bottom:calc(78px + var(--safe-bot));right:18px;z-index:55;width:46px;height:46px;
+  border-radius:13px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;
+  display:grid;place-items:center;font-size:15px;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+#installBtn{position:fixed;bottom:calc(134px + var(--safe-bot));right:18px;z-index:55;width:46px;height:46px;
+  border-radius:13px;border:1px solid var(--border);background:var(--surface);color:var(--accent);cursor:pointer;
+  display:none;place-items:center;font-size:15px;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+#installBtn.show{display:grid}
+
+/* ============ BOTTOM NAV (MOBILE) ============ */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--surface);
+  border-top:1px solid var(--border);padding:4px 2px calc(4px + var(--safe-bot));
+  display:flex;align-items:center;justify-content:space-around}
+.bnav button{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--muted);
+  font-size:10px;font-weight:700;cursor:pointer;border:none;background:none;font-family:inherit;
+  padding:8px 4px;border-radius:9px;flex:1;min-width:0;min-height:54px;transition:.15s}
+.bnav button i{font-size:17px;transition:.15s}
+.bnav button:active i{transform:scale(.85)}
+.bnav .active{color:var(--primary)}
+.bnav .active i{transform:translateY(-1px) scale(1.08)}
+
+/* ============ MODALS (BOTTOM SHEET ON MOBILE) ============ */
+.modal{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);
+  display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.modal.open{display:flex;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.box{width:100%;max-width:600px;max-height:92vh;max-height:92dvh;overflow:auto;-webkit-overflow-scrolling:touch;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px 20px 0 0;padding:18px 18px calc(22px + var(--safe-bot));
+  animation:slideUp .28s cubic-bezier(.2,.9,.3,1.2);position:relative}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.box::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:40px;height:4px;background:var(--surface-3);border-radius:99px}
+.box-h{display:flex;align-items:center;justify-content:space-between;margin:14px 0 16px}
+.box-h h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}
+.box-h h3 i{color:var(--accent);font-size:14px}
+.x{cursor:pointer;width:38px;height:38px;border-radius:10px;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--muted);display:grid;place-items:center;font-size:14px;flex:none}
+.x:active{background:rgba(239,68,68,.1);color:var(--red)}
+.box.lg{max-width:900px}
+
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px;color:var(--text)}
+input,select,textarea{width:100%;padding:13px 14px;background:var(--surface-2);border:1.5px solid var(--border);
+  border-radius:11px;color:var(--text);font-family:inherit;font-size:16px;min-height:48px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);background:var(--surface-3)}
+select option{background:var(--surface)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* Type selector (create server) */
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+.type-card{background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;padding:14px 6px;
+  text-align:center;cursor:pointer;font-weight:700;font-size:12px;transition:.15s;min-height:80px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.type-card.selected{border-color:var(--primary);background:rgba(0,196,106,.08);color:var(--primary)}
+.type-card i{font-size:20px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{background:none;border:none;font-family:inherit;font-weight:700;font-size:13px;
+  padding:11px 13px;cursor:pointer;color:var(--muted);position:relative;white-space:nowrap;min-height:44px;display:inline-flex;align-items:center;gap:6px}
+.tabs button.active{color:var(--primary)}
+.tabs button.active::after{content:"";position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--primary);border-radius:2px 2px 0 0}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* File manager mobile */
+.fm{display:grid;grid-template-columns:1fr;gap:12px}
+.fm-side{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:10px;max-height:240px;overflow:auto;-webkit-overflow-scrolling:touch}
+.fm-row{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600}
+.fm-row:active{background:var(--surface-3)}
+.fm-row.sel{background:rgba(139,92,246,.13);color:var(--accent)}
+.fm-row i{font-size:13px;color:var(--muted);width:14px;text-align:center}
+.fm-row.sel i{color:var(--accent)}
+.fm-row span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.fm-row .ops{display:flex;gap:3px;opacity:.8}
+.fm-row .ops button{background:none;border:none;color:var(--muted);cursor:pointer;width:28px;height:28px;border-radius:7px;font-size:11px}
+.fm-row .ops button:active{background:var(--surface-3);color:var(--text)}
+.fm-main{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;min-height:260px}
+.fm-bar{padding:9px 11px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;color:var(--muted);background:var(--surface)}
+.fm-bar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:11px}
+.CodeMirror{height:240px;font-family:'JetBrains Mono',monospace;font-size:13px}
+#imgPrev{max-width:100%;max-height:240px;display:block;margin:auto;padding:14px}
+.fm-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.fm-actions .btn{flex:1;min-width:130px}
+.upbox{border:2px dashed var(--border);border-radius:11px;padding:14px;text-align:center;color:var(--muted);font-size:12.5px;font-weight:600;background:var(--surface-2)}
+.upbox.over{border-color:var(--primary);background:rgba(0,196,106,.06);color:var(--primary)}
+
+/* Console */
+.term{background:#0a0d13;border:1px solid var(--border);border-radius:10px;padding:11px;color:#9ddca5;
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;max-height:280px;overflow:auto;-webkit-overflow-scrolling:touch;
+  white-space:pre-wrap;word-break:break-all;line-height:1.5}
+.term.err{color:#fca5a5}
+
+/* Plans */
+.plans{display:grid;grid-template-columns:1fr;gap:11px}
+.plan{background:var(--surface-2);border:1.5px solid var(--border);border-radius:13px;padding:16px;position:relative}
+.plan.pop{border-color:var(--primary)}
+.plan .badge{position:absolute;top:-9px;left:14px;background:var(--primary);color:#fff;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:99px}
+.plan h4{font-size:15px;font-weight:800;margin-bottom:5px}
+.plan .price{font-size:22px;font-weight:800;color:var(--primary);margin-bottom:9px}
+.plan .price small{font-size:11px;color:var(--muted);font-weight:600}
+.plan ul{list-style:none;margin-bottom:13px}
+.plan li{font-size:12.5px;color:var(--muted);padding:4px 0;display:flex;align-items:center;gap:6px}
+.plan li i{color:var(--primary);font-size:10px}
+
+/* AI chat */
+.ai-msgs{height:340px;overflow:auto;-webkit-overflow-scrolling:touch;padding:11px;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:11px;margin-bottom:11px;display:flex;flex-direction:column;gap:9px}
+.ai-msg{padding:10px 13px;border-radius:13px;max-width:88%;font-size:13.5px;line-height:1.55;word-break:break-word}
+.ai-msg.u{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.ai-msg.a{background:var(--surface);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px}
+.ai-msg pre{background:#0a0d13;color:#9ddca5;padding:9px;border-radius:7px;margin:6px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:11.5px}
+.ai-in{display:flex;gap:7px}
+.ai-in input{flex:1}
+.ai-in button{width:48px;height:48px;border-radius:11px;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:15px;flex:none}
+
+/* Toast */
+.toast{position:fixed;bottom:calc(80px + var(--safe-bot));left:50%;transform:translateX(-50%) translateY(120px);
+  z-index:500;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 18px;
+  font-weight:700;font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.32);display:flex;align-items:center;gap:9px;
+  transition:.3s ease;max-width:92%}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:rgba(0,196,106,.35)}
+.toast.ok i{color:var(--primary)}
+.toast.bad{border-color:rgba(239,68,68,.35)}
+.toast.bad i{color:var(--red)}
+
+/* Perf chart */
+#perfChart{width:100%;height:170px;display:block}
+
+/* ============ DESKTOP OVERRIDES ============ */
+@media (min-width:768px){
+  body{font-size:14.5px}
+  .hwrap{padding:14px 22px}
+  .logo{font-size:17px}
+  .logo .ic{width:38px;height:38px}
+  .pill{display:inline-flex}
+  .wrap{padding:22px 22px 40px;}
+  .welcome h1{font-size:22px}
+  .qgrid{grid-template-columns:repeat(5,1fr);gap:11px}
+  .qcard{padding:18px 10px;font-size:13px;min-height:104px}
+  .qi{width:46px;height:46px;font-size:18px}
+  .stats{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .stat{padding:18px}
+  .stat .val{font-size:24px}
+  .gauges{gap:12px}
+  .gauge{padding:18px 14px}
+  .gwrap{width:110px;height:110px}
+  .gwrap svg{width:110px;height:110px}
+  .ring-bg,.ring-fg{stroke-width:9}
+  .g-val{font-size:22px}
+  .g-lbl{font-size:12.5px}
+  .section-h h2{font-size:18px}
+  .servers{grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:13px}
+  .srv{padding:18px}
+  .bnav{display:none}
+  .fab{display:none}
+  #themeToggle{bottom:22px;right:22px}
+  #installBtn{bottom:78px;right:22px}
+  .modal{align-items:center;padding:18px}
+  .box{border-radius:16px;max-height:88vh;padding:22px;animation:rise .25s ease}
+  .box::before{display:none}
+  .box.lg{max-width:1000px}
+  @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  .fm{grid-template-columns:240px 1fr}
+  .fm-side{max-height:480px}
+  .CodeMirror{height:480px}
+  .plans{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .toast{bottom:24px}
+}
+@media (min-width:1024px){
+  .qgrid{grid-template-columns:repeat(5,1fr)}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <div class="logo"><div class="ic"><img src="/static/logo.png?v=8" alt="BATMAN Dev"></div>BATMAN <span class="accent">Dev</span></div>
+    <div class="huser">
+      <div class="pill" id="qAdmin" style="display:none"><i class="fas fa-user-shield"></i> <span id="bAdmin">أدمن</span></div>
+      <div class="user-chip" onclick="openSettings()"><div class="av" id="uAv">?</div><span id="uName">…</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="welcome">
+    <div>
+      <h1>أهلاً <span id="uName2">…</span> 👋</h1>
+      <p>تابع وادر بوتاتك</p>
+    </div>
+  </div>
+
+  <div class="qgrid">
+    <button class="qcard" onclick="openPlans()"><div class="qi"><i class="fas fa-gem"></i></div>الخطط</button>
+    <button class="qcard" onclick="openApi()"><div class="qi"><i class="fas fa-key"></i></div>API</button>
+    <button class="qcard" onclick="linkTg()"><div class="qi"><i class="fab fa-telegram"></i></div>تليجرام</button>
+    <button class="qcard" onclick="openAiChat()"><div class="qi"><i class="fas fa-robot"></i></div>مساعد AI</button>
+    <button class="qcard" onclick="openSettings()"><div class="qi"><i class="fas fa-gear"></i></div>إعدادات</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="lbl"><i class="fas fa-server"></i> السيرفرات</div>
+      <div class="val"><span id="sUsed">0</span><small> / <span id="sTotal">0</span></small></div>
+      <div class="bar"><i id="sBar" style="width:0%"></i></div>
+    </div>
+    <div class="stat">
+      <div class="lbl"><i class="fas fa-hard-drive"></i> التخزين</div>
+      <div class="val"><span id="dUsed">0</span><small> / <span id="dTotal">0</span> MB</small></div>
+      <div class="bar"><i id="dBar" style="width:0%;background:var(--accent)"></i></div>
+    </div>
+  </div>
+
+  <div class="stat" style="margin-bottom:16px">
+    <div class="lbl"><i class="fas fa-medal"></i> الخطة الحالية</div>
+    <div class="val" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <span id="planName" style="font-size:17px">—</span>
+      <button class="btn btn-sm btn-accent" onclick="openPlans()"><i class="fas fa-arrow-up"></i> ترقية</button>
+    </div>
+  </div>
+
+  <div class="gauges">
+    <div class="gauge"><div class="gwrap"><svg viewBox="0 0 118 118"><circle class="ring-bg" cx="59" cy="59" r="52"></circle><circle class="ring-fg cpu" id="ringCpu" cx="59" cy="59" r="52"></circle></svg><div class="g-center"><div class="g-val" id="gCpu">0%</div></div></div><div class="g-lbl"><i class="fas fa-microchip"></i> CPU</div></div>
+    <div class="gauge"><div class="gwrap"><svg viewBox="0 0 118 118"><circle class="ring-bg" cx="59" cy="59" r="52"></circle><circle class="ring-fg mem" id="ringMem" cx="59" cy="59" r="52"></circle></svg><div class="g-center"><div class="g-val" id="gMem">0%</div></div></div><div class="g-lbl"><i class="fas fa-memory"></i> RAM</div></div>
+    <div class="gauge"><div class="gwrap"><svg viewBox="0 0 118 118"><circle class="ring-bg" cx="59" cy="59" r="52"></circle><circle class="ring-fg disk" id="ringDisk" cx="59" cy="59" r="52"></circle></svg><div class="g-center"><div class="g-val" id="gDisk">0%</div></div></div><div class="g-lbl"><i class="fas fa-hard-drive"></i> Disk</div></div>
+  </div>
+
+  <div class="section-h">
+    <h2><i class="fas fa-server"></i> بوتاتي <span class="count" id="sCount">0</span></h2>
+    <button class="btn btn-primary btn-sm" onclick="openCreate()"><i class="fas fa-plus"></i> جديد</button>
+  </div>
+  <div id="serverList" class="servers"></div>
+</main>
+
+<!-- FAB (mobile) -->
+<button class="fab" onclick="openCreate()" aria-label="بوت جديد"><i class="fas fa-plus"></i></button>
+
+<!-- Create Modal -->
+<div class="modal" id="mCreate">
+  <div class="box">
+    <div class="box-h"><h3><i class="fas fa-plus"></i> إنشاء بوت</h3><div class="x" onclick="closeM('mCreate')"><i class="fas fa-xmark"></i></div></div>
+    <label>اسم البوت</label><input id="cName" placeholder="my-bot">
+    <label>نوع البوت</label>
+    <div class="type-grid">
+      <div class="type-card selected" data-t="python" onclick="selType('python')"><i class="fab fa-python"></i>Python</div>
+      <div class="type-card" data-t="node" onclick="selType('node')"><i class="fab fa-node-js"></i>Node</div>
+      <div class="type-card" data-t="php" onclick="selType('php')"><i class="fab fa-php"></i>PHP</div>
+      <div class="type-card" data-t="go" onclick="selType('go')"><i class="fas fa-code"></i>Go</div>
+      <div class="type-card" data-t="java" onclick="selType('java')"><i class="fab fa-java"></i>Java</div>
+      <div class="type-card" data-t="bash" onclick="selType('bash')"><i class="fas fa-terminal"></i>Bash</div>
+    </div>
+    <button class="btn btn-primary btn-block" id="createBtn" onclick="createServer()" style="margin-top:18px"><i class="fas fa-check"></i> إنشاء</button>
+  </div>
+</div>
+
+<!-- Manage Modal -->
+<div class="modal" id="mManage">
+  <div class="box lg">
+    <div class="box-h"><h3><i class="fas fa-server"></i> <span id="mgName">—</span></h3><div class="x" onclick="closeM('mManage')"><i class="fas fa-xmark"></i></div></div>
+    <div class="tabs" id="mgTabs">
+      <button class="active" onclick="switchTab('files',this)"><i class="fas fa-folder"></i> الملفات</button>
+      <button onclick="switchTab('console',this)"><i class="fas fa-terminal"></i> السجل</button>
+      <button onclick="switchTab('errors',this)"><i class="fas fa-triangle-exclamation"></i> أخطاء</button>
+      <button onclick="switchTab('perf',this)"><i class="fas fa-chart-line"></i> الأداء</button>
+    </div>
+
+    <div class="tab-pane active" id="tFiles">
+      <div class="fm-actions" style="margin:0 0 11px">
+        <button class="btn btn-ghost btn-sm" onclick="newFile()"><i class="fas fa-file-circle-plus"></i> ملف</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('upInput').click()"><i class="fas fa-upload"></i> رفع</button>
+        <button class="btn btn-ghost btn-sm" onclick="installDeps()"><i class="fas fa-download"></i> تثبيت</button>
+        <input type="file" id="upInput" multiple style="display:none" onchange="uploadFileList(this.files)">
+      </div>
+      <div class="upbox" id="dropMask"><i class="fas fa-cloud-arrow-up"></i> اسحب الملفات هنا</div>
+      <div class="fm" style="margin-top:11px">
+        <div class="fm-side" id="fmList"></div>
+        <div class="fm-main">
+          <div class="fm-bar"><span id="curFile">اختر ملف</span><span id="saveStat" style="font-size:10.5px"></span></div>
+          <textarea id="editor" style="display:none"></textarea>
+          <img id="imgPrev" style="display:none">
+        </div>
+      </div>
+      <div class="fm-actions">
+        <button class="btn btn-primary btn-sm" onclick="saveFile()"><i class="fas fa-floppy-disk"></i> حفظ</button>
+        <button class="btn btn-ghost btn-sm" onclick="setStartup()"><i class="fas fa-play"></i> ملف البداية</button>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tConsole">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:12px;color:var(--muted);font-weight:700"><i class="fas fa-terminal"></i> السجل الحي</span>
+        <button class="btn btn-ghost btn-sm" onclick="loadConsole()"><i class="fas fa-rotate"></i> تحديث</button>
+      </div>
+      <div class="term" id="consoleOut">—</div>
+    </div>
+
+    <div class="tab-pane" id="tErrors">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:12px;color:var(--muted);font-weight:700"><i class="fas fa-triangle-exclamation"></i> الأخطاء</span>
+        <button class="btn btn-ghost btn-sm" onclick="diagnoseErrors()"><i class="fas fa-stethoscope"></i> تشخيص AI</button>
+      </div>
+      <div class="term err" id="errorsOut">—</div>
+    </div>
+
+    <div class="tab-pane" id="tPerf">
+      <div style="display:flex;gap:11px;flex-wrap:wrap;margin-bottom:10px">
+        <div style="flex:1;min-width:90px;background:var(--surface-2);padding:11px;border-radius:10px;border:1px solid var(--border)"><div style="font-size:11px;color:var(--muted);font-weight:700">CPU</div><div style="font-size:18px;font-weight:800" id="pfCpu">0%</div></div>
+        <div style="flex:1;min-width:90px;background:var(--surface-2);padding:11px;border-radius:10px;border:1px solid var(--border)"><div style="font-size:11px;color:var(--muted);font-weight:700">RAM</div><div style="font-size:18px;font-weight:800" id="pfMem">0 MB</div></div>
+        <div style="flex:1;min-width:90px;background:var(--surface-2);padding:11px;border-radius:10px;border:1px solid var(--border)"><div style="font-size:11px;color:var(--muted);font-weight:700">وقت التشغيل</div><div style="font-size:18px;font-weight:800" id="pfTime">—</div></div>
+      </div>
+      <canvas id="perfChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Plans Modal -->
+<div class="modal" id="mPlans">
+  <div class="box lg">
+    <div class="box-h"><h3><i class="fas fa-gem"></i> الخطط</h3><div class="x" onclick="closeM('mPlans')"><i class="fas fa-xmark"></i></div></div>
+    <div class="plans" id="plansGrid"></div>
+  </div>
+</div>
+
+<!-- Pay Modal -->
+<div class="modal" id="mPay">
+  <div class="box">
+    <div class="box-h"><h3><i class="fas fa-credit-card"></i> الدفع</h3><div class="x" onclick="closeM('mPay')"><i class="fas fa-xmark"></i></div></div>
+    <div style="text-align:center;padding:14px;background:var(--surface-2);border-radius:11px;margin-bottom:12px">
+      <div style="color:var(--muted);font-size:12px;font-weight:700">المبلغ</div>
+      <div style="font-size:28px;font-weight:800;color:var(--primary)" id="payAmount">$0</div>
+    </div>
+    <label>فودافون كاش</label>
+    <div style="display:flex;gap:7px;align-items:center"><input id="payVod" readonly style="flex:1"><button class="icon-btn" onclick="copyPay('payVod')"><i class="fas fa-copy"></i></button></div>
+    <label>InstaPay</label>
+    <div style="display:flex;gap:7px;align-items:center"><input id="payInsta" readonly style="flex:1"><button class="icon-btn" onclick="copyPay('payInsta')"><i class="fas fa-copy"></i></button></div>
+    <label>ملاحظة</label><textarea id="payNote" rows="3" placeholder="رقم العملية، سكرين شوت..." style="resize:vertical"></textarea>
+    <button class="btn btn-primary btn-block" onclick="sendPay()" style="margin-top:16px"><i class="fas fa-paper-plane"></i> إرسال للأدمن</button>
+  </div>
+</div>
+
+<!-- API Modal -->
+<div class="modal" id="mApi">
+  <div class="box">
+    <div class="box-h"><h3><i class="fas fa-key"></i> API Key</h3><div class="x" onclick="closeM('mApi')"><i class="fas fa-xmark"></i></div></div>
+    <label>مفتاح API الخاص بك</label>
+    <div style="display:flex;gap:7px"><input id="apiKey" readonly style="flex:1;font-family:monospace;font-size:13px"><button class="icon-btn" onclick="copyApi()"><i class="fas fa-copy"></i></button></div>
+    <button class="btn btn-accent btn-block" onclick="genApi()" style="margin-top:16px"><i class="fas fa-arrows-rotate"></i> توليد جديد</button>
+    <div style="margin-top:14px"><label>ربط تليجرام</label><div style="display:flex;gap:7px;align-items:center"><input id="tgId" placeholder="123456789" style="flex:1"><button class="btn btn-primary" onclick="linkTg()"><i class="fab fa-telegram"></i></button></div></div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal" id="mSettings">
+  <div class="box">
+    <div class="box-h"><h3><i class="fas fa-gear"></i> الإعدادات</h3><div class="x" onclick="closeM('mSettings')"><i class="fas fa-xmark"></i></div></div>
+    <div style="display:flex;align-items:center;gap:13px;padding:14px;background:var(--surface-2);border-radius:11px;margin-bottom:14px">
+      <div class="av" style="width:48px;height:48px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:18px;font-weight:800" id="setAv">?</div>
+      <div style="flex:1;min-width:0"><div style="font-weight:800;font-size:15px" id="setUser">—</div><div style="font-size:11.5px;color:var(--muted);font-weight:600" id="setPlan">—</div></div>
+    </div>
+    <label>المظهر</label>
+    <div class="type-grid" style="grid-template-columns:1fr 1fr">
+      <div class="type-card" data-th="dark" onclick="setTheme('dark')"><i class="fas fa-moon"></i>داكن</div>
+      <div class="type-card" data-th="light" onclick="setTheme('light')"><i class="fas fa-sun"></i>فاتح</div>
+    </div>
+    <label style="margin-top:14px">تغيير كلمة المرور</label>
+    <input id="curPass" type="password" placeholder="الحالية" style="margin-bottom:8px">
+    <input id="newPass" type="password" placeholder="الجديدة" style="margin-bottom:8px">
+    <input id="newPass2" type="password" placeholder="تأكيد">
+    <button class="btn btn-primary btn-block" onclick="changePass()" style="margin-top:11px"><i class="fas fa-key"></i> تغيير</button>
+    <button class="btn btn-red btn-block" onclick="logout()" style="margin-top:8px"><i class="fas fa-right-from-bracket"></i> خروج</button>
+  </div>
+</div>
+
+<!-- AI Modal -->
+<div class="modal" id="mAi">
+  <div class="box lg">
+    <div class="box-h"><h3><i class="fas fa-robot"></i> مساعد AI</h3><div class="x" onclick="closeM('mAi')"><i class="fas fa-xmark"></i></div></div>
+    <div class="ai-msgs" id="aiMsgs"><div class="ai-msg a">أهلاً! أنا مساعدك. اسألني عن البوتات أو أخطاء الكود ؟</div></div>
+    <div class="ai-in">
+      <input id="aiInput" placeholder="اكتب سؤالك..." onkeydown="if(event.key==='Enter')chatSend()">
+      <button id="aiSendBtn" onclick="chatSend()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="fas fa-circle-check"></i><span id="toastMsg"></span></div>
+
+<button id="installBtn" type="button" title="تثبيت التطبيق" aria-label="تثبيت"><i class="fas fa-download"></i></button>
+<button id="themeToggle" type="button" aria-label="المظهر"><i class="fas fa-moon"></i></button>
+
+<nav class="bnav">
+  <button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-gauge-high"></i><span>الرئيسية</span></button>
+  <button onclick="openAiChat()"><i class="fas fa-robot"></i><span>AI</span></button>
+  <button onclick="openPlans()"><i class="fas fa-gem"></i><span>خطط</span></button>
+  <button onclick="openApi()"><i class="fas fa-key"></i><span>API</span></button>
+  <button onclick="openSettings()"><i class="fas fa-gear"></i><span>أكثر</span></button>
+</nav>
+
+<script>
+/* ============ STATE ============ */
+let ME=null, SERVERS=[], CUR=null, CURFILE=null, CM=null, PLANS={}, AUTOSAVE=null, PERF_CHART=null, SEL_TYPE='python';
+const $=id=>document.getElementById(id);
+
+/* ============ HELPERS ============ */
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+async function api(url,opt){try{const r=await fetch(url,opt);return await r.json();}catch(e){return{success:false,message:'خطأ اتصال'};}}
+function toast(msg,ok){if(ok===undefined)ok=true;const t=$('toast');$('toastMsg').textContent=msg;t.className='toast show '+(ok?'ok':'bad');t.querySelector('i').className=ok?'fas fa-circle-check':'fas fa-circle-exclamation';setTimeout(()=>t.className='toast',2800);}
+function closeM(id){$(id).classList.remove('open');}
+async function logout(){await fetch('/api/logout',{method:'POST'});location.href='/login';}
+function fmt(b){if(b<1024)return b+' B';if(b<1048576)return (b/1024).toFixed(1)+' KB';return (b/1048576).toFixed(1)+' MB';}
+
+/* ============ ME ============ */
+async function loadMe(){const d=await api('/api/current_user');if(!d.success){location.href='/login';return;}ME=d;$('uName').textContent=d.username;$('uName2').textContent=d.username;$('uAv').textContent=(d.username||'?').charAt(0).toUpperCase();$('setUser').textContent=d.username;$('setAv').textContent=(d.username||'?').charAt(0).toUpperCase();$('planName').textContent=(d.plan_name||d.plan||'Free');$('setPlan').textContent=(d.plan_name||d.plan||'Free');$('sTotal').textContent=d.max_servers||0;$('dTotal').textContent=d.storage_limit||0;if(d.is_admin){$('qAdmin').style.display='inline-flex';$('qAdmin').onclick=()=>location.href='/admin';}markTheme(localStorage.getItem('bm_theme')||'dark');}
+
+/* ============ SERVERS ============ */
+async function loadServers(){const d=await api('/api/servers');if(!d.success){renderServers([]);return;}SERVERS=d.servers||[];$('sUsed').textContent=SERVERS.length;$('sCount').textContent=SERVERS.length;const pct=ME&&ME.max_servers?Math.min(100,(SERVERS.length/ME.max_servers)*100):0;$('sBar').style.width=pct+'%';let used=0;SERVERS.forEach(s=>used+=(s.size||0));const mb=Math.round(used/1048576);$('dUsed').textContent=mb;const dp=ME&&ME.storage_limit?Math.min(100,(mb/ME.storage_limit)*100):0;$('dBar').style.width=dp+'%';renderServers(SERVERS);}
+function renderServers(list){const el=$('serverList');if(!list.length){el.innerHTML='<div class="empty"><i class="fas fa-server"></i><p>لا توجد بوتات بعد</p><button class="btn btn-primary" onclick="openCreate()"><i class="fas fa-plus"></i> أنشئ أول بوت</button></div>';return;}const icons={python:'fab fa-python',node:'fab fa-node-js',php:'fab fa-php',go:'fas fa-code',java:'fab fa-java',bash:'fas fa-terminal'};el.innerHTML=list.map(s=>{const t=s.type||'python';const running=s.status==='running';return `<div class="srv"><div class="srv-top"><div class="srv-name"><div class="stype"><i class="${icons[t]||icons.python}"></i></div><span>${esc(s.name)}</span></div><div class="stt ${running?'on run':'off'}"><i class="fas fa-circle"></i> ${running?'شغال':'موقف'}</div></div><div class="srv-info"><span><i class="fas fa-hard-drive"></i> ${fmt(s.size||0)}</span><span><i class="fas fa-clock"></i> ${esc(s.uptime||'—')}</span>${s.public?'<span style="color:var(--blue)"><i class="fas fa-globe"></i> عام</span>':''}</div><div class="srv-act">${running?`<button class="btn btn-red" onclick="act('${esc(s.name)}','stop')"><i class="fas fa-stop"></i> إيقاف</button><button class="btn btn-ghost" onclick="act('${esc(s.name)}','restart')"><i class="fas fa-rotate"></i></button>`:`<button class="btn btn-primary" onclick="act('${esc(s.name)}','start')"><i class="fas fa-play"></i> تشغيل</button>`}<button class="icon-btn" onclick="openManage('${esc(s.name)}')" title="إدارة"><i class="fas fa-folder-open"></i></button><button class="icon-btn" onclick="sharePublic('${esc(s.name)}',${!s.public})" title="مشاركة"><i class="fas fa-${s.public?'eye-slash':'globe'}"></i></button><button class="icon-btn danger" onclick="delServer('${esc(s.name)}')" title="حذف"><i class="fas fa-trash"></i></button></div></div>`;}).join('');}
+async function act(name,a){const d=await api('/api/server/action/'+encodeURIComponent(name)+'/'+a,{method:'POST'});toast(d.message||a,d.success);loadServers();}
+async function delServer(name){if(!confirm('حذف '+name+'؟'))return;const d=await api('/api/server/action/'+encodeURIComponent(name)+'/delete',{method:'POST'});toast(d.message,d.success);loadServers();}
+async function sharePublic(name,pub){const d=await api('/api/server/public/'+encodeURIComponent(name),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({public:pub})});toast(d.message,d.success);loadServers();}
+
+/* ============ CREATE ============ */
+function openCreate(){$('cName').value='';selType('python');$('mCreate').classList.add('open');}
+function selType(t){SEL_TYPE=t;document.querySelectorAll('.type-card[data-t]').forEach(c=>c.classList.toggle('selected',c.dataset.t===t));}
+async function createServer(){const n=$('cName').value.trim();if(!n)return toast('اسم البوت مطلوب',false);const d=await api('/api/server/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,type:SEL_TYPE})});toast(d.message,d.success);if(d.success){closeM('mCreate');loadServers();}}
+
+/* ============ MANAGE ============ */
+function openManage(name){CUR=name;$('mgName').textContent=name;$('mManage').classList.add('open');loadFiles();switchTab('files',document.querySelector('#mgTabs button'));}
+function switchTab(t,btn){document.querySelectorAll('#mgTabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('#mManage .tab-pane').forEach(p=>p.classList.remove('active'));$('t'+t.charAt(0).toUpperCase()+t.slice(1)).classList.add('active');if(t==='console')loadConsole();else if(t==='errors')loadErrors();else if(t==='perf')loadPerf();}
+async function loadFiles(){if(!CUR)return;const d=await api('/api/files/list/'+encodeURIComponent(CUR));const list=(d.files||[]);const el=$('fmList');if(!list.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">لا توجد ملفات</div>';return;}el.innerHTML=list.map(f=>`<div class="fm-row" onclick="openFile('${esc(f.name)}')"><i class="fas fa-file-code"></i><span>${esc(f.name)}</span><div class="ops"><button onclick="event.stopPropagation();renameFile('${esc(f.name)}')" title="تسمية"><i class="fas fa-pen"></i></button><button onclick="event.stopPropagation();deleteFile('${esc(f.name)}')" title="حذف" style="color:var(--red)"><i class="fas fa-trash"></i></button></div></div>`).join('');}
+function initCM(mode){if(CM){CM.toTextArea();CM=null;}CM=CodeMirror.fromTextArea($('editor'),{mode:mode||'python',theme:'material-darker',lineNumbers:true,lineWrapping:true,indentUnit:4,tabSize:4,viewportMargin:Infinity});CM.on('change',scheduleAutosave);}
+function cmMode(name){const ext=(name||'').split('.').pop().toLowerCase();return {py:'python',js:'javascript',json:{name:'javascript',json:true},html:'htmlmixed',htm:'htmlmixed',xml:'xml',css:'css',md:'markdown'}[ext]||'text/plain';}
+function getCode(){return CM?CM.getValue():'';}
+function setCode(v){if(CM)CM.setValue(v);}
+async function openFile(name){CURFILE=name;document.querySelectorAll('.fm-row').forEach(r=>r.classList.toggle('sel',r.querySelector('span').textContent===name));$('curFile').textContent=name;const ext=name.split('.').pop().toLowerCase();if(['png','jpg','jpeg','gif','webp','svg'].includes(ext)){$('editor').style.display='none';if(CM){CM.toTextArea();CM=null;}showImg('/api/files/raw/'+encodeURIComponent(CUR)+'/'+encodeURIComponent(name));return;}$('imgPrev').style.display='none';$('editor').style.display='block';const d=await api('/api/files/content/'+encodeURIComponent(CUR)+'/'+encodeURIComponent(name));if(!d.success){toast(d.message,false);return;}if(!CM)initCM(cmMode(name));else CM.setOption('mode',cmMode(name));setCode(d.content||'');}
+function showImg(src){$('imgPrev').src=src;$('imgPrev').style.display='block';}
+function showEditor(){$('imgPrev').style.display='none';$('editor').style.display='block';}
+async function saveFile(){if(!CUR||!CURFILE)return;$('saveStat').textContent='جاري الحفظ...';const d=await api('/api/files/save/'+encodeURIComponent(CUR)+'/'+encodeURIComponent(CURFILE),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:getCode()})});$('saveStat').textContent=d.success?'تم الحفظ ✓':'فشل';setTimeout(()=>{$('saveStat').textContent='';},1500);if(d.success===false)toast(d.message,false);}
+function scheduleAutosave(){if(AUTOSAVE)clearTimeout(AUTOSAVE);AUTOSAVE=setTimeout(autoSave,2200);}
+async function autoSave(){if(!CUR||!CURFILE)return;await api('/api/files/save/'+encodeURIComponent(CUR)+'/'+encodeURIComponent(CURFILE),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:getCode()})});$('saveStat').textContent='تم الحفظ ✓';setTimeout(()=>{$('saveStat').textContent='';},1200);}
+async function setStartup(){if(!CURFILE)return toast('اختر ملف',false);const d=await api('/api/server/set-startup/'+encodeURIComponent(CUR),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({file:CURFILE})});toast(d.message,d.success);}
+async function renameFile(n){const nn=prompt('الاسم الجديد:',n);if(!nn||nn===n)return;const d=await api('/api/files/rename/'+encodeURIComponent(CUR),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({old:n,new:nn})});toast(d.message,d.success);loadFiles();}
+async function deleteFile(n){if(!confirm('حذف '+n+'؟'))return;const d=await api('/api/files/delete/'+encodeURIComponent(CUR),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n})});toast(d.message,d.success);loadFiles();}
+async function newFile(){const n=prompt('اسم الملف:');if(!n)return;const d=await api('/api/files/create/'+encodeURIComponent(CUR),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n})});toast(d.message,d.success);loadFiles();}
+async function uploadFiles(files){await uploadFileList(files);}
+async function uploadFileList(files){if(!files||!files.length)return;const fd=new FormData();for(const f of files)fd.append('files',f);toast('جاري الرفع...');const r=await fetch('/api/files/upload/'+encodeURIComponent(CUR),{method:'POST',body:fd});const d=await r.json();toast(d.message,d.success);loadFiles();}
+async function installDeps(){toast('جاري التثبيت...');const d=await api('/api/server/install/'+encodeURIComponent(CUR),{method:'POST'});toast(d.message,d.success);}
+async function loadConsole(){if(!CUR)return;$('consoleOut').textContent='جاري...';const d=await api('/api/server/stats/'+encodeURIComponent(CUR));$('consoleOut').textContent=(d.logs||'—');$('consoleOut').scrollTop=$('consoleOut').scrollHeight;}
+async function loadErrors(){if(!CUR)return;$('errorsOut').textContent='جاري...';const d=await api('/api/server/stats/'+encodeURIComponent(CUR));$('errorsOut').textContent=(d.errors||'—');}
+async function diagnoseErrors(){if(!CUR)return;$('errorsOut').textContent='جاري التشخيص...';const d=await api('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({server:CUR,mode:'diagnose'})});$('errorsOut').textContent=d.answer||d.message||'—';}
+
+/* ============ PERF ============ */
+async function loadPerf(){if(!CUR)return;const d=await api('/api/server/stats/'+encodeURIComponent(CUR));$('pfCpu').textContent=Math.round(d.cpu||0)+'%';$('pfMem').textContent=Math.round(d.memory||0)+' MB';$('pfTime').textContent=d.uptime||'—';const h=await api('/api/server/history/'+encodeURIComponent(CUR));drawPerf(h.history||[]);}
+function drawPerf(hist){const ctx=$('perfChart').getContext('2d');if(PERF_CHART){PERF_CHART.destroy();PERF_CHART=null;}const lbl=hist.map(h=>h.t||'');const cp=hist.map(h=>h.cpu||0);const mm=hist.map(h=>h.memory||0);PERF_CHART=new Chart(ctx,{type:'line',data:{labels:lbl,datasets:[{label:'CPU%',data:cp,borderColor:'#8b5cf6',backgroundColor:'rgba(139,92,246,.13)',fill:true,tension:.35,borderWidth:2},{label:'RAM MB',data:mm,borderColor:'#00c46a',backgroundColor:'rgba(0,196,106,.1)',fill:true,tension:.35,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'Tajawal',size:11}}}},scales:{x:{ticks:{color:'#8b95a7',font:{size:10}},grid:{display:false}},y:{ticks:{color:'#8b95a7',font:{size:10}},grid:{color:'rgba(255,255,255,.05)'}}}}});}
+
+/* ============ PLANS / PAY ============ */
+async function openPlans(){const d=await api('/api/plans');PLANS=d.plans||{};const el=$('plansGrid');const cur=ME&&ME.plan;el.innerHTML=Object.entries(PLANS).map(([k,p])=>`<div class="plan ${k==='pro'?'pop':''}">${k==='pro'?'<div class="badge">الأفضل</div>':''}<h4>${esc(p.name||k)}</h4><div class="price">$${p.price||0}<small> / شهر</small></div><ul><li><i class="fas fa-check"></i> ${p.max_servers||1} سيرفر</li><li><i class="fas fa-check"></i> ${p.storage||0} MB</li><li><i class="fas fa-check"></i> ${p.ram||0} MB RAM</li><li><i class="fas fa-check"></i> ${p.cpu||1} CPU</li></ul>${cur===k?'<button class="btn btn-ghost btn-block" disabled><i class="fas fa-check"></i> الحالية</button>':`<button class="btn btn-primary btn-block" onclick="goUpgrade('${k}')"><i class="fas fa-arrow-up"></i> ترقية</button>`}</div>`).join('');$('mPlans').classList.add('open');}
+async function goUpgrade(k){closeM('mPlans');openPay(k);}
+function upgrade(k){goUpgrade(k);}
+async function openPay(k){const p=PLANS[k];if(!p)return;$('payAmount').textContent='$'+(p.price||0);const d=await api('/api/payment/info');$('payVod').value=d.vodafone||'';$('payInsta').value=d.instapay||'';$('payNote').value='';$('payNote').dataset.plan=k;$('mPay').classList.add('open');}
+async function sendPay(){const plan=$('payNote').dataset.plan;const d=await api('/api/user/request-upgrade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:plan,note:$('payNote').value})});toast(d.message,d.success);if(d.success)closeM('mPay');}
+function copyPay(id){$(id).select();document.execCommand('copy');toast('تم النسخ');}
+
+/* ============ API / TG ============ */
+async function openApi(){const d=await api('/api/current_user');$('apiKey').value=d.api_key||'';$('tgId').value=d.telegram_id||'';$('mApi').classList.add('open');}
+async function genApi(){const d=await api('/api/create_api_key',{method:'POST'});if(d.success){$('apiKey').value=d.api_key;toast('تم توليد مفتاح جديد');}else toast(d.message,false);}
+function copyApi(){$('apiKey').select();document.execCommand('copy');toast('تم النسخ');}
+async function linkTg(){const id=$('tgId').value.trim();if(!id){$('mApi').classList.add('open');return;}const d=await api('/api/link_telegram',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_id:id})});toast(d.message,d.success);}
+
+/* ============ SETTINGS ============ */
+function openSettings(){$('mSettings').classList.add('open');markTheme(localStorage.getItem('bm_theme')||'dark');}
+async function changePass(){const c=$('curPass').value,n=$('newPass').value,n2=$('newPass2').value;if(!c||!n)return toast('أكمل الحقول',false);if(n!==n2)return toast('التأكيد غير متطابق',false);const d=await api('/api/user/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({current:c,new:n})});toast(d.message,d.success);if(d.success){$('curPass').value='';$('newPass').value='';$('newPass2').value='';}}
+function applyTheme(t){const mc=document.querySelector('meta[name="theme-color"]');document.documentElement.setAttribute('data-theme',t);if(mc)mc.setAttribute('content',t==='light'?'#f5f7fa':'#0b0f17');const tb=$('themeToggle');if(tb)tb.innerHTML=t==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';}
+function markTheme(t){document.querySelectorAll('.type-card[data-th]').forEach(c=>c.classList.toggle('selected',c.dataset.th===t));}
+function setTheme(t){localStorage.setItem('bm_theme',t);applyTheme(t);markTheme(t);}
+
+/* ============ AI CHAT ============ */
+function openAiChat(){$('mAi').classList.add('open');setTimeout(()=>$('aiInput').focus(),300);}
+async function chatSend(){const inp=$('aiInput');const q=inp.value.trim();if(!q)return;inp.value='';const wrap=$('aiMsgs');wrap.insertAdjacentHTML('beforeend','<div class="ai-msg u">'+esc(q)+'</div>');wrap.scrollTop=wrap.scrollHeight;const loading=document.createElement('div');loading.className='ai-msg a';loading.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري التفكير...';wrap.appendChild(loading);wrap.scrollTop=wrap.scrollHeight;const d=await api('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q})});loading.remove();const ans=d.answer||d.message||'—';wrap.insertAdjacentHTML('beforeend','<div class="ai-msg a">'+esc(ans).replace(/```([\s\S]*?)```/g,(_,c)=>'<pre>'+c+'</pre>').replace(/\n/g,'<br>')+'</div>');wrap.scrollTop=wrap.scrollHeight;}
+async function aiCode(){return chatSend();}
+
+/* ============ METRICS ============ */
+function setGauge(id,pct){const c=$('ring'+id);pct=Math.max(0,Math.min(100,Number(pct)||0));if(c)c.style.strokeDashoffset=(326.726*(1-pct/100)).toFixed(2);const v=$('g'+id);if(v)v.textContent=Math.round(pct)+'%';}
+async function loadMetrics(){const d=await api('/api/system/metrics');setGauge('Cpu',d.cpu||0);setGauge('Mem',d.memory||0);setGauge('Disk',d.disk||0);}
+
+/* ============ DRAG DROP ============ */
+(function(){const m=$('dropMask');if(!m)return;['dragenter','dragover'].forEach(e=>m.addEventListener(e,ev=>{ev.preventDefault();m.classList.add('over');}));['dragleave','drop'].forEach(e=>m.addEventListener(e,ev=>{ev.preventDefault();m.classList.remove('over');}));m.addEventListener('drop',ev=>{if(ev.dataTransfer.files.length)uploadFileList(ev.dataTransfer.files);});})();
+
+/* ============ THEME INIT ============ */
+(function(){var s=localStorage.getItem('bm_theme')||'dark';applyTheme(s);var b=$('themeToggle');b.addEventListener('click',function(){var c=localStorage.getItem('bm_theme')||'dark',n=c==='light'?'dark':'light';localStorage.setItem('bm_theme',n);applyTheme(n);markTheme(n);});})();
+
+/* ============ INSTALL PROMPT ============ */
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('installBtn').classList.add('show');});
+function installApp(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt=null;$('installBtn').classList.remove('show');}
+$('installBtn').addEventListener('click',installApp);
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{});}
+
+/* ============ BOOT ============ */
+(async function(){await loadMe();await loadServers();loadMetrics();setInterval(loadServers,15000);setInterval(loadMetrics,5000);})();
+</script>
+</body>
+</html>

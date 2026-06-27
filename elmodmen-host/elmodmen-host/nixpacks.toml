@@ -1,0 +1,3 @@
+# تثبيت PHP CLI + إضافات البوتات (curl/mbstring) داخل حاوية Railway
+[phases.setup]
+aptPkgs = ["php-cli", "php-curl", "php-mbstring"]
