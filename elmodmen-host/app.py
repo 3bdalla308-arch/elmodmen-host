@@ -687,7 +687,7 @@ def request_upgrade():
     }
     db.setdefault("payments", []).insert(0, req)
     save_db(db)
-    notify_admin(f"\U0001f4b3 *\u0637\u0644\u0628 \u062a\u0631\u0642\u064a\u0629 \u062c\u062f\u064a\u062f*\n\U0001f464 `{session['username']}`\n\U0001f48e {plan.get('name')}\n\U0001f4b0 ${plan.get('price')}\n\U0001f4b3 {method or '\u2014'}")
+    notify_admin(f"\U0001f4b3 *\u0637\u0644\u0628 \u062a\u0631\u0642\u064a\u0629 \u062c\u062f\u064a\u062f*\n\U0001f464 `{session['username']}`\n\U0001f48e {plan.get('name')}\n\U0001f4b0 ${plan.get('price')}\n\U0001f4b3 {method or chr(8212)}")
     return jsonify(success=True, message="\u2705 \u062a\u0645 \u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0637\u0644\u0628\u060c \u0647\u064a\u062a\u0641\u0639\u0651\u0644 \u0628\u0639\u062f \u062a\u0623\u0643\u064a\u062f \u0627\u0644\u062f\u0641\u0639")
 
 
