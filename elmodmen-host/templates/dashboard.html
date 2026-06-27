@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#040910">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=5">
-<link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16.png?v=5">
-<link rel="shortcut icon" href="/static/favicon.ico?v=5">
-<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png?v=5">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=7">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16.png?v=7">
+<link rel="shortcut icon" href="/static/favicon.ico?v=7">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png?v=7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -35,7 +35,7 @@ html[data-theme="light"] .btn-ghost{background:rgba(0,0,0,.04);color:var(--txt)}
 html[data-theme="light"] th,html[data-theme="light"] td{border-color:rgba(0,0,0,.07)}
 html[data-theme="light"] tr:hover td{background:rgba(124,58,237,.05)}
 html[data-theme="light"] .box{background:#fff}
-#themeToggle{position:fixed;bottom:18px;right:18px;z-index:99998;width:46px;height:46px;border-radius:14px;border:1px solid var(--line);cursor:pointer;font-size:17px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#7c3aed,#00e676);box-shadow:0 10px 28px rgba(124,58,237,.4);transition:.18s}
+#themeToggle{position:fixed;bottom:96px;right:18px;z-index:99998;width:46px;height:46px;border-radius:14px;border:1px solid var(--line);cursor:pointer;font-size:17px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#7c3aed,#00e676);box-shadow:0 10px 28px rgba(124,58,237,.4);transition:.18s}
 #themeToggle:hover{transform:translateY(-3px) rotate(-8deg)}
 :root{--primary:#00e676;--primary-dark:#00b258;--accent:#7c3aed;--accent-light:#a855f7;
 --bg:#040910;--card:rgba(12,22,36,.78);--line:rgba(0,230,118,.14);--txt:#e6edf3;--muted:rgba(230,237,243,.45);
@@ -78,7 +78,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(6,12,20,.85);backdrop-fi
 .btn-red{background:rgba(255,84,112,.13);color:var(--red);border:1px solid rgba(255,84,112,.3)}
 .btn-red:hover{background:rgba(255,84,112,.22)}
 .btn-sm{padding:7px 12px;font-size:13px}
-.wrap{position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:26px 22px 60px}
+.wrap{position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:26px 22px 104px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:26px}
 .stat{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:18px;padding:20px 22px;position:relative;overflow:hidden}
 .stat::after{content:'';position:absolute;top:0;right:0;width:90px;height:90px;background:radial-gradient(circle,rgba(0,230,118,.13),transparent 70%)}
@@ -105,7 +105,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(6,12,20,.85);backdrop-fi
 .qcard{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:18px;padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;color:var(--txt);text-decoration:none;font-family:inherit;font-weight:800;font-size:13px;transition:.2s}
 .qcard:hover{transform:translateY(-3px);border-color:rgba(124,58,237,.4)}
 .qi{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-size:19px;background:rgba(124,58,237,.14);color:var(--accent-light)}
-.bnav{position:fixed;bottom:0;left:0;right:0;z-index:60;display:none;align-items:center;justify-content:space-around;padding:9px 4px calc(9px + env(safe-area-inset-bottom));background:rgba(6,12,20,.94);backdrop-filter:blur(22px);border-top:1px solid var(--line)}
+.bnav{position:fixed;bottom:0;left:0;right:0;max-width:680px;margin:0 auto;z-index:60;display:flex;align-items:center;justify-content:space-around;padding:9px 4px calc(9px + env(safe-area-inset-bottom));background:rgba(6,12,20,.94);backdrop-filter:blur(22px);border:1px solid var(--line);border-bottom:none;border-radius:20px 20px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.4)}
 .bnav button,.bnav a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:10px;font-weight:800;cursor:pointer;border:none;background:none;font-family:inherit;padding:4px 9px;border-radius:11px;transition:.16s;text-decoration:none}
 .bnav i{font-size:18px}
 .ai-msgs{display:flex;flex-direction:column;gap:10px;max-height:48vh;overflow-y:auto;padding:6px 2px;margin:6px 0 12px}
@@ -122,12 +122,12 @@ header{position:sticky;top:0;z-index:50;background:rgba(6,12,20,.85);backdrop-fi
 .bnav .active,.bnav button:hover,.bnav a:hover{color:var(--primary)}
 html[data-theme="light"] .ring-bg{stroke:rgba(0,0,0,.08)}
 html[data-theme="light"] .bnav{background:rgba(255,255,255,.94)}
-@media(max-width:760px){.bnav{display:flex}.wrap{padding-bottom:92px}#themeToggle{bottom:80px}#pwaInstall{bottom:80px}
+@media(max-width:760px){.bnav{display:flex}.wrap{padding:16px 14px 96px}#themeToggle{bottom:80px}#pwaInstall{bottom:80px}.empty{padding:36px 16px}.empty i{font-size:42px;margin-bottom:10px}.section-h{margin:20px 0 12px}.gauges{margin-bottom:14px}.qgrid{margin-bottom:16px}.stats{margin-bottom:18px}.bnav button,.bnav a{padding:4px 6px}
 .hwrap{padding:11px 15px}.logo{font-size:16px}.logo .ic{width:34px;height:34px;font-size:16px}
 .gauges{grid-template-columns:repeat(3,1fr);gap:10px}.gwrap{width:86px;height:86px}.gwrap svg{width:86px;height:86px}.g-val{font-size:18px}.g-lbl{font-size:11px}.gauge{padding:14px 6px;border-radius:16px}
 .qgrid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:1fr 1fr}.stat .val{font-size:23px}.servers{grid-template-columns:1fr}.section-h h2{font-size:18px}
 .srv{padding:16px}.srv-name{font-size:15px}}
-@media(max-width:380px){.gauges{gap:7px}.gwrap{width:74px;height:74px}.gwrap svg{width:74px;height:74px}.g-val{font-size:16px}.qcard{padding:14px 8px}}
+@media(max-width:380px){.gauges{gap:7px}.gwrap{width:74px;height:74px}.gwrap svg{width:74px;height:74px}.g-val{font-size:16px}.qcard{padding:14px 8px}.bnav button,.bnav a{padding:4px 4px;font-size:9px}.bnav i{font-size:16px}}
 .section-h{display:flex;align-items:center;justify-content:space-between;margin:30px 0 16px;flex-wrap:wrap;gap:12px}
 .section-h h2{font-size:21px;font-weight:800;display:flex;align-items:center;gap:10px}
 .section-h h2 i{color:var(--primary)}
@@ -143,6 +143,10 @@ html[data-theme="light"] .bnav{background:rgba(255,255,255,.94)}
 .srv-name .ti{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:15px}
 .ti.py{background:rgba(56,189,248,.14);color:var(--blue)}
 .ti.node{background:rgba(0,230,118,.14);color:var(--primary)}
+.ti.php{background:rgba(119,123,179,.20);color:#9ea3d8}
+.ti.html{background:rgba(227,76,38,.16);color:#ff7a55}
+.type-c.php i{color:#9ea3d8}
+.type-c.html i{color:#ff7a55}
 .badge{font-size:11.5px;font-weight:800;padding:5px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:5px}
 .badge.run{background:rgba(0,230,118,.14);color:var(--primary)}
 .badge.stop{background:rgba(255,84,112,.13);color:var(--red)}
@@ -261,7 +265,7 @@ select option{background:#0a1422}
 
 <header>
   <div class="hwrap">
-    <div class="logo"><div class="ic"><img src="/static/logo.png?v=5" alt="BATMAN Dev"></div>𝑩𝑨𝑻𝑴𝑨𝑵 <span>𝑫𝒆𝒗𓃠</span></div>
+    <div class="logo"><div class="ic"><img src="/static/logo.png?v=7" alt="BATMAN Dev"></div>𝑩𝑨𝑻𝑴𝑨𝑵 <span>𝑫𝒆𝒗𓃠</span></div>
     <div class="huser">
       <div class="pill"><i class="fas fa-user"></i><span id="uName">...</span></div>
       <div class="pill" id="planPill"><i class="fas fa-gem"></i><span id="uPlan">free</span></div>
@@ -308,8 +312,10 @@ select option{background:#0a1422}
     <input id="cName" placeholder="مثال: بوت التيليجرام">
     <label>نوع السيرفر</label>
     <div class="types">
-      <div class="type-c py sel" data-type="Python" onclick="selType(this)"><img src="/static/python.png" class="type-img" alt="Python"><b>Python</b></div>
+      <div class="type-c py sel" data-type="Python" onclick="selType(this)"><img src="/static/python.png?v=7" class="type-img" alt="Python"><b>Python</b></div>
       <div class="type-c node" data-type="Node.js" onclick="selType(this)"><i class="fab fa-node-js"></i><b>Node.js</b></div>
+      <div class="type-c php" data-type="PHP" onclick="selType(this)"><i class="fab fa-php"></i><b>PHP</b></div>
+      <div class="type-c html" data-type="HTML" onclick="selType(this)"><i class="fab fa-html5"></i><b>HTML</b></div>
     </div>
     <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:22px" onclick="createServer()" id="createBtn"><i class="fas fa-rocket"></i> إنشاء</button>
   </div>
@@ -448,6 +454,7 @@ select option{background:#0a1422}
   <button onclick="openPlans()"><i class="fas fa-gem"></i><span>الخطط</span></button>
   <button onclick="openAiChat()"><i class="fas fa-wand-magic-sparkles"></i><span>AI</span></button>
   <button onclick="openApi()"><i class="fas fa-robot"></i><span>API</span></button>
+  <button onclick="openSettings()"><i class="fas fa-gear"></i><span>الإعدادات</span></button>
   <a id="bAdmin" href="/admin" style="display:none"><i class="fas fa-shield-halved"></i><span>الأدمن</span></a>
 </nav>
 
@@ -464,10 +471,11 @@ async function loadMe(){const d=await api('/api/current_user');if(!d.success){lo
 
 async function loadServers(){const d=await api('/api/servers');if(!d.success)return;SERVERS=d.servers;const s=d.stats;$('sUsed').textContent=s.used;$('sTotal').textContent=s.total;$('dUsed').textContent=s.disk_used;$('dTotal').textContent=s.disk_total;$('planName').textContent=s.plan;$('sBar').style.width=Math.min(100,s.total?s.used/s.total*100:0)+'%';$('dBar').style.width=Math.min(100,s.disk_total?s.disk_used/s.disk_total*100:0)+'%';renderServers();}
 
-function renderServers(){const el=$('serverList');if(!SERVERS.length){el.innerHTML='<div class="empty" style="grid-column:1/-1"><i class="fas fa-cube"></i><h3>لا توجد سيرفرات بعد</h3><p>أنشئ أول سيرفر لك</p></div>';return;}el.innerHTML=SERVERS.map(s=>{const run=s.status==='Running';const isNode=s.type==='Node.js';return `<div class="srv"><div class="srv-top"><div class="srv-name"><div class="ti ${isNode?'node':'py'}">${isNode?'<i class="fab fa-node-js"></i>':'<img src="/static/python.png" class="ti-img" alt="py">'}</div>${esc(s.title)}</div><span class="badge ${run?'run':'stop'}"><span class="dot"></span>${run?'يعمل':'متوقف'}</span></div><div class="srv-meta"><div>النوع: <b>${s.type}</b></div><div>البورت: <b>${s.port}</b></div><div>التشغيل: <b>${run?s.uptime:'--'}</b></div><div>المساحة: <b>${s.disk_used} MB</b></div></div><div class="srv-actions">${run?`<button class="icon-btn" title="إيقاف" onclick="act('${s.folder}','stop')"><i class="fas fa-stop"></i></button><button class="icon-btn" title="إعادة" onclick="act('${s.folder}','restart')"><i class="fas fa-rotate"></i></button>`:`<button class="icon-btn" title="تشغيل" onclick="act('${s.folder}','start')"><i class="fas fa-play"></i></button>`}<button class="icon-btn" title="إدارة" onclick="openManage('${s.folder}','${esc(s.title)}')"><i class="fas fa-gears"></i></button><button class="icon-btn" style="${s.auto_restart?'color:var(--primary);border-color:rgba(0,230,118,.4)':''}" title="${s.auto_restart?'التشغيل التلقائي: مُفعّل':'التشغيل التلقائي: متوقف'}" onclick="act('${s.folder}','toggle-restart')"><i class="fas fa-arrows-rotate"></i></button><button class="icon-btn danger" title="حذف" onclick="delServer('${s.folder}')"><i class="fas fa-trash"></i></button></div></div>`;}).join('');}
+function renderServers(){const el=$('serverList');if(!SERVERS.length){el.innerHTML='<div class="empty" style="grid-column:1/-1"><i class="fas fa-cube"></i><h3>لا توجد سيرفرات بعد</h3><p>أنشئ أول سيرفر لك</p></div>';return;}el.innerHTML=SERVERS.map(s=>{const run=s.status==='Running';const t=s.type;const tiC=t==='Node.js'?'node':(t==='PHP'?'php':(t==='HTML'?'html':'py'));const tiI=t==='Node.js'?'<i class="fab fa-node-js"></i>':(t==='PHP'?'<i class="fab fa-php"></i>':(t==='HTML'?'<i class="fab fa-html5"></i>':'<img src="/static/python.png?v=7" class="ti-img" alt="py">'));const web=(t==='HTML');return `<div class="srv"><div class="srv-top"><div class="srv-name"><div class="ti ${tiC}">${tiI}</div>${esc(s.title)}</div><span class="badge ${run?'run':'stop'}"><span class="dot"></span>${run?'يعمل':'متوقف'}</span></div><div class="srv-meta"><div>النوع: <b>${s.type}</b></div><div>البورت: <b>${s.port}</b></div><div>التشغيل: <b>${run?s.uptime:'--'}</b></div><div>المساحة: <b>${s.disk_used} MB</b></div></div><div class="srv-actions">${(run&&web)?`<a class="icon-btn" title="فتح الموقع" href="/p/${s.folder}/" target="_blank"><i class="fas fa-arrow-up-right-from-square"></i></a>`:''}${web?`<button class="icon-btn" title="رابط عام للمشاركة" onclick="sharePublic('${s.folder}',${s.public?'true':'false'},'${s.public_url||''}')" style="${s.public?'color:var(--accent-light);border-color:rgba(168,85,247,.45)':''}"><i class="fas fa-share-nodes"></i></button>`:''}${run?`<button class="icon-btn" title="إيقاف" onclick="act('${s.folder}','stop')"><i class="fas fa-stop"></i></button><button class="icon-btn" title="إعادة" onclick="act('${s.folder}','restart')"><i class="fas fa-rotate"></i></button>`:`<button class="icon-btn" title="تشغيل" onclick="act('${s.folder}','start')"><i class="fas fa-play"></i></button>`}<button class="icon-btn" title="إدارة" onclick="openManage('${s.folder}','${esc(s.title)}')"><i class="fas fa-gears"></i></button><button class="icon-btn" style="${s.auto_restart?'color:var(--primary);border-color:rgba(0,230,118,.4)':''}" title="${s.auto_restart?'التشغيل التلقائي: مُفعّل':'التشغيل التلقائي: متوقف'}" onclick="act('${s.folder}','toggle-restart')"><i class="fas fa-arrows-rotate"></i></button><button class="icon-btn danger" title="حذف" onclick="delServer('${s.folder}')"><i class="fas fa-trash"></i></button></div></div>`;}).join('');}
 
 async function act(f,a){toast('جاري...');const d=await api(`/api/server/action/${f}/${a}`,{method:'POST'});toast(d.message,d.success);loadServers();}
 async function delServer(f){if(!confirm('حذف السيرفر نهائيًا؟'))return;const d=await api(`/api/server/action/${f}/delete`,{method:'POST'});toast(d.message,d.success);loadServers();}
+async function sharePublic(f,isOn,url){if(isOn){const full=location.origin+url;if(confirm('🔗 الرابط العام مفعّل:\n'+full+'\n\nموافق = نسخ الرابط | إلغاء = إيقاف الرابط')){try{await navigator.clipboard.writeText(full);}catch(e){}toast('📋 تم نسخ الرابط');}else{const d=await api('/api/server/public/'+f,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enable:false})});toast(d.message,d.success);loadServers();}return;}const d=await api('/api/server/public/'+f,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enable:true})});toast(d.message,d.success);if(d.success&&d.url){const full=location.origin+d.url;try{await navigator.clipboard.writeText(full);}catch(e){}alert('🔗 رابطك العام (تم نسخه تلقائيًا):\n'+full);}loadServers();}
 
 function openCreate(){$('cName').value='';selType(document.querySelector('.type-c.py'));$('mCreate').classList.add('open');}
 function selType(el){document.querySelectorAll('.type-c').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');selectedType=el.dataset.type;}
@@ -489,7 +497,7 @@ async function installDeps(){const d=await api(`/api/server/install/${CURF}`,{me
 async function loadConsole(){const d=await api(`/api/server/stats/${CURF}`);$('consoleOut').textContent=d.logs||'لا توجد مخرجات';$('consoleOut').scrollTop=$('consoleOut').scrollHeight;}
 async function loadErrors(){const d=await api(`/api/server/stats/${CURF}`);$('errorsOut').textContent=d.errors||'✅ لا توجد أخطاء';}
 
-async function openPlans(){const d=await api('/api/plans');const g=$('plansGrid');g.innerHTML=Object.entries(d.plans).filter(([k])=>k!=='admin').map(([k,p])=>`<div class="plan-c ${ME&&ME.plan===k?'cur':''}"><div class="pn">${p.name}</div><div class="pp">$${p.price}<small>/شهر</small></div><ul><li><i class="fas fa-hard-drive"></i> ${p.storage} MB تخزين</li><li><i class="fas fa-memory"></i> ${p.ram} MB رام</li><li><i class="fas fa-microchip"></i> ${p.cpu} CPU</li><li><i class="fas fa-server"></i> ${p.max_servers} سيرفر</li></ul>${ME&&ME.plan===k?'<button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center" disabled>الخطة الحالية</button>':`<button class="btn btn-primary btn-sm" style="width:100%;justify-content:center" onclick="goUpgrade('${k}',${p.price||0})"><i class="fas ${p.price>0?'fa-credit-card':'fa-bolt'}"></i> ${p.price>0?'اشترك الآن':'تفعيل'}</button>`}</div>`).join('');$('mPlans').classList.add('open');}
+async function openPlans(){const d=await api('/api/plans');const g=$('plansGrid');g.innerHTML=Object.entries(d.plans).filter(([k])=>k!=='admin').map(([k,p])=>`<div class="plan-c ${ME&&ME.plan===k?'cur':''}"><div class="pn">${p.name}</div><div class="pp">$${p.price}<small>/شهر</small></div><ul><li><i class="fas fa-hard-drive"></i> ${p.storage} MB تخزين</li><li><i class="fas fa-memory"></i> ${p.ram} MB ر��م</li><li><i class="fas fa-microchip"></i> ${p.cpu} CPU</li><li><i class="fas fa-server"></i> ${p.max_servers} سيرفر</li></ul>${ME&&ME.plan===k?'<button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center" disabled>الخطة الحالية</button>':`<button class="btn btn-primary btn-sm" style="width:100%;justify-content:center" onclick="goUpgrade('${k}',${p.price||0})"><i class="fas ${p.price>0?'fa-credit-card':'fa-bolt'}"></i> ${p.price>0?'اشترك الآن':'تفعيل'}</button>`}</div>`).join('');$('mPlans').classList.add('open');}
 async function upgrade(pid){const d=await api('/api/user/upgrade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan_id:pid})});toast(d.message,d.success);if(d.success){closeM('mPlans');await loadMe();loadServers();}}
 
 function openApi(){$('mApi').classList.add('open');}

@@ -248,6 +248,18 @@ def detect_main_file(srv_path, server_type):
                 return c
         js = [f for f in os.listdir(srv_path) if f.endswith(".js")]
         return js[0] if js else ""
+    if server_type == "PHP":
+        for c in ["index.php", "bot.php", "app.php", "main.php", "server.php"]:
+            if os.path.exists(os.path.join(srv_path, c)):
+                return c
+        php = [f for f in os.listdir(srv_path) if f.endswith(".php")]
+        return php[0] if php else "index.php"
+    if server_type == "HTML":
+        for c in ["index.html", "index.htm", "home.html"]:
+            if os.path.exists(os.path.join(srv_path, c)):
+                return c
+        html = [f for f in os.listdir(srv_path) if f.endswith((".html", ".htm"))]
+        return html[0] if html else "index.html"
     for c in ["main.py", "bot.py", "app.py", "index.py", "run.py", "start.py"]:
         if os.path.exists(os.path.join(srv_path, c)):
             return c
@@ -283,13 +295,16 @@ def start_server_process(folder):
     if not srv:
         return False, "\u0627\u0644\u0633\u064a\u0631\u0641\u0631 \u063a\u064a\u0631 \u0645\u0648\u062c\u0648\u062f"
     server_type = srv.get("type", "Python")
+    is_web = server_type == "HTML"
     main_file = srv.get("startup_file", "") or detect_main_file(srv["path"], server_type)
-    if not main_file:
+    if not main_file and not is_web:
         return False, "\u0644\u0627 \u064a\u0648\u062c\u062f \u0645\u0644\u0641 \u062a\u0634\u063a\u064a\u0644"
-    srv["startup_file"] = main_file
-    fpath = os.path.join(srv["path"], main_file)
-    if not os.path.exists(fpath):
-        return False, f"\u0627\u0644\u0645\u0644\u0641 '{main_file}' \u063a\u064a\u0631 \u0645\u0648\u062c\u0648\u062f"
+    if main_file:
+        srv["startup_file"] = main_file
+    if not is_web:
+        fpath = os.path.join(srv["path"], main_file)
+        if not os.path.exists(fpath):
+            return False, f"\u0627\u0644\u0645\u0644\u0641 '{main_file}' \u063a\u064a\u0631 \u0645\u0648\u062c\u0648\u062f"
     port = srv.get("port") or get_assigned_port()
     srv["port"] = port
     log_path = os.path.join(srv["path"], "out.log")
@@ -300,7 +315,14 @@ def start_server_process(folder):
         lf.flush()
         env = os.environ.copy()
         env["PORT"] = str(port)
-        cmd = ["node", main_file] if server_type == "Node.js" else [sys.executable, "-u", main_file]
+        if server_type == "Node.js":
+            cmd = ["node", main_file]
+        elif server_type == "PHP":
+            cmd = ["php", main_file]
+        elif server_type == "HTML":
+            cmd = [sys.executable, "-u", "-m", "http.server", str(port), "--directory", srv["path"]]
+        else:
+            cmd = [sys.executable, "-u", main_file]
         proc = subprocess.Popen(
             cmd, cwd=srv["path"], stdout=lf,
             stderr=open(error_path, "a", encoding="utf-8"), env=env,
@@ -310,7 +332,7 @@ def start_server_process(folder):
         save_db(db)
         return True, "\u2705 \u062a\u0645 \u0627\u0644\u062a\u0634\u063a\u064a\u0644"
     except FileNotFoundError:
-        return False, "\u274c \u0627\u0644\u0645\u0634\u063a\u0651\u0644 \u063a\u064a\u0631 \u0645\u062b\u0628\u0651\u062a (node/python)"
+        return False, "\u274c \u0627\u0644\u0645\u0634\u063a\u0651\u0644 \u063a\u064a\u0631 \u0645\u062b\u0628\u0651\u062a (node/python/php)"
     except Exception as e:
         return False, str(e)
 
@@ -988,6 +1010,8 @@ def list_servers():
                 "cpu_limit": srv.get("cpu_limit", 0.5),
                 "auto_restart": srv.get("auto_restart", True),
                 "restart_count": srv.get("restart_count", 0),
+                "public": srv.get("public", False),
+                "public_url": (f"/v/{srv['public_token']}/" if srv.get("public") and srv.get("public_token") else ""),
             })
     u = db["users"].get(uname, {})
     return jsonify(success=True, servers=out, stats={
@@ -1002,7 +1026,7 @@ def _create_server(username, name, server_type):
     count = len([s for s in db["servers"].values() if s.get("owner") == username])
     if count >= user.get("max_servers", 2):
         return None, f"\u0648\u0635\u0644\u062a \u0644\u0644\u062d\u062f \u0627\u0644\u0623\u0642\u0635\u0649 ({user.get('max_servers', 2)})"
-    if server_type not in ("Python", "Node.js"):
+    if server_type not in ("Python", "Node.js", "PHP", "HTML"):
         server_type = "Python"
     plan = db["plans"].get(user.get("plan", "free"), db["plans"]["free"])
     folder = f"{username}_{re.sub(r'[^a-zA-Z0-9]', '', name)}_{int(time.time())}"
@@ -1207,19 +1231,33 @@ def files_upload(folder):
     if not files:
         return jsonify(success=False, message="\u0644\u0627 \u062a\u0648\u062c\u062f \u0645\u0644\u0641\u0627\u062a")
     uploaded = 0
+    extracted = 0
     for f in files:
         if not f or not f.filename or ".." in f.filename:
             continue
         try:
-            f.save(os.path.join(srv["path"], os.path.basename(f.filename)))
+            dest = os.path.join(srv["path"], os.path.basename(f.filename))
+            f.save(dest)
             uploaded += 1
+            if dest.lower().endswith(".zip"):
+                try:
+                    with zipfile.ZipFile(dest, "r") as zf:
+                        if all(not (m.startswith("/") or ".." in m) for m in zf.namelist()):
+                            zf.extractall(srv["path"])
+                            extracted += 1
+                            os.remove(dest)
+                except Exception:
+                    pass
         except Exception:
             pass
     if uploaded:
         threading.Thread(target=auto_install_deps,
                          args=(srv["path"], srv.get("type", "Python"), os.path.join(srv["path"], "out.log")),
                          daemon=True).start()
-        return jsonify(success=True, message=f"\u2705 \u062a\u0645 \u0631\u0641\u0639 {uploaded} \u0645\u0644\u0641")
+        msg = f"\u2705 \u062a\u0645 \u0631\u0641\u0639 {uploaded} \u0645\u0644\u0641"
+        if extracted:
+            msg += f" \u0648\u062a\u0645 \u0641\u0643 {extracted} \u0623\u0631\u0634\u064a\u0641 ZIP \u062a\u0644\u0642\u0627\u0626\u064a\u064b\u0627"
+        return jsonify(success=True, message=msg)
     return jsonify(success=False, message="\u0641\u0634\u0644 \u0627\u0644\u0631\u0641\u0639")
 
 
@@ -1306,6 +1344,72 @@ def file_create(folder):
         return jsonify(success=True, message=f"\u2705 \u062a\u0645 \u0625\u0646\u0634\u0627\u0621 {fn}")
     except Exception as e:
         return jsonify(success=False, message=str(e))
+
+
+# ----------------------------------------------------------------------
+#  \u0645\u0639\u0627\u064a\u0646\u0629 \u0645\u0648\u0627\u0642\u0639 PHP / HTML (\u0628\u0631\u0648\u0643\u0633\u064a)
+# ----------------------------------------------------------------------
+def _proxy_to_server(srv, sub):
+    if srv.get("type") != "HTML" or srv.get("status") != "Running" or not srv.get("port"):
+        return ("<h3 style='font-family:sans-serif;text-align:center;margin-top:40px'>\u26a0\ufe0f \u0627\u0644\u0633\u064a\u0631\u0641\u0631 \u0645\u062a\u0648\u0642\u0641 \u062d\u0627\u0644\u064a\u064b\u0627.</h3>", 503)
+    target = f"http://127.0.0.1:{srv['port']}/{sub}"
+    try:
+        fwd = {k: v for k, v in request.headers if k.lower() not in ("host", "content-length")}
+        resp = requests.request(request.method, target, params=request.args,
+                                data=request.get_data(), headers=fwd,
+                                cookies=request.cookies, allow_redirects=False, timeout=30)
+    except Exception as e:
+        return (f"<h3 style='font-family:sans-serif;text-align:center;margin-top:40px'>\u062a\u0639\u0630\u0651\u0631 \u0627\u0644\u0648\u0635\u0648\u0644 \u0644\u0644\u0633\u064a\u0631\u0641\u0631: {e}</h3>", 502)
+    excluded = {"content-encoding", "content-length", "transfer-encoding", "connection"}
+    headers = [(k, v) for k, v in resp.headers.items() if k.lower() not in excluded]
+    return (resp.content, resp.status_code, headers)
+
+
+@app.route("/p/<folder>/", defaults={"sub": ""}, methods=["GET", "POST", "HEAD"])
+@app.route("/p/<folder>/<path:sub>", methods=["GET", "POST", "HEAD"])
+@login_required
+def preview_proxy(folder, sub):
+    srv = owned_server(folder)
+    if not srv:
+        return ("\u063a\u064a\u0631 \u0645\u0635\u0631\u062d", 403)
+    return _proxy_to_server(srv, sub)
+
+
+def _find_public_server(token):
+    if not token:
+        return None
+    for srv in db["servers"].values():
+        if srv.get("public") and srv.get("public_token") == token:
+            return srv
+    return None
+
+
+@app.route("/v/<token>/", defaults={"sub": ""}, methods=["GET", "POST", "HEAD"])
+@app.route("/v/<token>/<path:sub>", methods=["GET", "POST", "HEAD"])
+def public_site(token, sub):
+    srv = _find_public_server(token)
+    if not srv:
+        return ("<h3 style='font-family:sans-serif;text-align:center;margin-top:40px'>\u26d4 \u0627\u0644\u0631\u0627\u0628\u0637 \u063a\u064a\u0631 \u0645\u062a\u0627\u062d \u0623\u0648 \u0645\u0648\u0642\u0648\u0641.</h3>", 404)
+    return _proxy_to_server(srv, sub)
+
+
+@app.route("/api/server/public/<folder>", methods=["POST"])
+@login_required
+def toggle_public(folder):
+    srv = owned_server(folder)
+    if not srv:
+        return jsonify(success=False, message="\u063a\u064a\u0631 \u0645\u0635\u0631\u062d")
+    if srv.get("type") != "HTML":
+        return jsonify(success=False, message="\u0627\u0644\u0631\u0627\u0628\u0637 \u0627\u0644\u0639\u0627\u0645 \u0645\u062a\u0627\u062d \u0644\u0645\u0648\u0627\u0642\u0639 HTML \u0641\u0642\u0637")
+    data = request.get_json(silent=True) or {}
+    enable = data.get("enable")
+    srv["public"] = (not srv.get("public", False)) if enable is None else bool(enable)
+    if srv["public"] and not srv.get("public_token"):
+        srv["public_token"] = secrets.token_urlsafe(9)
+    save_db(db)
+    url = f"/v/{srv['public_token']}/" if srv["public"] else ""
+    return jsonify(success=True, public=srv["public"], url=url,
+                   message=("\u2705 \u062a\u0645 \u062a\u0641\u0639\u064a\u0644 \u0627\u0644\u0631\u0627\u0628\u0637 \u0627\u0644\u0639\u0627\u0645" if srv["public"] else "\u23f9\ufe0f \u062a\u0645 \u0625\u064a\u0642\u0627\u0641 \u0627\u0644\u0631\u0627\u0628\u0637 \u0627\u0644\u0639\u0627\u0645"))
 
 
 # ----------------------------------------------------------------------

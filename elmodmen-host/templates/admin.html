@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#040910">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=5">
-<link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16.png?v=5">
-<link rel="shortcut icon" href="/static/favicon.ico?v=5">
-<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png?v=5">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=7">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16.png?v=7">
+<link rel="shortcut icon" href="/static/favicon.ico?v=7">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png?v=7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -26,7 +26,7 @@ html[data-theme="light"] .btn-ghost{background:rgba(0,0,0,.04);color:var(--txt)}
 html[data-theme="light"] th,html[data-theme="light"] td{border-color:rgba(0,0,0,.07)}
 html[data-theme="light"] tr:hover td{background:rgba(124,58,237,.05)}
 html[data-theme="light"] .box{background:#fff}
-#themeToggle{position:fixed;bottom:18px;right:18px;z-index:99998;width:46px;height:46px;border-radius:14px;border:1px solid var(--line);cursor:pointer;font-size:17px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#7c3aed,#00e676);box-shadow:0 10px 28px rgba(124,58,237,.4);transition:.18s}
+#themeToggle{position:fixed;bottom:96px;right:18px;z-index:99998;width:46px;height:46px;border-radius:14px;border:1px solid var(--line);cursor:pointer;font-size:17px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#7c3aed,#00e676);box-shadow:0 10px 28px rgba(124,58,237,.4);transition:.18s}
 #themeToggle:hover{transform:translateY(-3px) rotate(-8deg)}
 :root{--primary:#00e676;--primary-dark:#00b258;--accent:#7c3aed;--accent-light:#a855f7;
 --bg:#040910;--card:rgba(12,22,36,.78);--line:rgba(124,58,237,.18);--txt:#e6edf3;--muted:rgba(230,237,243,.45);
@@ -68,7 +68,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(6,12,20,.85);backdrop-fi
 .btn-red{background:rgba(255,84,112,.13);color:var(--red);border:1px solid rgba(255,84,112,.3)}
 .btn-red:hover{background:rgba(255,84,112,.22)}
 .btn-sm{padding:7px 12px;font-size:13px}
-.wrap{position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:26px 22px 60px}
+.wrap{position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:26px 22px 104px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:26px}
 .stat{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:18px;padding:20px 22px;position:relative;overflow:hidden}
 .stat .lbl{color:var(--muted);font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:7px}
@@ -139,7 +139,7 @@ select option{background:#0a1422}
 .g-val{font-size:25px;font-weight:900;line-height:1}
 .g-lbl{color:var(--muted);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:2px}
 .g-lbl i{color:var(--primary)}
-.bnav{position:fixed;bottom:0;left:0;right:0;z-index:60;display:none;align-items:center;justify-content:space-around;padding:9px 4px calc(9px + env(safe-area-inset-bottom));background:rgba(6,12,20,.94);backdrop-filter:blur(22px);border-top:1px solid var(--line)}
+.bnav{position:fixed;bottom:0;left:0;right:0;max-width:680px;margin:0 auto;z-index:60;display:flex;align-items:center;justify-content:space-around;padding:9px 4px calc(9px + env(safe-area-inset-bottom));background:rgba(6,12,20,.94);backdrop-filter:blur(22px);border:1px solid var(--line);border-bottom:none;border-radius:20px 20px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.4)}
 .bnav button,.bnav a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:10px;font-weight:800;cursor:pointer;border:none;background:none;font-family:inherit;padding:4px 9px;border-radius:11px;transition:.16s;text-decoration:none}
 .bnav i{font-size:18px}
 .bnav .active,.bnav button:hover,.bnav a:hover{color:var(--primary)}
@@ -155,7 +155,7 @@ html[data-theme="light"] .bnav{background:rgba(255,255,255,.94)}
 
 <header>
   <div class="hwrap">
-    <div class="logo"><div class="ic"><img src="/static/logo.png?v=5" alt="BATMAN Dev"></div>𝑩𝑨𝑻𝑴𝑨𝑵 <span>𝑫𝒆𝒗𓃠</span></div>
+    <div class="logo"><div class="ic"><img src="/static/logo.png?v=7" alt="BATMAN Dev"></div>𝑩𝑨𝑻𝑴𝑨𝑵 <span>𝑫𝒆𝒗𓃠</span></div>
     <div style="display:flex;align-items:center;gap:12px">
       <div class="pill"><i class="fas fa-user-shield"></i><span id="adminName">admin</span></div>
       <button class="btn btn-ghost btn-sm" onclick="logout()"><i class="fas fa-right-from-bracket"></i></button>
