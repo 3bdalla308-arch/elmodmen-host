@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "sh -c 'gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 120'",
+    "startCommand": "sh -c 'P=$(find . -name app.py -not -path \"*/node_modules/*\" -not -path \"*/data/*\" 2>/dev/null | head -1); cd \"$(dirname \"$P\")\"; echo \"[boot] running from: $(pwd)\"; exec gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 120'",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 100,
     "restartPolicyType": "ON_FAILURE",

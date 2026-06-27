@@ -1,1 +1,1 @@
-web: sh -c 'gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 120'
+web: sh -c 'P=$(find . -name app.py -not -path "*/node_modules/*" -not -path "*/data/*" 2>/dev/null | head -1); cd "$(dirname "$P")"; exec gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 120'
