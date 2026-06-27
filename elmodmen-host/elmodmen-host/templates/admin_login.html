@@ -2,50 +2,90 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#0b0f17">
-<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=8">
-<title>دخول الأدمن</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#101418">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/static/favicon.ico">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>أدمن — BATMAN Dev</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--accent:#8b5cf6;--bg:#0b0f17;--surface:#141a25;--surface-2:#1a2230;--surface-3:#202a3a;--border:#222b3a;--text:#e6edf3;--muted:#8b95a7;--red:#ef4444}
-html,body{height:100%;overscroll-behavior:none}
-body{font-family:'Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;
-  min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
-.card{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px 22px}
-.h{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:22px;text-align:center}
-.ic{width:64px;height:64px;border-radius:16px;background:rgba(139,92,246,.13);color:var(--accent);display:grid;place-items:center;font-size:25px}
-.h h1{font-size:20px;font-weight:800}
-.h p{font-size:13px;color:var(--muted);font-weight:600}
-label{display:block;font-size:13.5px;font-weight:700;margin:14px 0 7px}
-.in-wrap{position:relative}
-.in-wrap i{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
-input{width:100%;padding:14px 42px 14px 14px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;color:var(--text);font-family:inherit;font-size:16px;min-height:50px}
-input:focus{outline:none;border-color:var(--accent);background:var(--surface-3)}
-.btn{width:100%;border:none;font-family:inherit;font-weight:800;font-size:15.5px;cursor:pointer;border-radius:12px;padding:15px;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#fff;margin-top:22px;min-height:52px}
-.btn:active{transform:scale(.98)}
-.err{margin-top:14px;padding:11px 13px;border-radius:10px;font-size:13.5px;font-weight:700;background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.25);display:flex;align-items:center;gap:8px}
-.back{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);color:var(--muted);font-size:13px;text-decoration:none;font-weight:700;background:var(--surface);border:1px solid var(--border);padding:10px 16px;border-radius:11px}
+:root{
+  --primary:#c2b6ff;--on-primary:#2c1f6e;
+  --primary-container:#433786;--on-primary-container:#e4dfff;
+  --secondary:#7af0b4;--secondary-container:#005230;--on-secondary-container:#a4f6c8;
+  --error:#ffb4ab;--error-container:#93000a;--on-error-container:#ffdad6;
+  --bg:#101418;--s1:#171b1f;--s2:#1c2024;--s3:#1f2429;--s4:#222830;
+  --on-surface:#e1e3e7;--on-surface-v:#c1c7ce;--outline:#8b9198;--outline-v:#41474d;
+  --label:var(--on-surface);--label-2:var(--on-surface-v);--label-3:rgba(193,199,206,.55);
+  --separator:rgba(65,71,77,.6);
+  --safe-top:env(safe-area-inset-top);--safe-bot:env(safe-area-inset-bottom);
+  --el1:0 1px 2px rgba(0,0,0,.3),0 1px 3px 1px rgba(0,0,0,.15);
+  --el2:0 1px 2px rgba(0,0,0,.3),0 2px 6px 2px rgba(0,0,0,.15);
+  --el3:0 4px 8px 3px rgba(0,0,0,.15),0 1px 3px rgba(0,0,0,.3);
+}
+html[data-theme="light"]{
+  --bg:#fef7ff;--s1:#f7f2fa;--s2:#f1ecf4;--s3:#ebe6ee;--s4:#e8e3eb;
+  --on-surface:#1c1b1f;--on-surface-v:#49454f;--outline:#79747e;--outline-v:#cac4d0;
+  --primary:#5e5891;--on-primary:#fff;--primary-container:#e4dfff;--on-primary-container:#19134d;
+  --secondary:#006d3d;--secondary-container:#9bf6c3;--on-secondary-container:#00210e;
+  --error:#ba1a1a;--error-container:#ffdad6;--on-error-container:#410002;
+  --label:var(--on-surface);--label-2:var(--on-surface-v);--label-3:rgba(73,69,79,.5);
+  --separator:rgba(202,196,208,.7);
+}
+html,body{height:100%}
+body{font-family:'Roboto','Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--label);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:calc(var(--safe-top) + 24px) 16px calc(var(--safe-bot) + 24px);-webkit-font-smoothing:antialiased;font-size:14px;letter-spacing:.1px}
+.wrap{width:100%;max-width:420px;margin:auto 0}
+.brand{text-align:center;margin-bottom:30px}
+.logo{width:84px;height:84px;border-radius:24px;background:linear-gradient(135deg,var(--primary) 0%,#a78bfa 100%);display:grid;place-items:center;margin:0 auto 18px;color:#1c0a44;font-size:34px;box-shadow:var(--el3)}
+.brand h1{font-size:28px;font-weight:500;margin-bottom:6px;line-height:1.2}
+.brand p{font-size:14px;color:var(--label-2);font-weight:400;letter-spacing:.25px;display:inline-flex;align-items:center;gap:7px}
+.brand p i{color:var(--primary)}
+.card{background:var(--s1);border-radius:28px;padding:8px 0 20px;box-shadow:var(--el1);overflow:hidden}
+.card-h{padding:18px 24px 12px}
+.card-h h2{font-size:18px;font-weight:500}
+.card-h p{font-size:13px;color:var(--label-2);font-weight:400;margin-top:4px;letter-spacing:.25px}
+.field{position:relative;display:flex;align-items:center;gap:14px;padding:14px 22px;min-height:60px}
+.field + .field::before{content:"";position:absolute;top:0;right:22px;left:22px;height:1px;background:var(--separator)}
+.field .ic{width:24px;height:24px;display:grid;place-items:center;color:var(--label-2);flex:none;font-size:16px}
+.field-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.field label{font-size:12px;font-weight:500;color:var(--label-2);letter-spacing:.4px}
+.field input{width:100%;border:none;background:none;color:var(--label);font-family:inherit;font-size:16px;outline:none;text-align:right;padding:0;letter-spacing:.25px}
+.field input::placeholder{color:var(--label-3)}
+.btn{cursor:pointer;border:none;font-family:inherit;font-weight:500;font-size:15px;border-radius:99px;padding:0 24px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--on-primary);background:var(--primary);width:calc(100% - 32px);margin:18px 16px 0;height:48px;box-shadow:var(--el1);transition:.18s;letter-spacing:.1px}
+.btn:active{transform:scale(.97);box-shadow:var(--el2)}
+.btn-link{background:none;color:var(--primary);box-shadow:none;height:40px;margin-top:8px;font-weight:500;font-size:14px}
+.err{background:var(--error-container);color:var(--on-error-container);padding:14px 18px;border-radius:14px;font-size:13px;font-weight:500;display:none;align-items:center;gap:10px;margin:12px 16px 0;letter-spacing:.2px}
+.err.show{display:flex}
+.err i{font-size:16px}
+.foot{text-align:center;margin-top:24px;color:var(--label-3);font-size:12px;font-weight:400;letter-spacing:.4px}
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="h">
-    <div class="ic"><i class="fas fa-user-shield"></i></div>
+<div class="wrap">
+  <div class="brand">
+    <div class="logo"><i class="fas fa-crown"></i></div>
     <h1>دخول الأدمن</h1>
-    <p>دخول محدود للمسؤولين فقط</p>
+    <p><i class="fas fa-user-shield"></i> لوحة التحكم</p>
   </div>
-  __ERROR__
-  <form method="POST">
-    <label>اسم المستخدم</label>
-    <div class="in-wrap"><i class="fas fa-user"></i><input name="username" autocomplete="username" required></div>
-    <label>كلمة المرور</label>
-    <div class="in-wrap"><i class="fas fa-lock"></i><input name="password" type="password" autocomplete="current-password" required></div>
-    <button class="btn" type="submit"><i class="fas fa-right-to-bracket"></i> دخول</button>
-  </form>
+  <div class="card">
+    <div class="card-h"><h2>تسجيل الدخول</h2><p>فقط للمديرين</p></div>
+    <div class="field"><div class="ic"><i class="fas fa-user-shield"></i></div><div class="field-body"><label>اسم الأدمن</label><input id="user" autocapitalize="off" spellcheck="false" autocomplete="username" placeholder="admin"></div></div>
+    <div class="field"><div class="ic"><i class="fas fa-lock"></i></div><div class="field-body"><label>كلمة المرور</label><input id="pass" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div></div>
+    <div class="err" id="err"><i class="fas fa-circle-exclamation"></i><span id="errMsg"></span></div>
+    <button class="btn" onclick="doLogin()"><i class="fas fa-shield-halved"></i> دخول الأدمن</button>
+    <a class="btn btn-link" href="/login"><i class="fas fa-arrow-right"></i> دخول عادي</a>
+  </div>
+  <div class="foot">© BATMAN Dev — Admin Panel</div>
 </div>
-<a class="back" href="/login"><i class="fas fa-arrow-right-long"></i> العودة للدخول العادي</a>
+<script>
+(function(){var s=localStorage.getItem('bm_theme')||'dark';document.documentElement.setAttribute('data-theme',s);const mc=document.querySelector('meta[name="theme-color"]');if(mc)mc.setAttribute('content',s==='light'?'#fef7ff':'#101418');})();
+async function doLogin(){const u=document.getElementById('user').value.trim();const p=document.getElementById('pass').value;const err=document.getElementById('err');err.classList.remove('show');if(!u||!p){document.getElementById('errMsg').textContent='أكمل الحقول';err.classList.add('show');return;}try{const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});const d=await r.json();if(d.success){location.href='/admin';}else{document.getElementById('errMsg').textContent=d.message||'خطأ';err.classList.add('show');}}catch(e){document.getElementById('errMsg').textContent='خطأ اتصال';err.classList.add('show');}}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{});}
+</script>
 </body>
 </html>

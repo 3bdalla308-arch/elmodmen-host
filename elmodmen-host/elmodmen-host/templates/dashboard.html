@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b0f17">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#101418">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=8">
 <link rel="shortcut icon" href="/static/favicon.ico?v=8">
@@ -12,9 +12,10 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BATMAN Dev">
-<title>BATMAN Dev — لوحة التحكم</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>BATMAN Dev</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
@@ -25,638 +26,544 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-/* ============ MOBILE-FIRST RESET + TOKENS ============ */
+/* =========================================================
+   MATERIAL YOU (Material 3) — Android-native feel
+   ========================================================= */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --primary:#00c46a;--primary-2:#00a85a;--accent:#8b5cf6;--accent-2:#7c3aed;
-  --bg:#0b0f17;--surface:#141a25;--surface-2:#1a2230;--surface-3:#202a3a;
-  --border:#222b3a;--text:#e6edf3;--muted:#8b95a7;
-  --red:#ef4444;--warn:#f59e0b;--blue:#38bdf8;
+  /* M3 color tokens (BATMAN Dev branding) */
+  --primary:#7af0b4; --on-primary:#003918;
+  --primary-container:#005230; --on-primary-container:#a4f6c8;
+  --secondary:#c2b6ff; --on-secondary:#2c1f6e;
+  --secondary-container:#433786; --on-secondary-container:#e4dfff;
+  --tertiary:#7fd2ff; --tertiary-container:#004a72; --on-tertiary-container:#c4e7ff;
+  --error:#ffb4ab; --error-container:#93000a; --on-error-container:#ffdad6;
+  --warning:#ffb868; --warning-container:#5a3d00; --on-warning-container:#ffddb4;
+
+  /* Dark surfaces (tinted, not pure black) */
+  --grouped:#101418;
+  --surface:#101418;
+  --s1:#171b1f;     /* level 1 */
+  --s2:#1c2024;     /* level 2 */
+  --s3:#1f2429;     /* level 3 */
+  --s4:#222830;     /* level 4 */
+  --s5:#272d35;     /* level 5 */
+  --on-surface:#e1e3e7;
+  --on-surface-v:#c1c7ce;
+  --outline:#8b9198;
+  --outline-v:#41474d;
+  --scrim:rgba(0,0,0,.55);
+
+  /* legacy aliases (existing class names still work) */
+  --tint:var(--primary);--accent:var(--secondary);--accent-2:#a78bfa;
+  --red:var(--error);--orange:var(--warning);--blue:var(--tertiary);
+  --label:var(--on-surface);--label-2:var(--on-surface-v);
+  --label-3:rgba(193,199,206,.55);--label-4:rgba(193,199,206,.22);
+  --separator:rgba(65,71,77,.6);--separator-strong:var(--outline-v);
+
   --safe-top:env(safe-area-inset-top);
   --safe-bot:env(safe-area-inset-bottom);
+  --tab-h:80px;
+
+  --el1:0 1px 2px rgba(0,0,0,.3),0 1px 3px 1px rgba(0,0,0,.15);
+  --el2:0 1px 2px rgba(0,0,0,.3),0 2px 6px 2px rgba(0,0,0,.15);
+  --el3:0 4px 8px 3px rgba(0,0,0,.15),0 1px 3px rgba(0,0,0,.3);
 }
-html[data-theme="light"]{--bg:#f5f7fa;--surface:#fff;--surface-2:#f0f3f7;--surface-3:#e8ecf2;--border:#e4e7eb;--text:#1a202c;--muted:#64748b}
+html[data-theme="light"]{
+  --grouped:#fef7ff;--surface:#fef7ff;
+  --s1:#f7f2fa;--s2:#f1ecf4;--s3:#ebe6ee;--s4:#e8e3eb;--s5:#e4dfe7;
+  --on-surface:#1c1b1f;--on-surface-v:#49454f;--outline:#79747e;--outline-v:#cac4d0;
+  --primary:#006d3d;--on-primary:#fff;--primary-container:#9bf6c3;--on-primary-container:#00210e;
+  --secondary:#5e5891;--on-secondary:#fff;--secondary-container:#e4dfff;--on-secondary-container:#19134d;
+  --tertiary:#0061a4;--tertiary-container:#cee5ff;--on-tertiary-container:#001d35;
+  --error:#ba1a1a;--error-container:#ffdad6;--on-error-container:#410002;
+  --warning:#825500;--warning-container:#ffddb4;--on-warning-container:#291800;
+  --label:var(--on-surface);--label-2:var(--on-surface-v);
+  --label-3:rgba(73,69,79,.5);--label-4:rgba(73,69,79,.2);
+  --separator:rgba(202,196,208,.7);--separator-strong:var(--outline-v);
+  --scrim:rgba(0,0,0,.4);
+}
 html,body{height:100%;overscroll-behavior-y:contain}
-body{font-family:'Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--text);
-  min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;font-size:14.5px}
+body{font-family:'Roboto','Tajawal',system-ui,sans-serif;
+  background:var(--grouped);color:var(--label);min-height:100vh;
+  line-height:1.43;-webkit-font-smoothing:antialiased;font-size:14px;letter-spacing:.1px}
 
-/* ============ HEADER (MOBILE) ============ */
-header{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--border);
-  padding-top:var(--safe-top)}
-.hwrap{padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px;min-width:0}
-.logo .ic{width:34px;height:34px;border-radius:10px;overflow:hidden;flex:none;background:var(--surface-2)}
-.logo .ic img{width:100%;height:100%;object-fit:cover;display:block}
-.logo .accent{color:var(--primary)}
-.huser{display:flex;align-items:center;gap:8px}
-.pill{display:none;align-items:center;gap:6px;padding:6px 11px;background:var(--surface-2);
-  border:1px solid var(--border);border-radius:9px;font-size:12px;font-weight:700;color:var(--text)}
-.pill i{color:var(--muted);font-size:11px}
-.user-chip{display:flex;align-items:center;gap:7px;padding:5px 10px 5px 5px;background:var(--surface-2);
-  border:1px solid var(--border);border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;max-width:140px}
-.user-chip .av{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;
-  display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}
-.user-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.app{padding:calc(var(--safe-top) + 8px) 0 calc(var(--tab-h) + var(--safe-bot) + 24px);max-width:680px;margin:0 auto}
 
-/* ============ BUTTONS ============ */
-.btn{cursor:pointer;border:none;border-radius:11px;font-family:inherit;font-weight:700;font-size:14px;
-  padding:12px 16px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  transition:.15s;white-space:nowrap;color:var(--text);min-height:44px}
-.btn:active{transform:scale(.97)}
-.btn-primary{background:var(--primary);color:#fff}
-.btn-accent{background:var(--accent);color:#fff}
-.btn-ghost{background:var(--surface-2);color:var(--text);border:1px solid var(--border)}
-.btn-red{background:rgba(239,68,68,.13);color:var(--red);border:1px solid rgba(239,68,68,.25)}
-.btn-sm{padding:8px 12px;font-size:12.5px;min-height:36px}
-.btn-block{width:100%}
-.icon-btn{cursor:pointer;width:40px;height:40px;border-radius:11px;border:1px solid var(--border);
-  background:var(--surface-2);color:var(--text);display:grid;place-items:center;font-size:14px;
-  text-decoration:none;transition:.15s}
-.icon-btn:active{transform:scale(.94)}
-.icon-btn.danger{color:var(--red);border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
-.icon-btn.green{color:var(--primary);border-color:rgba(0,196,106,.25);background:rgba(0,196,106,.08)}
+/* ============ TOP APP BAR (M3) ============ */
+.lt{padding:14px 20px 22px;background:var(--s1);margin:0 0 14px;border-radius:0 0 28px 28px;box-shadow:var(--el1)}
+.lt-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.lt-row h1{font-size:24px;font-weight:500;letter-spacing:0;line-height:1.2;color:var(--label)}
+.lt-row p{font-size:14px;color:var(--label-2);font-weight:400;margin-top:4px;letter-spacing:.25px}
+.av-big{width:44px;height:44px;border-radius:50%;background:var(--secondary-container);color:var(--on-secondary-container);
+  display:grid;place-items:center;font-size:17px;font-weight:600;cursor:pointer;border:none;flex:none;transition:.18s;font-family:inherit}
+.av-big:active{transform:scale(.92)}
+.av-big.admin{background:var(--secondary-container);color:var(--on-secondary-container)}
 
-.wrap{padding:14px 14px calc(96px + var(--safe-bot)) 14px;max-width:1200px;margin:0 auto}
+/* ============ SECTION HEADER (M3 title-medium) ============ */
+.sec-h{padding:16px 24px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sec-h .lbl{font-size:14px;font-weight:500;color:var(--label);letter-spacing:.1px}
+.sec-h .act{font-size:14px;font-weight:500;color:var(--primary);cursor:pointer;background:none;border:none;
+  font-family:inherit;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;min-height:36px;letter-spacing:.1px;transition:.15s}
+.sec-h .act:active{background:rgba(122,240,180,.12)}
 
-/* ============ WELCOME ROW ============ */
-.welcome{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px}
-.welcome h1{font-size:18px;font-weight:800}
-.welcome p{font-size:12px;color:var(--muted);font-weight:600;margin-top:2px}
+/* ============ M3 CARD (elevated container) ============ */
+.group{margin:0 12px;background:var(--s1);border-radius:20px;overflow:hidden;box-shadow:var(--el1)}
+.row{display:flex;align-items:center;gap:14px;padding:14px 20px;min-height:64px;cursor:pointer;
+  position:relative;transition:background .15s;color:var(--label);text-decoration:none;
+  font-family:inherit;width:100%;background:none;border:none;text-align:right;font-size:14px}
+.row:active{background:var(--s3)}
+.row + .row::before{content:"";position:absolute;top:0;right:74px;left:20px;height:1px;background:var(--separator)}
+.row .ric{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:16px;color:#fff;flex:none}
+.row .rbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.row .rtitle{font-size:16px;font-weight:500;line-height:1.25;color:var(--label);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.1px}
+.row .rsub{font-size:13px;color:var(--label-2);font-weight:400;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.2px}
+.row .rval{font-size:14px;color:var(--label-2);font-weight:500;flex:none}
+.row .rch{color:var(--label-3);font-size:14px;margin-right:-4px;flex:none}
 
-/* ============ QUICK ACTIONS GRID (MOBILE 3-COL) ============ */
-.qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 6px;
-  display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;color:var(--text);
-  text-decoration:none;font-family:inherit;font-weight:700;font-size:11.5px;text-align:center;min-height:78px}
-.qcard:active{transform:scale(.96);background:var(--surface-2)}
-.qi{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:15px;
-  background:rgba(0,196,106,.13);color:var(--primary)}
-.qcard:nth-child(2) .qi{background:rgba(139,92,246,.13);color:var(--accent)}
-.qcard:nth-child(3) .qi{background:rgba(56,189,248,.13);color:var(--blue)}
-.qcard:nth-child(4) .qi{background:rgba(245,158,11,.13);color:var(--warn)}
-.qcard:nth-child(5) .qi{background:var(--surface-2);color:var(--muted)}
+/* ============ METRIC ROW ============ */
+.metric{display:flex;align-items:center;gap:14px;padding:14px 20px;min-height:66px;position:relative}
+.metric + .metric::before{content:"";position:absolute;top:0;right:74px;left:20px;height:1px;background:var(--separator)}
+.metric .ric{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:16px;color:var(--on-primary);flex:none}
+.metric .mbody{flex:1;min-width:0}
+.metric .mtop{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.metric .mtitle{font-size:15px;font-weight:500;color:var(--label);letter-spacing:.1px}
+.metric .mval{font-size:13px;color:var(--label-2);font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:.2px}
+.metric .mval b{color:var(--label);font-weight:600}
+.metric .pbar{height:8px;border-radius:99px;background:var(--s4);overflow:hidden}
+.metric .pbar i{display:block;height:100%;border-radius:99px;transition:width .6s cubic-bezier(.2,0,0,1)}
+.metric.cpu .ric{background:var(--secondary-container);color:var(--on-secondary-container)}
+.metric.cpu .pbar i{background:var(--secondary)}
+.metric.mem .ric{background:var(--primary-container);color:var(--on-primary-container)}
+.metric.mem .pbar i{background:var(--primary)}
+.metric.disk .ric{background:var(--tertiary-container);color:var(--on-tertiary-container)}
+.metric.disk .pbar i{background:var(--tertiary)}
+.metric.srv .ric{background:var(--warning-container);color:var(--on-warning-container)}
+.metric.srv .pbar i{background:var(--warning)}
 
-/* ============ STATS ROW ============ */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px}
-.stat .lbl{color:var(--muted);font-size:11.5px;font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:5px}
-.stat .lbl i{font-size:10px}
-.stat .val{font-size:18px;font-weight:800;line-height:1.1}
-.stat .val small{font-size:11px;color:var(--muted);font-weight:600}
-.bar{height:5px;border-radius:3px;background:var(--surface-3);margin-top:9px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--primary);transition:.5s;border-radius:3px}
+/* ============ M3 ASSIST CHIPS (horizontal scroll) ============ */
+.qrow{display:flex;gap:8px;padding:4px 16px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.qrow::-webkit-scrollbar{display:none}
+.qpill{flex:none;background:transparent;border:1px solid var(--outline-v);border-radius:8px;
+  padding:0 16px;display:flex;align-items:center;gap:8px;
+  font-family:inherit;font-weight:500;font-size:14px;color:var(--label);cursor:pointer;height:40px;letter-spacing:.1px;transition:.18s}
+.qpill:active{background:var(--s3)}
+.qpill i{font-size:18px}
+.qpill.tint i{color:var(--primary)}
+.qpill.acc i{color:var(--secondary)}
+.qpill.bl i{color:var(--tertiary)}
+.qpill.org i{color:var(--warning)}
+.qpill.rd i{color:var(--error)}
 
-/* ============ GAUGES ROW ============ */
-.gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.gauge{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:11px 4px;text-align:center}
-.gwrap{position:relative;width:78px;height:78px;margin:0 auto 6px}
-.gwrap svg{width:78px;height:78px;transform:rotate(-90deg)}
-.ring-bg{fill:none;stroke:var(--border);stroke-width:7}
-.ring-fg{fill:none;stroke-width:7;stroke-linecap:round;stroke-dasharray:326.726;stroke-dashoffset:326.726;transition:stroke-dashoffset .7s ease}
-.ring-fg.cpu{stroke:var(--accent)}
-.ring-fg.mem{stroke:var(--primary)}
-.ring-fg.disk{stroke:var(--blue)}
-.g-center{position:absolute;inset:0;display:grid;place-items:center}
-.g-val{font-size:14px;font-weight:800}
-.g-lbl{color:var(--muted);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px;margin-top:2px}
-
-/* ============ SECTION HEADER ============ */
-.section-h{display:flex;align-items:center;justify-content:space-between;margin:18px 0 11px;gap:10px;flex-wrap:wrap}
-.section-h h2{font-size:15.5px;font-weight:800;display:flex;align-items:center;gap:7px}
-.section-h h2 i{color:var(--primary);font-size:13px}
-.section-h .count{background:var(--surface-2);border:1px solid var(--border);color:var(--muted);font-size:11px;font-weight:800;padding:3px 8px;border-radius:99px}
-
-/* ============ SERVERS LIST (MOBILE = SINGLE COL) ============ */
-.servers{display:grid;grid-template-columns:1fr;gap:10px}
-.srv{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px}
-.srv-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
-.srv-name{font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px;min-width:0;flex:1}
-.srv-name .stype{width:32px;height:32px;border-radius:9px;background:var(--surface-2);display:grid;place-items:center;font-size:14px;flex:none;color:var(--primary)}
-.srv-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.stt{font-size:10.5px;font-weight:800;padding:4px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;flex:none}
-.stt.on{background:rgba(0,196,106,.13);color:var(--primary)}
-.stt.off{background:rgba(239,68,68,.13);color:var(--red)}
-.stt.run i{animation:pulse 1.6s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.srv-info{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px;color:var(--muted);font-size:11.5px;font-weight:600}
-.srv-info span{display:inline-flex;align-items:center;gap:4px;background:var(--surface-2);padding:4px 9px;border-radius:7px}
-.srv-act{display:flex;gap:6px;flex-wrap:wrap}
-.srv-act .btn{flex:1;min-width:0;padding:9px 8px;font-size:12px;min-height:38px}
-.srv-act .icon-btn{width:38px;height:38px;flex:none}
+/* ============ BOT ROW (M3 list item) ============ */
+.bot{display:flex;align-items:center;gap:14px;padding:14px 20px;min-height:76px;position:relative;cursor:pointer;
+  background:none;border:none;width:100%;text-align:right;font-family:inherit;transition:background .15s}
+.bot:active{background:var(--s3)}
+.bot + .bot::before{content:"";position:absolute;top:0;right:74px;left:20px;height:1px;background:var(--separator)}
+.bot .bav{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:16px;color:#fff;flex:none;background:var(--s4)}
+.bot .bav.py{background:linear-gradient(135deg,#3776ab,#ffd43b);color:#0f1d2e}
+.bot .bav.node{background:#539e43}
+.bot .bav.php{background:#777bb4}
+.bot .bav.go{background:#00add8}
+.bot .bav.java{background:#e76f00}
+.bot .bav.bash{background:#4eaa25}
+.bot .bbody{flex:1;min-width:0}
+.bot .bname{font-size:16px;font-weight:500;color:var(--label);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;letter-spacing:.1px}
+.bot .bmeta{font-size:13px;color:var(--label-2);font-weight:400;display:flex;align-items:center;gap:7px;line-height:1.3;letter-spacing:.2px}
+.bot .bmeta .dot{width:7px;height:7px;border-radius:50%;background:var(--label-3);flex:none}
+.bot .bmeta .dot.on{background:var(--primary);box-shadow:0 0 0 3px rgba(122,240,180,.2);animation:pulse 2s infinite}
+.bot .bmeta .dot.off{background:var(--error)}
+@keyframes pulse{50%{opacity:.55}}
+.bot .bact{display:flex;gap:6px;flex:none}
+.bot .bact button{width:40px;height:40px;border-radius:50%;border:none;background:var(--s3);color:var(--label);font-size:14px;cursor:pointer;font-family:inherit;display:grid;place-items:center;transition:.15s}
+.bot .bact button:active{transform:scale(.9);background:var(--s4)}
+.bot .bact .play{background:var(--primary-container);color:var(--on-primary-container)}
+.bot .bact .stop{background:var(--error-container);color:var(--on-error-container)}
 
 /* ============ EMPTY STATE ============ */
-.empty{text-align:center;padding:40px 20px;color:var(--muted);background:var(--surface);border:1px dashed var(--border);border-radius:14px}
-.empty i{font-size:38px;opacity:.35;margin-bottom:12px;display:block}
-.empty p{font-size:13px;font-weight:600;margin-bottom:14px}
+.empty{margin:14px 12px;padding:48px 24px;background:var(--s1);border-radius:20px;text-align:center;color:var(--label-2);box-shadow:var(--el1)}
+.empty i{font-size:42px;color:var(--label-3);margin-bottom:16px;display:block}
+.empty h4{font-size:18px;font-weight:500;color:var(--label);margin-bottom:8px;letter-spacing:0}
+.empty p{font-size:14px;margin-bottom:24px;font-weight:400;letter-spacing:.25px}
+.empty button{font-family:inherit;font-weight:500;font-size:14px;padding:0 24px;border-radius:99px;
+  background:var(--primary);color:var(--on-primary);border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;height:40px;box-shadow:var(--el1);letter-spacing:.1px;transition:.18s}
+.empty button:active{transform:scale(.97);box-shadow:var(--el2)}
 
-/* ============ FLOATING ACTION BUTTON (FAB) ============ */
-.fab{position:fixed;bottom:calc(78px + var(--safe-bot));left:18px;z-index:55;width:54px;height:54px;
-  border-radius:50%;border:none;background:var(--primary);color:#fff;cursor:pointer;font-size:20px;
-  display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,196,106,.4)}
-.fab:active{transform:scale(.92)}
+/* ============ M3 NAVIGATION BAR (with pill indicator) ============ */
+.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--s2);border-top:1px solid var(--outline-v);
+  padding:12px 8px calc(16px + var(--safe-bot));display:flex;align-items:flex-start;justify-content:space-around;
+  height:calc(var(--tab-h) + var(--safe-bot))}
+.tabbar button,.tabbar a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--label-2);
+  font-size:12px;font-weight:500;cursor:pointer;border:none;background:none;font-family:inherit;
+  padding:0;flex:1;min-width:0;min-height:48px;text-decoration:none;letter-spacing:.4px;transition:color .18s}
+.tabbar .pill{display:grid;place-items:center;width:64px;height:32px;border-radius:16px;
+  transition:background .25s cubic-bezier(.2,0,0,1);position:relative}
+.tabbar i{font-size:20px;transition:.18s}
+.tabbar button:active i,.tabbar a:active i{transform:scale(.88)}
+.tabbar .active{color:var(--on-secondary-container)}
+.tabbar .active .pill{background:var(--secondary-container)}
+.tabbar .active i{color:var(--on-secondary-container)}
 
-/* ============ THEME TOGGLE ============ */
-#themeToggle{position:fixed;bottom:calc(78px + var(--safe-bot));right:18px;z-index:55;width:46px;height:46px;
-  border-radius:13px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;
-  display:grid;place-items:center;font-size:15px;box-shadow:0 4px 12px rgba(0,0,0,.18)}
-#installBtn{position:fixed;bottom:calc(134px + var(--safe-bot));right:18px;z-index:55;width:46px;height:46px;
-  border-radius:13px;border:1px solid var(--border);background:var(--surface);color:var(--accent);cursor:pointer;
-  display:none;place-items:center;font-size:15px;box-shadow:0 4px 12px rgba(0,0,0,.18)}
-#installBtn.show{display:grid}
+/* ============ M3 FAB ============ */
+.fab{position:fixed;bottom:calc(var(--tab-h) + var(--safe-bot) + 16px);left:16px;z-index:55;
+  width:56px;height:56px;border-radius:18px;border:none;cursor:pointer;font-size:22px;
+  background:var(--primary-container);color:var(--on-primary-container);display:grid;place-items:center;
+  box-shadow:var(--el3);transition:.2s}
+.fab:active{transform:scale(.94);box-shadow:var(--el2)}
 
-/* ============ BOTTOM NAV (MOBILE) ============ */
-.bnav{position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--surface);
-  border-top:1px solid var(--border);padding:4px 2px calc(4px + var(--safe-bot));
-  display:flex;align-items:center;justify-content:space-around}
-.bnav button{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--muted);
-  font-size:10px;font-weight:700;cursor:pointer;border:none;background:none;font-family:inherit;
-  padding:8px 4px;border-radius:9px;flex:1;min-width:0;min-height:54px;transition:.15s}
-.bnav button i{font-size:17px;transition:.15s}
-.bnav button:active i{transform:scale(.85)}
-.bnav .active{color:var(--primary)}
-.bnav .active i{transform:translateY(-1px) scale(1.08)}
+/* ============ M3 SNACKBAR ============ */
+.toast{position:fixed;bottom:calc(var(--tab-h) + var(--safe-bot) + 20px);left:16px;right:16px;margin:0 auto;max-width:520px;
+  transform:translateY(140px);opacity:0;z-index:500;
+  background:var(--s5);color:var(--label);border-radius:8px;padding:14px 18px;
+  font-weight:500;font-size:14px;box-shadow:var(--el3);
+  display:flex;align-items:center;gap:10px;transition:.3s cubic-bezier(.2,0,0,1);letter-spacing:.25px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok i{color:var(--primary)}
+.toast.bad i{color:var(--error)}
 
-/* ============ MODALS (BOTTOM SHEET ON MOBILE) ============ */
-.modal{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);
-  display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+/* ============ M3 MODAL BOTTOM SHEET ============ */
+.modal{position:fixed;inset:0;z-index:200;background:var(--scrim);display:none;align-items:flex-end;justify-content:center}
 .modal.open{display:flex;animation:fadeIn .2s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.box{width:100%;max-width:600px;max-height:92vh;max-height:92dvh;overflow:auto;-webkit-overflow-scrolling:touch;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:20px 20px 0 0;padding:18px 18px calc(22px + var(--safe-bot));
-  animation:slideUp .28s cubic-bezier(.2,.9,.3,1.2);position:relative}
+.sheet{width:100%;max-width:680px;max-height:92vh;max-height:92dvh;overflow:auto;-webkit-overflow-scrolling:touch;
+  background:var(--s2);border-radius:28px 28px 0 0;padding:0 0 calc(24px + var(--safe-bot));position:relative;
+  animation:slideUp .32s cubic-bezier(.2,0,0,1);box-shadow:var(--el3)}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.box::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:40px;height:4px;background:var(--surface-3);border-radius:99px}
-.box-h{display:flex;align-items:center;justify-content:space-between;margin:14px 0 16px}
-.box-h h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}
-.box-h h3 i{color:var(--accent);font-size:14px}
-.x{cursor:pointer;width:38px;height:38px;border-radius:10px;border:1px solid var(--border);
-  background:var(--surface-2);color:var(--muted);display:grid;place-items:center;font-size:14px;flex:none}
-.x:active{background:rgba(239,68,68,.1);color:var(--red)}
-.box.lg{max-width:900px}
+.sheet::before{content:"";position:sticky;top:0;display:block;margin:14px auto 0;width:32px;height:4px;background:var(--outline);border-radius:99px;opacity:.5}
+.sheet-h{padding:14px 22px 8px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:18px;background:var(--s2);z-index:5}
+.sheet-h h3{font-size:22px;font-weight:500;letter-spacing:0;color:var(--label)}
+.sheet-h .x{font-family:inherit;font-weight:500;font-size:14px;color:var(--primary);background:none;border:none;cursor:pointer;padding:8px 14px;border-radius:99px;min-height:36px;letter-spacing:.1px;transition:.15s}
+.sheet-h .x:active{background:rgba(122,240,180,.12)}
+.sheet-body{padding:6px 0 0}
+.sheet.lg{max-height:96vh;max-height:96dvh}
 
-label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px;color:var(--text)}
-input,select,textarea{width:100%;padding:13px 14px;background:var(--surface-2);border:1.5px solid var(--border);
-  border-radius:11px;color:var(--text);font-family:inherit;font-size:16px;min-height:48px}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);background:var(--surface-3)}
-select option{background:var(--surface)}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* ============ M3 OUTLINED FIELDS ============ */
+.field{display:flex;align-items:center;gap:14px;padding:16px 22px;min-height:58px;position:relative}
+.field + .field::before{content:"";position:absolute;top:0;right:22px;left:22px;height:1px;background:var(--separator)}
+.field label{font-size:14px;font-weight:500;color:var(--label-2);min-width:110px;flex:none;letter-spacing:.1px}
+.field input,.field select,.field textarea{flex:1;border:none;background:none;color:var(--label);font-family:inherit;font-size:16px;outline:none;text-align:right;min-height:32px;padding:0;font-weight:400;resize:none;letter-spacing:.25px}
+.field input::placeholder,.field textarea::placeholder{color:var(--label-3)}
+.field-col{flex-direction:column;align-items:stretch;gap:6px;padding:14px 22px}
+.field-col label{min-width:0;font-size:12px;font-weight:500;color:var(--label-2);letter-spacing:.4px}
+.field-col input,.field-col select,.field-col textarea{font-size:16px;text-align:right}
 
-/* Type selector (create server) */
-.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
-.type-card{background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;padding:14px 6px;
-  text-align:center;cursor:pointer;font-weight:700;font-size:12px;transition:.15s;min-height:80px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
-.type-card.selected{border-color:var(--primary);background:rgba(0,196,106,.08);color:var(--primary)}
-.type-card i{font-size:20px}
+/* ============ M3 BUTTONS (filled pill) ============ */
+.btn{cursor:pointer;border:none;font-family:inherit;font-weight:500;font-size:14px;border-radius:99px;
+  padding:0 24px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  color:var(--on-primary);height:40px;transition:.18s;letter-spacing:.1px;box-shadow:var(--el1)}
+.btn:active{transform:scale(.97);box-shadow:var(--el2)}
+.btn-block{width:calc(100% - 32px);margin:18px 16px;height:48px;font-size:15px}
+.btn-primary{background:var(--primary);color:var(--on-primary)}
+.btn-accent{background:var(--secondary-container);color:var(--on-secondary-container);box-shadow:none}
+.btn-red{background:var(--error-container);color:var(--on-error-container);box-shadow:none}
+.btn-ghost{background:var(--s3);color:var(--label);box-shadow:none}
+.btn-link{background:none;color:var(--primary);padding:8px 16px;height:36px;box-shadow:none}
 
-/* Tabs */
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tabs::-webkit-scrollbar{display:none}
-.tabs button{background:none;border:none;font-family:inherit;font-weight:700;font-size:13px;
-  padding:11px 13px;cursor:pointer;color:var(--muted);position:relative;white-space:nowrap;min-height:44px;display:inline-flex;align-items:center;gap:6px}
-.tabs button.active{color:var(--primary)}
-.tabs button.active::after{content:"";position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--primary);border-radius:2px 2px 0 0}
-.tab-pane{display:none}
+/* ============ M3 FILTER CHIPS for type selector ============ */
+.types{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:8px 16px 14px}
+.type{background:transparent;border:1px solid var(--outline-v);border-radius:14px;padding:14px 6px;text-align:center;
+  cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px;font-weight:500;
+  color:var(--label);min-height:88px;justify-content:center;font-family:inherit;transition:.18s;letter-spacing:.1px}
+.type:active{transform:scale(.97)}
+.type i{font-size:24px;color:var(--label-2)}
+.type.sel{border-color:transparent;background:var(--primary-container);color:var(--on-primary-container)}
+.type.sel i{color:var(--on-primary-container)}
+
+/* ============ M3 SEGMENTED BUTTONS ============ */
+.segtabs{display:flex;border:1px solid var(--outline-v);border-radius:99px;margin:8px 14px 14px;overflow:hidden}
+.segtabs button{flex:1;background:none;border:none;font-family:inherit;font-weight:500;font-size:13px;
+  padding:0 6px;color:var(--label-2);cursor:pointer;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;border-right:1px solid var(--outline-v);letter-spacing:.1px;transition:.18s}
+.segtabs button:last-child{border-right:none}
+.segtabs button.active{background:var(--secondary-container);color:var(--on-secondary-container)}
+.segtabs button i{font-size:14px}
+.tab-pane{display:none;padding:0 14px}
 .tab-pane.active{display:block}
 
-/* File manager mobile */
-.fm{display:grid;grid-template-columns:1fr;gap:12px}
-.fm-side{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:10px;max-height:240px;overflow:auto;-webkit-overflow-scrolling:touch}
-.fm-row{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600}
-.fm-row:active{background:var(--surface-3)}
-.fm-row.sel{background:rgba(139,92,246,.13);color:var(--accent)}
-.fm-row i{font-size:13px;color:var(--muted);width:14px;text-align:center}
-.fm-row.sel i{color:var(--accent)}
-.fm-row span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.fm-row .ops{display:flex;gap:3px;opacity:.8}
-.fm-row .ops button{background:none;border:none;color:var(--muted);cursor:pointer;width:28px;height:28px;border-radius:7px;font-size:11px}
-.fm-row .ops button:active{background:var(--surface-3);color:var(--text)}
-.fm-main{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;min-height:260px}
-.fm-bar{padding:9px 11px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;color:var(--muted);background:var(--surface)}
-.fm-bar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:11px}
-.CodeMirror{height:240px;font-family:'JetBrains Mono',monospace;font-size:13px}
-#imgPrev{max-width:100%;max-height:240px;display:block;margin:auto;padding:14px}
-.fm-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.fm-actions .btn{flex:1;min-width:130px}
-.upbox{border:2px dashed var(--border);border-radius:11px;padding:14px;text-align:center;color:var(--muted);font-size:12.5px;font-weight:600;background:var(--surface-2)}
-.upbox.over{border-color:var(--primary);background:rgba(0,196,106,.06);color:var(--primary)}
+/* ============ FILE MANAGER ============ */
+.fm-files{background:var(--s1);border-radius:16px;overflow:hidden;margin-bottom:10px;max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.fm-file{display:flex;align-items:center;gap:12px;padding:14px 18px;min-height:56px;position:relative;cursor:pointer;transition:background .15s}
+.fm-file + .fm-file::before{content:"";position:absolute;top:0;right:48px;left:18px;height:1px;background:var(--separator)}
+.fm-file:active{background:var(--s3)}
+.fm-file.sel{background:var(--secondary-container)}
+.fm-file i{color:var(--label-2);width:18px;text-align:center;font-size:15px;flex:none}
+.fm-file.sel i:first-child{color:var(--on-secondary-container)}
+.fm-file.sel{color:var(--on-secondary-container)}
+.fm-file .fname{flex:1;font-size:14px;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;letter-spacing:.2px}
+.fm-file .fops{display:flex;gap:4px;flex:none}
+.fm-file .fops button{background:none;border:none;color:var(--label-2);width:36px;height:36px;border-radius:50%;font-size:13px;cursor:pointer}
+.fm-file .fops button:active{background:var(--s4)}
+.fm-toolbar{display:flex;gap:8px;flex-wrap:wrap;padding:0 0 10px}
+.fm-toolbar .btn{flex:1;min-width:0;font-size:13px;padding:0 12px;height:40px;background:var(--s3);color:var(--label);box-shadow:none}
+.fm-editor-wrap{background:var(--s1);border-radius:16px;overflow:hidden;margin-bottom:10px;display:flex;flex-direction:column}
+.fm-editor-bar{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--label-2);font-weight:500;border-bottom:1px solid var(--separator);letter-spacing:.2px}
+.fm-editor-bar span{font-family:'Roboto Mono',Menlo,monospace;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.CodeMirror{height:260px;font-family:'Roboto Mono','SF Mono',Menlo,monospace;font-size:13.5px;background:var(--s1) !important}
+#imgPrev{max-width:100%;max-height:260px;display:block;margin:auto;padding:14px}
+.upbox{border:1px dashed var(--outline-v);border-radius:14px;padding:18px;text-align:center;color:var(--label-2);font-size:13px;font-weight:500;background:var(--s1);margin-bottom:10px;letter-spacing:.2px}
+.upbox.over{border-color:var(--primary);background:rgba(122,240,180,.08);color:var(--primary)}
+.upbox i{margin-left:8px;font-size:18px}
 
-/* Console */
-.term{background:#0a0d13;border:1px solid var(--border);border-radius:10px;padding:11px;color:#9ddca5;
-  font-family:'JetBrains Mono',monospace;font-size:11.5px;max-height:280px;overflow:auto;-webkit-overflow-scrolling:touch;
-  white-space:pre-wrap;word-break:break-all;line-height:1.5}
+/* terminal */
+.term{background:#0a0f10;border-radius:16px;padding:14px 16px;color:#9ddca5;
+  font-family:'Roboto Mono','SF Mono',Menlo,monospace;font-size:12.5px;max-height:300px;
+  overflow:auto;-webkit-overflow-scrolling:touch;white-space:pre-wrap;word-break:break-all;line-height:1.6;margin:0 14px 14px}
 .term.err{color:#fca5a5}
 
-/* Plans */
-.plans{display:grid;grid-template-columns:1fr;gap:11px}
-.plan{background:var(--surface-2);border:1.5px solid var(--border);border-radius:13px;padding:16px;position:relative}
-.plan.pop{border-color:var(--primary)}
-.plan .badge{position:absolute;top:-9px;left:14px;background:var(--primary);color:#fff;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:99px}
-.plan h4{font-size:15px;font-weight:800;margin-bottom:5px}
-.plan .price{font-size:22px;font-weight:800;color:var(--primary);margin-bottom:9px}
-.plan .price small{font-size:11px;color:var(--muted);font-weight:600}
-.plan ul{list-style:none;margin-bottom:13px}
-.plan li{font-size:12.5px;color:var(--muted);padding:4px 0;display:flex;align-items:center;gap:6px}
-.plan li i{color:var(--primary);font-size:10px}
+/* plans */
+.plans{padding:0 12px}
+.plan{background:var(--s1);border-radius:20px;padding:22px;margin-bottom:11px;position:relative;box-shadow:var(--el1)}
+.plan.pop{box-shadow:0 0 0 2px var(--primary) inset,var(--el1)}
+.plan .pbadge{position:absolute;top:-9px;right:18px;background:var(--primary);color:var(--on-primary);font-size:11px;font-weight:700;padding:4px 11px;border-radius:99px;letter-spacing:.4px}
+.plan h4{font-size:18px;font-weight:500;margin-bottom:6px;letter-spacing:.1px}
+.plan .pp{font-size:30px;font-weight:500;color:var(--primary);margin-bottom:12px;letter-spacing:-.5px}
+.plan .pp small{font-size:14px;color:var(--label-2);font-weight:500}
+.plan ul{list-style:none;margin-bottom:16px}
+.plan li{font-size:14px;color:var(--label);padding:5px 0;display:flex;align-items:center;gap:10px;letter-spacing:.2px}
+.plan li i{color:var(--primary);font-size:13px;width:16px;text-align:center}
 
 /* AI chat */
-.ai-msgs{height:340px;overflow:auto;-webkit-overflow-scrolling:touch;padding:11px;background:var(--surface-2);
-  border:1px solid var(--border);border-radius:11px;margin-bottom:11px;display:flex;flex-direction:column;gap:9px}
-.ai-msg{padding:10px 13px;border-radius:13px;max-width:88%;font-size:13.5px;line-height:1.55;word-break:break-word}
-.ai-msg.u{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
-.ai-msg.a{background:var(--surface);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px}
-.ai-msg pre{background:#0a0d13;color:#9ddca5;padding:9px;border-radius:7px;margin:6px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:11.5px}
-.ai-in{display:flex;gap:7px}
-.ai-in input{flex:1}
-.ai-in button{width:48px;height:48px;border-radius:11px;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:15px;flex:none}
+.ai-msgs{padding:16px;background:var(--s1);border-radius:20px;margin:0 12px 14px;
+  height:360px;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:9px;box-shadow:var(--el1)}
+.aim{padding:11px 16px;border-radius:20px;max-width:84%;font-size:14px;line-height:1.5;word-break:break-word;letter-spacing:.2px}
+.aim.u{background:var(--primary-container);color:var(--on-primary-container);align-self:flex-end;border-bottom-right-radius:6px}
+.aim.a{background:var(--s3);color:var(--label);align-self:flex-start;border-bottom-left-radius:6px}
+.aim pre{background:#0a0f10;color:#9ddca5;padding:10px;border-radius:10px;margin:6px 0;overflow-x:auto;font-family:'Roboto Mono',Menlo,monospace;font-size:12px}
+.ai-in{display:flex;gap:8px;padding:0 14px}
+.ai-in input{flex:1;background:var(--s2);border:1px solid var(--outline-v);border-radius:99px;padding:12px 22px;color:var(--label);font-family:inherit;font-size:15px;outline:none;min-height:48px;letter-spacing:.2px}
+.ai-in input:focus{border-color:var(--primary)}
+.ai-in button{width:48px;height:48px;border-radius:50%;background:var(--primary-container);color:var(--on-primary-container);border:none;cursor:pointer;font-size:16px;flex:none;box-shadow:var(--el1);transition:.18s}
+.ai-in button:active{transform:scale(.92);box-shadow:var(--el2)}
 
-/* Toast */
-.toast{position:fixed;bottom:calc(80px + var(--safe-bot));left:50%;transform:translateX(-50%) translateY(120px);
-  z-index:500;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 18px;
-  font-weight:700;font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.32);display:flex;align-items:center;gap:9px;
-  transition:.3s ease;max-width:92%}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.toast.ok{border-color:rgba(0,196,106,.35)}
-.toast.ok i{color:var(--primary)}
-.toast.bad{border-color:rgba(239,68,68,.35)}
-.toast.bad i{color:var(--red)}
+/* status pill */
+.spill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;display:inline-flex;align-items:center;gap:5px;letter-spacing:.2px}
+.spill.on{background:var(--primary-container);color:var(--on-primary-container)}
+.spill.off{background:var(--error-container);color:var(--on-error-container)}
 
-/* Perf chart */
+/* perf gauges */
+.pf-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:0 14px 12px}
+.pf-stat{background:var(--s1);border-radius:16px;padding:14px 10px;text-align:center;box-shadow:var(--el1)}
+.pf-stat .pfl{font-size:11px;color:var(--label-2);font-weight:500;margin-bottom:5px;letter-spacing:.4px}
+.pf-stat .pfv{font-size:20px;font-weight:500;letter-spacing:-.3px;color:var(--label)}
 #perfChart{width:100%;height:170px;display:block}
 
-/* ============ DESKTOP OVERRIDES ============ */
+/* settings */
+.set-hero{display:flex;align-items:center;gap:14px;margin:0 12px 14px;padding:18px;background:var(--s1);border-radius:20px;box-shadow:var(--el1)}
+.set-hero .sav{width:56px;height:56px;border-radius:50%;background:var(--secondary-container);color:var(--on-secondary-container);display:grid;place-items:center;font-size:22px;font-weight:500;flex:none}
+.set-hero .sn{font-weight:500;font-size:18px;margin-bottom:3px;letter-spacing:.1px}
+.set-hero .sp{font-size:13px;color:var(--label-2);font-weight:400;letter-spacing:.2px}
+
+/* theme segmented */
+.seg{display:flex;border:1px solid var(--outline-v);border-radius:99px;margin:0 22px;overflow:hidden}
+.seg button{flex:1;background:none;border:none;font-family:inherit;font-size:14px;font-weight:500;padding:0;color:var(--label);cursor:pointer;min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border-right:1px solid var(--outline-v);letter-spacing:.1px;transition:.18s}
+.seg button:last-child{border-right:none}
+.seg button.sel{background:var(--secondary-container);color:var(--on-secondary-container)}
+.seg button i{font-size:14px}
+
+/* desktop */
 @media (min-width:768px){
-  body{font-size:14.5px}
-  .hwrap{padding:14px 22px}
-  .logo{font-size:17px}
-  .logo .ic{width:38px;height:38px}
-  .pill{display:inline-flex}
-  .wrap{padding:22px 22px 40px;}
-  .welcome h1{font-size:22px}
-  .qgrid{grid-template-columns:repeat(5,1fr);gap:11px}
-  .qcard{padding:18px 10px;font-size:13px;min-height:104px}
-  .qi{width:46px;height:46px;font-size:18px}
-  .stats{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-  .stat{padding:18px}
-  .stat .val{font-size:24px}
-  .gauges{gap:12px}
-  .gauge{padding:18px 14px}
-  .gwrap{width:110px;height:110px}
-  .gwrap svg{width:110px;height:110px}
-  .ring-bg,.ring-fg{stroke-width:9}
-  .g-val{font-size:22px}
-  .g-lbl{font-size:12.5px}
-  .section-h h2{font-size:18px}
-  .servers{grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:13px}
-  .srv{padding:18px}
-  .bnav{display:none}
+  body{font-size:14px}
+  .app{padding-bottom:24px}
+  .lt{margin:14px;border-radius:24px}
+  .tabbar{display:none}
   .fab{display:none}
-  #themeToggle{bottom:22px;right:22px}
-  #installBtn{bottom:78px;right:22px}
-  .modal{align-items:center;padding:18px}
-  .box{border-radius:16px;max-height:88vh;padding:22px;animation:rise .25s ease}
-  .box::before{display:none}
-  .box.lg{max-width:1000px}
-  @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-  .fm{grid-template-columns:240px 1fr}
-  .fm-side{max-height:480px}
-  .CodeMirror{height:480px}
-  .plans{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .modal{align-items:center;padding:30px}
+  .sheet{border-radius:28px;max-width:680px;max-height:90vh}
+  .sheet::before{display:none}
+  .sheet-h{top:0}
   .toast{bottom:24px}
-}
-@media (min-width:1024px){
-  .qgrid{grid-template-columns:repeat(5,1fr)}
+  .CodeMirror{height:380px}
 }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="hwrap">
-    <div class="logo"><div class="ic"><img src="/static/logo.png?v=8" alt="BATMAN Dev"></div>BATMAN <span class="accent">Dev</span></div>
-    <div class="huser">
-      <div class="pill" id="qAdmin" style="display:none"><i class="fas fa-user-shield"></i> <span id="bAdmin">أدمن</span></div>
-      <div class="user-chip" onclick="openSettings()"><div class="av" id="uAv">?</div><span id="uName">…</span></div>
-    </div>
-  </div>
-</header>
+<div class="app">
 
-<main class="wrap">
-  <div class="welcome">
-    <div>
-      <h1>أهلاً <span id="uName2">…</span> 👋</h1>
-      <p>تابع وادر بوتاتك</p>
+  <header class="lt">
+    <div class="lt-row">
+      <div style="min-width:0;flex:1">
+        <h1>أهلاً — <span id="uName">…</span></h1>
+        <p id="uPlan">تابع وأدر بوتاتك</p>
+      </div>
+      <button class="av-big" id="uAvBtn" onclick="openSettings()"><span id="uAv">?</span></button>
     </div>
-  </div>
+    <span id="uName2" style="display:none"></span>
+  </header>
 
-  <div class="qgrid">
-    <button class="qcard" onclick="openPlans()"><div class="qi"><i class="fas fa-gem"></i></div>الخطط</button>
-    <button class="qcard" onclick="openApi()"><div class="qi"><i class="fas fa-key"></i></div>API</button>
-    <button class="qcard" onclick="linkTg()"><div class="qi"><i class="fab fa-telegram"></i></div>تليجرام</button>
-    <button class="qcard" onclick="openAiChat()"><div class="qi"><i class="fas fa-robot"></i></div>مساعد AI</button>
-    <button class="qcard" onclick="openSettings()"><div class="qi"><i class="fas fa-gear"></i></div>إعدادات</button>
+  <div class="qrow">
+    <button class="qpill tint" onclick="openCreate()"><i class="fas fa-plus-circle"></i> بوت جديد</button>
+    <button class="qpill acc" onclick="openAiChat()"><i class="fas fa-robot"></i> AI</button>
+    <button class="qpill bl" onclick="openPlans()"><i class="fas fa-gem"></i> الخطط</button>
+    <button class="qpill org" onclick="openApi()"><i class="fas fa-key"></i> API</button>
+    <button class="qpill rd" onclick="linkTg()"><i class="fab fa-telegram"></i> تليجرام</button>
   </div>
 
-  <div class="stats">
-    <div class="stat">
-      <div class="lbl"><i class="fas fa-server"></i> السيرفرات</div>
-      <div class="val"><span id="sUsed">0</span><small> / <span id="sTotal">0</span></small></div>
-      <div class="bar"><i id="sBar" style="width:0%"></i></div>
+  <div class="sec-h"><span class="lbl">الاستخدام</span></div>
+  <div class="group">
+    <div class="metric srv">
+      <div class="ric"><i class="fas fa-server"></i></div>
+      <div class="mbody">
+        <div class="mtop"><span class="mtitle">السيرفرات</span><span class="mval"><b id="sUsed">0</b> ⁄ <span id="sTotal">0</span></span></div>
+        <div class="pbar"><i id="sBar" style="width:0%"></i></div>
+      </div>
     </div>
-    <div class="stat">
-      <div class="lbl"><i class="fas fa-hard-drive"></i> التخزين</div>
-      <div class="val"><span id="dUsed">0</span><small> / <span id="dTotal">0</span> MB</small></div>
-      <div class="bar"><i id="dBar" style="width:0%;background:var(--accent)"></i></div>
-    </div>
-  </div>
-
-  <div class="stat" style="margin-bottom:16px">
-    <div class="lbl"><i class="fas fa-medal"></i> الخطة الحالية</div>
-    <div class="val" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-      <span id="planName" style="font-size:17px">—</span>
-      <button class="btn btn-sm btn-accent" onclick="openPlans()"><i class="fas fa-arrow-up"></i> ترقية</button>
+    <div class="metric mem">
+      <div class="ric"><i class="fas fa-hard-drive"></i></div>
+      <div class="mbody">
+        <div class="mtop"><span class="mtitle">التخزين</span><span class="mval"><b id="dUsed">0</b> ⁄ <span id="dTotal">0</span> MB</span></div>
+        <div class="pbar"><i id="dBar" style="width:0%"></i></div>
+      </div>
     </div>
   </div>
 
-  <div class="gauges">
-    <div class="gauge"><div class="gwrap"><svg viewBox="0 0 118 118"><circle class="ring-bg" cx="59" cy="59" r="52"></circle><circle class="ring-fg cpu" id="ringCpu" cx="59" cy="59" r="52"></circle></svg><div class="g-center"><div class="g-val" id="gCpu">0%</div></div></div><div class="g-lbl"><i class="fas fa-microchip"></i> CPU</div></div>
-    <div class="gauge"><div class="gwrap"><svg viewBox="0 0 118 118"><circle class="ring-bg" cx="59" cy="59" r="52"></circle><circle class="ring-fg mem" id="ringMem" cx="59" cy="59" r="52"></circle></svg><div class="g-center"><div class="g-val" id="gMem">0%</div></div></div><div class="g-lbl"><i class="fas fa-memory"></i> RAM</div></div>
-    <div class="gauge"><div class="gwrap"><svg viewBox="0 0 118 118"><circle class="ring-bg" cx="59" cy="59" r="52"></circle><circle class="ring-fg disk" id="ringDisk" cx="59" cy="59" r="52"></circle></svg><div class="g-center"><div class="g-val" id="gDisk">0%</div></div></div><div class="g-lbl"><i class="fas fa-hard-drive"></i> Disk</div></div>
+  <div class="sec-h"><span class="lbl">أداء الخادم — مباشر</span></div>
+  <div class="group">
+    <div class="metric cpu"><div class="ric"><i class="fas fa-microchip"></i></div><div class="mbody"><div class="mtop"><span class="mtitle">المعالج</span><span class="mval"><b id="gCpu">0%</b></span></div><div class="pbar"><i id="ringCpu" style="width:0%"></i></div></div></div>
+    <div class="metric mem"><div class="ric"><i class="fas fa-memory"></i></div><div class="mbody"><div class="mtop"><span class="mtitle">الرام</span><span class="mval"><b id="gMem">0%</b></span></div><div class="pbar"><i id="ringMem" style="width:0%"></i></div></div></div>
+    <div class="metric disk"><div class="ric"><i class="fas fa-database"></i></div><div class="mbody"><div class="mtop"><span class="mtitle">القرص</span><span class="mval"><b id="gDisk">0%</b></span></div><div class="pbar"><i id="ringDisk" style="width:0%"></i></div></div></div>
   </div>
 
-  <div class="section-h">
-    <h2><i class="fas fa-server"></i> بوتاتي <span class="count" id="sCount">0</span></h2>
-    <button class="btn btn-primary btn-sm" onclick="openCreate()"><i class="fas fa-plus"></i> جديد</button>
+  <div class="sec-h"><span class="lbl">الخطة</span><button class="act" onclick="openPlans()">ترقية</button></div>
+  <div class="group">
+    <button class="row" onclick="openPlans()">
+      <div class="ric" style="background:var(--secondary-container);color:var(--on-secondary-container)"><i class="fas fa-gem"></i></div>
+      <div class="rbody"><div class="rtitle" id="planName">—</div><div class="rsub">اضغط للترقية أو تغيير الخطة</div></div>
+      <i class="fas fa-chevron-left rch"></i>
+    </button>
   </div>
-  <div id="serverList" class="servers"></div>
-</main>
 
-<!-- FAB (mobile) -->
+  <div class="sec-h"><span class="lbl">بوتاتي (<span id="sCount">0</span>)</span><button class="act" onclick="openCreate()"><i class="fas fa-plus"></i> جديد</button></div>
+  <div id="serverList"></div>
+
+  <div id="qAdmin" style="display:none">
+    <div class="sec-h"><span class="lbl">الإدارة</span></div>
+    <div class="group">
+      <a class="row" href="/admin">
+        <div class="ric" style="background:var(--secondary-container);color:var(--on-secondary-container)"><i class="fas fa-user-shield"></i></div>
+        <div class="rbody"><div class="rtitle">لوحة الأدمن</div><div class="rsub" id="bAdmin">إدارة المستخدمين والخطط</div></div>
+        <i class="fas fa-chevron-left rch"></i>
+      </a>
+    </div>
+  </div>
+
+</div>
+
 <button class="fab" onclick="openCreate()" aria-label="بوت جديد"><i class="fas fa-plus"></i></button>
 
-<!-- Create Modal -->
-<div class="modal" id="mCreate">
-  <div class="box">
-    <div class="box-h"><h3><i class="fas fa-plus"></i> إنشاء بوت</h3><div class="x" onclick="closeM('mCreate')"><i class="fas fa-xmark"></i></div></div>
-    <label>اسم البوت</label><input id="cName" placeholder="my-bot">
-    <label>نوع البوت</label>
-    <div class="type-grid">
-      <div class="type-card selected" data-t="python" onclick="selType('python')"><i class="fab fa-python"></i>Python</div>
-      <div class="type-card" data-t="node" onclick="selType('node')"><i class="fab fa-node-js"></i>Node</div>
-      <div class="type-card" data-t="php" onclick="selType('php')"><i class="fab fa-php"></i>PHP</div>
-      <div class="type-card" data-t="go" onclick="selType('go')"><i class="fas fa-code"></i>Go</div>
-      <div class="type-card" data-t="java" onclick="selType('java')"><i class="fab fa-java"></i>Java</div>
-      <div class="type-card" data-t="bash" onclick="selType('bash')"><i class="fas fa-terminal"></i>Bash</div>
-    </div>
-    <button class="btn btn-primary btn-block" id="createBtn" onclick="createServer()" style="margin-top:18px"><i class="fas fa-check"></i> إنشاء</button>
-  </div>
-</div>
+<nav class="tabbar">
+  <button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><div class="pill"><i class="fas fa-house"></i></div><span>الرئيسية</span></button>
+  <button onclick="openAiChat()"><div class="pill"><i class="fas fa-robot"></i></div><span>AI</span></button>
+  <button onclick="openPlans()"><div class="pill"><i class="fas fa-gem"></i></div><span>خطط</span></button>
+  <button onclick="openApi()"><div class="pill"><i class="fas fa-key"></i></div><span>API</span></button>
+  <button onclick="openSettings()"><div class="pill"><i class="fas fa-gear"></i></div><span>المزيد</span></button>
+</nav>
 
-<!-- Manage Modal -->
-<div class="modal" id="mManage">
-  <div class="box lg">
-    <div class="box-h"><h3><i class="fas fa-server"></i> <span id="mgName">—</span></h3><div class="x" onclick="closeM('mManage')"><i class="fas fa-xmark"></i></div></div>
-    <div class="tabs" id="mgTabs">
-      <button class="active" onclick="switchTab('files',this)"><i class="fas fa-folder"></i> الملفات</button>
-      <button onclick="switchTab('console',this)"><i class="fas fa-terminal"></i> السجل</button>
-      <button onclick="switchTab('errors',this)"><i class="fas fa-triangle-exclamation"></i> أخطاء</button>
-      <button onclick="switchTab('perf',this)"><i class="fas fa-chart-line"></i> الأداء</button>
-    </div>
+<!-- Create sheet -->
+<div class="modal" id="mCreate"><div class="sheet"><div class="sheet-h"><h3>إنشاء بوت</h3><button class="x" onclick="closeM('mCreate')">إلغاء</button></div><div class="sheet-body"><div class="sec-h"><span class="lbl">الاسم</span></div><div class="group"><div class="field"><label>الاسم</label><input id="cName" placeholder="my-bot" autocapitalize="off" spellcheck="false"></div></div><div class="sec-h"><span class="lbl">نوع البوت</span></div><div class="types"><div class="type sel" data-t="python" onclick="selType('python')"><i class="fab fa-python"></i>Python</div><div class="type" data-t="node" onclick="selType('node')"><i class="fab fa-node-js"></i>Node.js</div><div class="type" data-t="php" onclick="selType('php')"><i class="fab fa-php"></i>PHP</div><div class="type" data-t="go" onclick="selType('go')"><i class="fas fa-code"></i>Go</div><div class="type" data-t="java" onclick="selType('java')"><i class="fab fa-java"></i>Java</div><div class="type" data-t="bash" onclick="selType('bash')"><i class="fas fa-terminal"></i>Bash</div></div><button class="btn btn-primary btn-block" id="createBtn" onclick="createServer()"><i class="fas fa-check"></i> إنشاء</button></div></div></div>
 
-    <div class="tab-pane active" id="tFiles">
-      <div class="fm-actions" style="margin:0 0 11px">
-        <button class="btn btn-ghost btn-sm" onclick="newFile()"><i class="fas fa-file-circle-plus"></i> ملف</button>
-        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('upInput').click()"><i class="fas fa-upload"></i> رفع</button>
-        <button class="btn btn-ghost btn-sm" onclick="installDeps()"><i class="fas fa-download"></i> تثبيت</button>
-        <input type="file" id="upInput" multiple style="display:none" onchange="uploadFileList(this.files)">
-      </div>
-      <div class="upbox" id="dropMask"><i class="fas fa-cloud-arrow-up"></i> اسحب الملفات هنا</div>
-      <div class="fm" style="margin-top:11px">
-        <div class="fm-side" id="fmList"></div>
-        <div class="fm-main">
-          <div class="fm-bar"><span id="curFile">اختر ملف</span><span id="saveStat" style="font-size:10.5px"></span></div>
-          <textarea id="editor" style="display:none"></textarea>
-          <img id="imgPrev" style="display:none">
-        </div>
-      </div>
-      <div class="fm-actions">
-        <button class="btn btn-primary btn-sm" onclick="saveFile()"><i class="fas fa-floppy-disk"></i> حفظ</button>
-        <button class="btn btn-ghost btn-sm" onclick="setStartup()"><i class="fas fa-play"></i> ملف البداية</button>
-      </div>
-    </div>
+<!-- Manage sheet -->
+<div class="modal" id="mManage"><div class="sheet lg"><div class="sheet-h"><h3 id="mgName">—</h3><button class="x" onclick="closeM('mManage')">إغلاق</button></div><div class="segtabs" id="mgTabs"><button class="active" onclick="switchTab('files',this)"><i class="fas fa-folder"></i> ملفات</button><button onclick="switchTab('console',this)"><i class="fas fa-terminal"></i> سجل</button><button onclick="switchTab('errors',this)"><i class="fas fa-triangle-exclamation"></i> أخطاء</button><button onclick="switchTab('perf',this)"><i class="fas fa-chart-line"></i> أداء</button></div><div class="tab-pane active" id="tFiles"><div class="upbox" id="dropMask"><i class="fas fa-cloud-arrow-up"></i> اسحب الملفات أو اضغط للرفع</div><div class="fm-toolbar"><button class="btn" onclick="newFile()"><i class="fas fa-file-circle-plus"></i> جديد</button><button class="btn" onclick="document.getElementById('upInput').click()"><i class="fas fa-upload"></i> رفع</button><button class="btn" onclick="installDeps()"><i class="fas fa-download"></i> تثبيت</button><input type="file" id="upInput" multiple style="display:none" onchange="uploadFileList(this.files)"></div><div class="fm-files" id="fmList"></div><div class="fm-editor-wrap"><div class="fm-editor-bar"><span id="curFile">اختر ملف</span><span id="saveStat" style="font-size:11px"></span></div><textarea id="editor" style="display:none"></textarea><img id="imgPrev" style="display:none"></div><div class="fm-toolbar"><button class="btn btn-primary" onclick="saveFile()"><i class="fas fa-floppy-disk"></i> حفظ</button><button class="btn" onclick="setStartup()"><i class="fas fa-play"></i> ملف البداية</button></div></div><div class="tab-pane" id="tConsole"><div class="sec-h"><span class="lbl">السجل الحي</span><button class="act" onclick="loadConsole()"><i class="fas fa-rotate"></i> تحديث</button></div><pre class="term" id="consoleOut">—</pre></div><div class="tab-pane" id="tErrors"><div class="sec-h"><span class="lbl">الأخطاء</span><button class="act" onclick="diagnoseErrors()"><i class="fas fa-stethoscope"></i> تشخيص AI</button></div><pre class="term err" id="errorsOut">—</pre></div><div class="tab-pane" id="tPerf"><div class="pf-stats"><div class="pf-stat"><div class="pfl">CPU</div><div class="pfv" id="pfCpu">0%</div></div><div class="pf-stat"><div class="pfl">RAM</div><div class="pfv" id="pfMem">0 MB</div></div><div class="pf-stat"><div class="pfl">تشغيل</div><div class="pfv" id="pfTime" style="font-size:14px">—</div></div></div><div style="padding:0 14px 14px"><canvas id="perfChart"></canvas></div></div></div></div>
 
-    <div class="tab-pane" id="tConsole">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <span style="font-size:12px;color:var(--muted);font-weight:700"><i class="fas fa-terminal"></i> السجل الحي</span>
-        <button class="btn btn-ghost btn-sm" onclick="loadConsole()"><i class="fas fa-rotate"></i> تحديث</button>
-      </div>
-      <div class="term" id="consoleOut">—</div>
-    </div>
+<!-- Plans sheet -->
+<div class="modal" id="mPlans"><div class="sheet lg"><div class="sheet-h"><h3>الخطط</h3><button class="x" onclick="closeM('mPlans')">إغلاق</button></div><div class="plans" id="plansGrid"></div></div></div>
 
-    <div class="tab-pane" id="tErrors">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <span style="font-size:12px;color:var(--muted);font-weight:700"><i class="fas fa-triangle-exclamation"></i> الأخطاء</span>
-        <button class="btn btn-ghost btn-sm" onclick="diagnoseErrors()"><i class="fas fa-stethoscope"></i> تشخيص AI</button>
-      </div>
-      <div class="term err" id="errorsOut">—</div>
-    </div>
+<!-- Pay sheet -->
+<div class="modal" id="mPay"><div class="sheet"><div class="sheet-h"><h3>الدفع</h3><button class="x" onclick="closeM('mPay')">إلغاء</button></div><div class="sheet-body"><div style="margin:6px 12px 14px;padding:22px;background:var(--s1);border-radius:20px;text-align:center;box-shadow:var(--el1)"><div style="color:var(--label-2);font-size:13px;font-weight:500;margin-bottom:6px;letter-spacing:.3px">المبلغ</div><div style="font-size:36px;font-weight:500;color:var(--primary);letter-spacing:-.5px" id="payAmount">$0</div></div><div class="sec-h"><span class="lbl">طرق الدفع</span></div><div class="group"><div class="field"><label>فودافون كاش</label><input id="payVod" readonly></div><div class="field"><label>InstaPay</label><input id="payInsta" readonly></div></div><div class="sec-h"><span class="lbl">رقم العملية والتفاصيل</span></div><div class="group"><div class="field-col"><textarea id="payNote" rows="3" placeholder="أرفق رقم العملية وتفاصيل التحويل..."></textarea></div></div><button class="btn btn-primary btn-block" onclick="sendPay()"><i class="fas fa-paper-plane"></i> إرسال للأدمن</button></div></div></div>
 
-    <div class="tab-pane" id="tPerf">
-      <div style="display:flex;gap:11px;flex-wrap:wrap;margin-bottom:10px">
-        <div style="flex:1;min-width:90px;background:var(--surface-2);padding:11px;border-radius:10px;border:1px solid var(--border)"><div style="font-size:11px;color:var(--muted);font-weight:700">CPU</div><div style="font-size:18px;font-weight:800" id="pfCpu">0%</div></div>
-        <div style="flex:1;min-width:90px;background:var(--surface-2);padding:11px;border-radius:10px;border:1px solid var(--border)"><div style="font-size:11px;color:var(--muted);font-weight:700">RAM</div><div style="font-size:18px;font-weight:800" id="pfMem">0 MB</div></div>
-        <div style="flex:1;min-width:90px;background:var(--surface-2);padding:11px;border-radius:10px;border:1px solid var(--border)"><div style="font-size:11px;color:var(--muted);font-weight:700">وقت التشغيل</div><div style="font-size:18px;font-weight:800" id="pfTime">—</div></div>
-      </div>
-      <canvas id="perfChart"></canvas>
-    </div>
-  </div>
-</div>
+<!-- API sheet -->
+<div class="modal" id="mApi"><div class="sheet"><div class="sheet-h"><h3>API Key</h3><button class="x" onclick="closeM('mApi')">إغلاق</button></div><div class="sheet-body"><div class="sec-h"><span class="lbl">مفتاح API</span></div><div class="group"><div class="field-col"><label>المفتاح</label><input id="apiKey" readonly style="font-family:'Roboto Mono',Menlo,monospace;font-size:13px"></div><button class="row" onclick="copyApi()"><div class="ric" style="background:var(--tertiary-container);color:var(--on-tertiary-container)"><i class="fas fa-copy"></i></div><div class="rbody"><div class="rtitle">نسخ المفتاح</div></div></button><button class="row" onclick="genApi()"><div class="ric" style="background:var(--secondary-container);color:var(--on-secondary-container)"><i class="fas fa-arrows-rotate"></i></div><div class="rbody"><div class="rtitle">توليد مفتاح جديد</div></div></button></div><div class="sec-h"><span class="lbl">ربط تليجرام</span></div><div class="group"><div class="field"><label>ID</label><input id="tgId" placeholder="123456789" inputmode="numeric"></div></div><button class="btn btn-primary btn-block" onclick="linkTg()"><i class="fab fa-telegram"></i> ربط الحساب</button></div></div></div>
 
-<!-- Plans Modal -->
-<div class="modal" id="mPlans">
-  <div class="box lg">
-    <div class="box-h"><h3><i class="fas fa-gem"></i> الخطط</h3><div class="x" onclick="closeM('mPlans')"><i class="fas fa-xmark"></i></div></div>
-    <div class="plans" id="plansGrid"></div>
-  </div>
-</div>
+<!-- Settings sheet -->
+<div class="modal" id="mSettings"><div class="sheet lg"><div class="sheet-h"><h3>الإعدادات</h3><button class="x" onclick="closeM('mSettings')">تم</button></div><div class="sheet-body"><div class="set-hero"><div class="sav" id="setAv">?</div><div style="flex:1;min-width:0"><div class="sn" id="setUser">—</div><div class="sp" id="setPlan">—</div></div></div><div class="sec-h"><span class="lbl">المظهر</span></div><div class="seg"><button id="thDark" onclick="setTheme('dark')"><i class="fas fa-moon"></i> داكن</button><button id="thLight" onclick="setTheme('light')"><i class="fas fa-sun"></i> فاتح</button></div><div class="sec-h"><span class="lbl">تغيير كلمة المرور</span></div><div class="group"><div class="field-col"><label>كلمة المرور الحالية</label><input id="curPass" type="password"></div><div class="field-col"><label>الجديدة</label><input id="newPass" type="password"></div><div class="field-col"><label>تأكيد</label><input id="newPass2" type="password"></div></div><button class="btn btn-primary btn-block" onclick="changePass()"><i class="fas fa-key"></i> تغيير كلمة المرور</button><div class="sec-h"><span class="lbl">الحساب</span></div><div class="group"><button class="row" id="installBtn" style="display:none" onclick="installApp()"><div class="ric" style="background:var(--tertiary-container);color:var(--on-tertiary-container)"><i class="fas fa-download"></i></div><div class="rbody"><div class="rtitle">تثبيت التطبيق</div><div class="rsub">تثبيت على الشاشة الرئيسية</div></div><i class="fas fa-chevron-left rch"></i></button><button class="row" onclick="logout()"><div class="ric" style="background:var(--error-container);color:var(--on-error-container)"><i class="fas fa-right-from-bracket"></i></div><div class="rbody"><div class="rtitle" style="color:var(--error)">تسجيل خروج</div></div></button></div></div></div></div>
 
-<!-- Pay Modal -->
-<div class="modal" id="mPay">
-  <div class="box">
-    <div class="box-h"><h3><i class="fas fa-credit-card"></i> الدفع</h3><div class="x" onclick="closeM('mPay')"><i class="fas fa-xmark"></i></div></div>
-    <div style="text-align:center;padding:14px;background:var(--surface-2);border-radius:11px;margin-bottom:12px">
-      <div style="color:var(--muted);font-size:12px;font-weight:700">المبلغ</div>
-      <div style="font-size:28px;font-weight:800;color:var(--primary)" id="payAmount">$0</div>
-    </div>
-    <label>فودافون كاش</label>
-    <div style="display:flex;gap:7px;align-items:center"><input id="payVod" readonly style="flex:1"><button class="icon-btn" onclick="copyPay('payVod')"><i class="fas fa-copy"></i></button></div>
-    <label>InstaPay</label>
-    <div style="display:flex;gap:7px;align-items:center"><input id="payInsta" readonly style="flex:1"><button class="icon-btn" onclick="copyPay('payInsta')"><i class="fas fa-copy"></i></button></div>
-    <label>ملاحظة</label><textarea id="payNote" rows="3" placeholder="رقم العملية، سكرين شوت..." style="resize:vertical"></textarea>
-    <button class="btn btn-primary btn-block" onclick="sendPay()" style="margin-top:16px"><i class="fas fa-paper-plane"></i> إرسال للأدمن</button>
-  </div>
-</div>
-
-<!-- API Modal -->
-<div class="modal" id="mApi">
-  <div class="box">
-    <div class="box-h"><h3><i class="fas fa-key"></i> API Key</h3><div class="x" onclick="closeM('mApi')"><i class="fas fa-xmark"></i></div></div>
-    <label>مفتاح API الخاص بك</label>
-    <div style="display:flex;gap:7px"><input id="apiKey" readonly style="flex:1;font-family:monospace;font-size:13px"><button class="icon-btn" onclick="copyApi()"><i class="fas fa-copy"></i></button></div>
-    <button class="btn btn-accent btn-block" onclick="genApi()" style="margin-top:16px"><i class="fas fa-arrows-rotate"></i> توليد جديد</button>
-    <div style="margin-top:14px"><label>ربط تليجرام</label><div style="display:flex;gap:7px;align-items:center"><input id="tgId" placeholder="123456789" style="flex:1"><button class="btn btn-primary" onclick="linkTg()"><i class="fab fa-telegram"></i></button></div></div>
-  </div>
-</div>
-
-<!-- Settings Modal -->
-<div class="modal" id="mSettings">
-  <div class="box">
-    <div class="box-h"><h3><i class="fas fa-gear"></i> الإعدادات</h3><div class="x" onclick="closeM('mSettings')"><i class="fas fa-xmark"></i></div></div>
-    <div style="display:flex;align-items:center;gap:13px;padding:14px;background:var(--surface-2);border-radius:11px;margin-bottom:14px">
-      <div class="av" style="width:48px;height:48px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:18px;font-weight:800" id="setAv">?</div>
-      <div style="flex:1;min-width:0"><div style="font-weight:800;font-size:15px" id="setUser">—</div><div style="font-size:11.5px;color:var(--muted);font-weight:600" id="setPlan">—</div></div>
-    </div>
-    <label>المظهر</label>
-    <div class="type-grid" style="grid-template-columns:1fr 1fr">
-      <div class="type-card" data-th="dark" onclick="setTheme('dark')"><i class="fas fa-moon"></i>داكن</div>
-      <div class="type-card" data-th="light" onclick="setTheme('light')"><i class="fas fa-sun"></i>فاتح</div>
-    </div>
-    <label style="margin-top:14px">تغيير كلمة المرور</label>
-    <input id="curPass" type="password" placeholder="الحالية" style="margin-bottom:8px">
-    <input id="newPass" type="password" placeholder="الجديدة" style="margin-bottom:8px">
-    <input id="newPass2" type="password" placeholder="تأكيد">
-    <button class="btn btn-primary btn-block" onclick="changePass()" style="margin-top:11px"><i class="fas fa-key"></i> تغيير</button>
-    <button class="btn btn-red btn-block" onclick="logout()" style="margin-top:8px"><i class="fas fa-right-from-bracket"></i> خروج</button>
-  </div>
-</div>
-
-<!-- AI Modal -->
-<div class="modal" id="mAi">
-  <div class="box lg">
-    <div class="box-h"><h3><i class="fas fa-robot"></i> مساعد AI</h3><div class="x" onclick="closeM('mAi')"><i class="fas fa-xmark"></i></div></div>
-    <div class="ai-msgs" id="aiMsgs"><div class="ai-msg a">أهلاً! أنا مساعدك. اسألني عن البوتات أو أخطاء الكود ؟</div></div>
-    <div class="ai-in">
-      <input id="aiInput" placeholder="اكتب سؤالك..." onkeydown="if(event.key==='Enter')chatSend()">
-      <button id="aiSendBtn" onclick="chatSend()"><i class="fas fa-paper-plane"></i></button>
-    </div>
-  </div>
-</div>
+<!-- AI chat sheet -->
+<div class="modal" id="mAi"><div class="sheet lg"><div class="sheet-h"><h3><i class="fas fa-robot" style="color:var(--secondary)"></i> مساعد AI</h3><button class="x" onclick="closeM('mAi')">إغلاق</button></div><div class="ai-msgs" id="aiMsgs"><div class="aim a">أهلاً! أنا مساعدك. اسألني عن بوتاتك أو أخطاء الكود.</div></div><div class="ai-in"><input id="aiInput" placeholder="اكتب رسالة..." onkeydown="if(event.key==='Enter')chatSend()"><button id="aiSendBtn" onclick="chatSend()"><i class="fas fa-arrow-up"></i></button></div></div></div>
 
 <div class="toast" id="toast"><i class="fas fa-circle-check"></i><span id="toastMsg"></span></div>
 
-<button id="installBtn" type="button" title="تثبيت التطبيق" aria-label="تثبيت"><i class="fas fa-download"></i></button>
-<button id="themeToggle" type="button" aria-label="المظهر"><i class="fas fa-moon"></i></button>
-
-<nav class="bnav">
-  <button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-gauge-high"></i><span>الرئيسية</span></button>
-  <button onclick="openAiChat()"><i class="fas fa-robot"></i><span>AI</span></button>
-  <button onclick="openPlans()"><i class="fas fa-gem"></i><span>خطط</span></button>
-  <button onclick="openApi()"><i class="fas fa-key"></i><span>API</span></button>
-  <button onclick="openSettings()"><i class="fas fa-gear"></i><span>أكثر</span></button>
-</nav>
-
 <script>
-/* ============ STATE ============ */
 let ME=null, SERVERS=[], CUR=null, CURFILE=null, CM=null, PLANS={}, AUTOSAVE=null, PERF_CHART=null, SEL_TYPE='python';
 const $=id=>document.getElementById(id);
-
-/* ============ HELPERS ============ */
 function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 async function api(url,opt){try{const r=await fetch(url,opt);return await r.json();}catch(e){return{success:false,message:'خطأ اتصال'};}}
-function toast(msg,ok){if(ok===undefined)ok=true;const t=$('toast');$('toastMsg').textContent=msg;t.className='toast show '+(ok?'ok':'bad');t.querySelector('i').className=ok?'fas fa-circle-check':'fas fa-circle-exclamation';setTimeout(()=>t.className='toast',2800);}
+function toast(msg,ok){if(ok===undefined)ok=true;const t=$('toast');$('toastMsg').textContent=msg;t.className='toast show '+(ok?'ok':'bad');t.querySelector('i').className=ok?'fas fa-circle-check':'fas fa-circle-exclamation';setTimeout(()=>t.className='toast',2600);}
 function closeM(id){$(id).classList.remove('open');}
 async function logout(){await fetch('/api/logout',{method:'POST'});location.href='/login';}
 function fmt(b){if(b<1024)return b+' B';if(b<1048576)return (b/1024).toFixed(1)+' KB';return (b/1048576).toFixed(1)+' MB';}
+function ini(s){return (s||'?').charAt(0).toUpperCase();}
 
-/* ============ ME ============ */
-async function loadMe(){const d=await api('/api/current_user');if(!d.success){location.href='/login';return;}ME=d;$('uName').textContent=d.username;$('uName2').textContent=d.username;$('uAv').textContent=(d.username||'?').charAt(0).toUpperCase();$('setUser').textContent=d.username;$('setAv').textContent=(d.username||'?').charAt(0).toUpperCase();$('planName').textContent=(d.plan_name||d.plan||'Free');$('setPlan').textContent=(d.plan_name||d.plan||'Free');$('sTotal').textContent=d.max_servers||0;$('dTotal').textContent=d.storage_limit||0;if(d.is_admin){$('qAdmin').style.display='inline-flex';$('qAdmin').onclick=()=>location.href='/admin';}markTheme(localStorage.getItem('bm_theme')||'dark');}
+async function loadMe(){const d=await api('/api/current_user');if(!d.success){location.href='/login';return;}ME=d;$('uName').textContent=d.username;$('uAv').textContent=ini(d.username);$('setUser').textContent=d.username;$('setAv').textContent=ini(d.username);$('planName').textContent=(d.plan_name||d.plan||'Free');$('setPlan').textContent='الخطة: '+(d.plan_name||d.plan||'Free');$('sTotal').textContent=d.max_servers||0;$('dTotal').textContent=d.storage_limit||0;if(d.is_admin){$('qAdmin').style.display='block';$('uAvBtn').classList.add('admin');}}
 
-/* ============ SERVERS ============ */
 async function loadServers(){const d=await api('/api/servers');if(!d.success){renderServers([]);return;}SERVERS=d.servers||[];$('sUsed').textContent=SERVERS.length;$('sCount').textContent=SERVERS.length;const pct=ME&&ME.max_servers?Math.min(100,(SERVERS.length/ME.max_servers)*100):0;$('sBar').style.width=pct+'%';let used=0;SERVERS.forEach(s=>used+=(s.size||0));const mb=Math.round(used/1048576);$('dUsed').textContent=mb;const dp=ME&&ME.storage_limit?Math.min(100,(mb/ME.storage_limit)*100):0;$('dBar').style.width=dp+'%';renderServers(SERVERS);}
-function renderServers(list){const el=$('serverList');if(!list.length){el.innerHTML='<div class="empty"><i class="fas fa-server"></i><p>لا توجد بوتات بعد</p><button class="btn btn-primary" onclick="openCreate()"><i class="fas fa-plus"></i> أنشئ أول بوت</button></div>';return;}const icons={python:'fab fa-python',node:'fab fa-node-js',php:'fab fa-php',go:'fas fa-code',java:'fab fa-java',bash:'fas fa-terminal'};el.innerHTML=list.map(s=>{const t=s.type||'python';const running=s.status==='running';return `<div class="srv"><div class="srv-top"><div class="srv-name"><div class="stype"><i class="${icons[t]||icons.python}"></i></div><span>${esc(s.name)}</span></div><div class="stt ${running?'on run':'off'}"><i class="fas fa-circle"></i> ${running?'شغال':'موقف'}</div></div><div class="srv-info"><span><i class="fas fa-hard-drive"></i> ${fmt(s.size||0)}</span><span><i class="fas fa-clock"></i> ${esc(s.uptime||'—')}</span>${s.public?'<span style="color:var(--blue)"><i class="fas fa-globe"></i> عام</span>':''}</div><div class="srv-act">${running?`<button class="btn btn-red" onclick="act('${esc(s.name)}','stop')"><i class="fas fa-stop"></i> إيقاف</button><button class="btn btn-ghost" onclick="act('${esc(s.name)}','restart')"><i class="fas fa-rotate"></i></button>`:`<button class="btn btn-primary" onclick="act('${esc(s.name)}','start')"><i class="fas fa-play"></i> تشغيل</button>`}<button class="icon-btn" onclick="openManage('${esc(s.name)}')" title="إدارة"><i class="fas fa-folder-open"></i></button><button class="icon-btn" onclick="sharePublic('${esc(s.name)}',${!s.public})" title="مشاركة"><i class="fas fa-${s.public?'eye-slash':'globe'}"></i></button><button class="icon-btn danger" onclick="delServer('${esc(s.name)}')" title="حذف"><i class="fas fa-trash"></i></button></div></div>`;}).join('');}
+function renderServers(list){const el=$('serverList');if(!list.length){el.innerHTML='<div class="empty"><i class="fas fa-server"></i><h4>لا توجد بوتات بعد</h4><p>ابدأ بإنشاء أول بوت لك</p><button onclick="openCreate()"><i class="fas fa-plus"></i> إنشاء بوت</button></div>';return;}const ic={python:'fab fa-python',node:'fab fa-node-js',php:'fab fa-php',go:'fas fa-code',java:'fab fa-java',bash:'fas fa-terminal'};el.innerHTML='<div class="group">'+list.map(s=>{const t=s.type||'python';const r=s.status==='running';return `<button class="bot" onclick="openManage('${esc(s.name)}')"><div class="bav ${t}"><i class="${ic[t]||ic.python}"></i></div><div class="bbody"><div class="bname">${esc(s.name)}</div><div class="bmeta"><span class="dot ${r?'on':'off'}"></span>${r?'شغال':'موقف'} • ${fmt(s.size||0)}${s.public?' • عام':''}</div></div><div class="bact">${r?`<button class="stop" onclick="event.stopPropagation();act('${esc(s.name)}','stop')" title="إيقاف"><i class="fas fa-stop"></i></button>`:`<button class="play" onclick="event.stopPropagation();act('${esc(s.name)}','start')" title="تشغيل"><i class="fas fa-play"></i></button>`}<button onclick="event.stopPropagation();delServer('${esc(s.name)}')" title="حذف" style="color:var(--error)"><i class="fas fa-trash"></i></button></div></button>`;}).join('')+'</div>';}
 async function act(name,a){const d=await api('/api/server/action/'+encodeURIComponent(name)+'/'+a,{method:'POST'});toast(d.message||a,d.success);loadServers();}
 async function delServer(name){if(!confirm('حذف '+name+'؟'))return;const d=await api('/api/server/action/'+encodeURIComponent(name)+'/delete',{method:'POST'});toast(d.message,d.success);loadServers();}
 async function sharePublic(name,pub){const d=await api('/api/server/public/'+encodeURIComponent(name),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({public:pub})});toast(d.message,d.success);loadServers();}
 
-/* ============ CREATE ============ */
 function openCreate(){$('cName').value='';selType('python');$('mCreate').classList.add('open');}
-function selType(t){SEL_TYPE=t;document.querySelectorAll('.type-card[data-t]').forEach(c=>c.classList.toggle('selected',c.dataset.t===t));}
+function selType(t){SEL_TYPE=t;document.querySelectorAll('.type[data-t]').forEach(c=>c.classList.toggle('sel',c.dataset.t===t));}
 async function createServer(){const n=$('cName').value.trim();if(!n)return toast('اسم البوت مطلوب',false);const d=await api('/api/server/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,type:SEL_TYPE})});toast(d.message,d.success);if(d.success){closeM('mCreate');loadServers();}}
 
-/* ============ MANAGE ============ */
 function openManage(name){CUR=name;$('mgName').textContent=name;$('mManage').classList.add('open');loadFiles();switchTab('files',document.querySelector('#mgTabs button'));}
 function switchTab(t,btn){document.querySelectorAll('#mgTabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('#mManage .tab-pane').forEach(p=>p.classList.remove('active'));$('t'+t.charAt(0).toUpperCase()+t.slice(1)).classList.add('active');if(t==='console')loadConsole();else if(t==='errors')loadErrors();else if(t==='perf')loadPerf();}
-async function loadFiles(){if(!CUR)return;const d=await api('/api/files/list/'+encodeURIComponent(CUR));const list=(d.files||[]);const el=$('fmList');if(!list.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">لا توجد ملفات</div>';return;}el.innerHTML=list.map(f=>`<div class="fm-row" onclick="openFile('${esc(f.name)}')"><i class="fas fa-file-code"></i><span>${esc(f.name)}</span><div class="ops"><button onclick="event.stopPropagation();renameFile('${esc(f.name)}')" title="تسمية"><i class="fas fa-pen"></i></button><button onclick="event.stopPropagation();deleteFile('${esc(f.name)}')" title="حذف" style="color:var(--red)"><i class="fas fa-trash"></i></button></div></div>`).join('');}
+async function loadFiles(){if(!CUR)return;const d=await api('/api/files/list/'+encodeURIComponent(CUR));const list=(d.files||[]);const el=$('fmList');if(!list.length){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--label-2);font-size:14px">لا توجد ملفات</div>';return;}el.innerHTML=list.map(f=>`<div class="fm-file" onclick="openFile('${esc(f.name)}')"><i class="fas fa-file-code"></i><span class="fname">${esc(f.name)}</span><div class="fops"><button onclick="event.stopPropagation();renameFile('${esc(f.name)}')"><i class="fas fa-pen"></i></button><button onclick="event.stopPropagation();deleteFile('${esc(f.name)}')" style="color:var(--error)"><i class="fas fa-trash"></i></button></div></div>`).join('');}
 function initCM(mode){if(CM){CM.toTextArea();CM=null;}CM=CodeMirror.fromTextArea($('editor'),{mode:mode||'python',theme:'material-darker',lineNumbers:true,lineWrapping:true,indentUnit:4,tabSize:4,viewportMargin:Infinity});CM.on('change',scheduleAutosave);}
 function cmMode(name){const ext=(name||'').split('.').pop().toLowerCase();return {py:'python',js:'javascript',json:{name:'javascript',json:true},html:'htmlmixed',htm:'htmlmixed',xml:'xml',css:'css',md:'markdown'}[ext]||'text/plain';}
 function getCode(){return CM?CM.getValue():'';}
 function setCode(v){if(CM)CM.setValue(v);}
-async function openFile(name){CURFILE=name;document.querySelectorAll('.fm-row').forEach(r=>r.classList.toggle('sel',r.querySelector('span').textContent===name));$('curFile').textContent=name;const ext=name.split('.').pop().toLowerCase();if(['png','jpg','jpeg','gif','webp','svg'].includes(ext)){$('editor').style.display='none';if(CM){CM.toTextArea();CM=null;}showImg('/api/files/raw/'+encodeURIComponent(CUR)+'/'+encodeURIComponent(name));return;}$('imgPrev').style.display='none';$('editor').style.display='block';const d=await api('/api/files/content/'+encodeURIComponent(CUR)+'/'+encodeURIComponent(name));if(!d.success){toast(d.message,false);return;}if(!CM)initCM(cmMode(name));else CM.setOption('mode',cmMode(name));setCode(d.content||'');}
+async function openFile(name){CURFILE=name;document.querySelectorAll('.fm-file').forEach(r=>r.classList.toggle('sel',r.querySelector('.fname').textContent===name));$('curFile').textContent=name;const ext=name.split('.').pop().toLowerCase();if(['png','jpg','jpeg','gif','webp','svg'].includes(ext)){$('editor').style.display='none';if(CM){CM.toTextArea();CM=null;}showImg('/api/files/raw/'+encodeURIComponent(CUR)+'/'+encodeURIComponent(name));return;}$('imgPrev').style.display='none';$('editor').style.display='block';const d=await api('/api/files/content/'+encodeURIComponent(CUR)+'/'+encodeURIComponent(name));if(!d.success){toast(d.message,false);return;}if(!CM)initCM(cmMode(name));else CM.setOption('mode',cmMode(name));setCode(d.content||'');}
 function showImg(src){$('imgPrev').src=src;$('imgPrev').style.display='block';}
 function showEditor(){$('imgPrev').style.display='none';$('editor').style.display='block';}
-async function saveFile(){if(!CUR||!CURFILE)return;$('saveStat').textContent='جاري الحفظ...';const d=await api('/api/files/save/'+encodeURIComponent(CUR)+'/'+encodeURIComponent(CURFILE),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:getCode()})});$('saveStat').textContent=d.success?'تم الحفظ ✓':'فشل';setTimeout(()=>{$('saveStat').textContent='';},1500);if(d.success===false)toast(d.message,false);}
+async function saveFile(){if(!CUR||!CURFILE)return;$('saveStat').textContent='جاري...';const d=await api('/api/files/save/'+encodeURIComponent(CUR)+'/'+encodeURIComponent(CURFILE),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:getCode()})});$('saveStat').textContent=d.success?'تم ✓':'فشل';setTimeout(()=>{$('saveStat').textContent='';},1500);if(d.success===false)toast(d.message,false);}
 function scheduleAutosave(){if(AUTOSAVE)clearTimeout(AUTOSAVE);AUTOSAVE=setTimeout(autoSave,2200);}
-async function autoSave(){if(!CUR||!CURFILE)return;await api('/api/files/save/'+encodeURIComponent(CUR)+'/'+encodeURIComponent(CURFILE),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:getCode()})});$('saveStat').textContent='تم الحفظ ✓';setTimeout(()=>{$('saveStat').textContent='';},1200);}
+async function autoSave(){if(!CUR||!CURFILE)return;await api('/api/files/save/'+encodeURIComponent(CUR)+'/'+encodeURIComponent(CURFILE),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:getCode()})});$('saveStat').textContent='تم ✓';setTimeout(()=>{$('saveStat').textContent='';},1200);}
 async function setStartup(){if(!CURFILE)return toast('اختر ملف',false);const d=await api('/api/server/set-startup/'+encodeURIComponent(CUR),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({file:CURFILE})});toast(d.message,d.success);}
 async function renameFile(n){const nn=prompt('الاسم الجديد:',n);if(!nn||nn===n)return;const d=await api('/api/files/rename/'+encodeURIComponent(CUR),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({old:n,new:nn})});toast(d.message,d.success);loadFiles();}
 async function deleteFile(n){if(!confirm('حذف '+n+'؟'))return;const d=await api('/api/files/delete/'+encodeURIComponent(CUR),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n})});toast(d.message,d.success);loadFiles();}
 async function newFile(){const n=prompt('اسم الملف:');if(!n)return;const d=await api('/api/files/create/'+encodeURIComponent(CUR),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n})});toast(d.message,d.success);loadFiles();}
-async function uploadFiles(files){await uploadFileList(files);}
 async function uploadFileList(files){if(!files||!files.length)return;const fd=new FormData();for(const f of files)fd.append('files',f);toast('جاري الرفع...');const r=await fetch('/api/files/upload/'+encodeURIComponent(CUR),{method:'POST',body:fd});const d=await r.json();toast(d.message,d.success);loadFiles();}
-async function installDeps(){toast('جاري التثبيت...');const d=await api('/api/server/install/'+encodeURIComponent(CUR),{method:'POST'});toast(d.message,d.success);}
+async function installDeps(){toast('جاري...');const d=await api('/api/server/install/'+encodeURIComponent(CUR),{method:'POST'});toast(d.message,d.success);}
 async function loadConsole(){if(!CUR)return;$('consoleOut').textContent='جاري...';const d=await api('/api/server/stats/'+encodeURIComponent(CUR));$('consoleOut').textContent=(d.logs||'—');$('consoleOut').scrollTop=$('consoleOut').scrollHeight;}
 async function loadErrors(){if(!CUR)return;$('errorsOut').textContent='جاري...';const d=await api('/api/server/stats/'+encodeURIComponent(CUR));$('errorsOut').textContent=(d.errors||'—');}
 async function diagnoseErrors(){if(!CUR)return;$('errorsOut').textContent='جاري التشخيص...';const d=await api('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({server:CUR,mode:'diagnose'})});$('errorsOut').textContent=d.answer||d.message||'—';}
 
-/* ============ PERF ============ */
 async function loadPerf(){if(!CUR)return;const d=await api('/api/server/stats/'+encodeURIComponent(CUR));$('pfCpu').textContent=Math.round(d.cpu||0)+'%';$('pfMem').textContent=Math.round(d.memory||0)+' MB';$('pfTime').textContent=d.uptime||'—';const h=await api('/api/server/history/'+encodeURIComponent(CUR));drawPerf(h.history||[]);}
-function drawPerf(hist){const ctx=$('perfChart').getContext('2d');if(PERF_CHART){PERF_CHART.destroy();PERF_CHART=null;}const lbl=hist.map(h=>h.t||'');const cp=hist.map(h=>h.cpu||0);const mm=hist.map(h=>h.memory||0);PERF_CHART=new Chart(ctx,{type:'line',data:{labels:lbl,datasets:[{label:'CPU%',data:cp,borderColor:'#8b5cf6',backgroundColor:'rgba(139,92,246,.13)',fill:true,tension:.35,borderWidth:2},{label:'RAM MB',data:mm,borderColor:'#00c46a',backgroundColor:'rgba(0,196,106,.1)',fill:true,tension:.35,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'Tajawal',size:11}}}},scales:{x:{ticks:{color:'#8b95a7',font:{size:10}},grid:{display:false}},y:{ticks:{color:'#8b95a7',font:{size:10}},grid:{color:'rgba(255,255,255,.05)'}}}}});}
+function drawPerf(hist){const ctx=$('perfChart').getContext('2d');if(PERF_CHART){PERF_CHART.destroy();PERF_CHART=null;}const lbl=hist.map(h=>h.t||'');const cp=hist.map(h=>h.cpu||0);const mm=hist.map(h=>h.memory||0);PERF_CHART=new Chart(ctx,{type:'line',data:{labels:lbl,datasets:[{label:'CPU%',data:cp,borderColor:'#c2b6ff',backgroundColor:'rgba(194,182,255,.15)',fill:true,tension:.4,borderWidth:2,pointRadius:0},{label:'RAM MB',data:mm,borderColor:'#7af0b4',backgroundColor:'rgba(122,240,180,.12)',fill:true,tension:.4,borderWidth:2,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11},color:'rgba(193,199,206,.62)'}}},scales:{x:{ticks:{color:'rgba(193,199,206,.32)',font:{size:10}},grid:{display:false}},y:{ticks:{color:'rgba(193,199,206,.32)',font:{size:10}},grid:{color:'rgba(255,255,255,.05)'}}}}});}
 
-/* ============ PLANS / PAY ============ */
-async function openPlans(){const d=await api('/api/plans');PLANS=d.plans||{};const el=$('plansGrid');const cur=ME&&ME.plan;el.innerHTML=Object.entries(PLANS).map(([k,p])=>`<div class="plan ${k==='pro'?'pop':''}">${k==='pro'?'<div class="badge">الأفضل</div>':''}<h4>${esc(p.name||k)}</h4><div class="price">$${p.price||0}<small> / شهر</small></div><ul><li><i class="fas fa-check"></i> ${p.max_servers||1} سيرفر</li><li><i class="fas fa-check"></i> ${p.storage||0} MB</li><li><i class="fas fa-check"></i> ${p.ram||0} MB RAM</li><li><i class="fas fa-check"></i> ${p.cpu||1} CPU</li></ul>${cur===k?'<button class="btn btn-ghost btn-block" disabled><i class="fas fa-check"></i> الحالية</button>':`<button class="btn btn-primary btn-block" onclick="goUpgrade('${k}')"><i class="fas fa-arrow-up"></i> ترقية</button>`}</div>`).join('');$('mPlans').classList.add('open');}
-async function goUpgrade(k){closeM('mPlans');openPay(k);}
+async function openPlans(){const d=await api('/api/plans');PLANS=d.plans||{};const el=$('plansGrid');const cur=ME&&ME.plan;el.innerHTML=Object.entries(PLANS).map(([k,p])=>`<div class="plan ${k==='pro'?'pop':''}">${k==='pro'?'<div class="pbadge">الأفضل</div>':''}<h4>${esc(p.name||k)}</h4><div class="pp">$${p.price||0}<small> / شهر</small></div><ul><li><i class="fas fa-check"></i> ${p.max_servers||1} بوت</li><li><i class="fas fa-check"></i> ${p.storage||0} MB تخزين</li><li><i class="fas fa-check"></i> ${p.ram||0} MB RAM</li><li><i class="fas fa-check"></i> ${p.cpu||1} CPU</li></ul>${cur===k?'<button class="btn btn-ghost" disabled style="width:100%"><i class="fas fa-check"></i> الخطة الحالية</button>':`<button class="btn btn-primary" style="width:100%" onclick="goUpgrade('${k}')"><i class="fas fa-arrow-up"></i> ترقية لـ${esc(p.name||k)}</button>`}</div>`).join('');$('mPlans').classList.add('open');}
+function goUpgrade(k){closeM('mPlans');openPay(k);}
 function upgrade(k){goUpgrade(k);}
 async function openPay(k){const p=PLANS[k];if(!p)return;$('payAmount').textContent='$'+(p.price||0);const d=await api('/api/payment/info');$('payVod').value=d.vodafone||'';$('payInsta').value=d.instapay||'';$('payNote').value='';$('payNote').dataset.plan=k;$('mPay').classList.add('open');}
 async function sendPay(){const plan=$('payNote').dataset.plan;const d=await api('/api/user/request-upgrade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:plan,note:$('payNote').value})});toast(d.message,d.success);if(d.success)closeM('mPay');}
 function copyPay(id){$(id).select();document.execCommand('copy');toast('تم النسخ');}
 
-/* ============ API / TG ============ */
 async function openApi(){const d=await api('/api/current_user');$('apiKey').value=d.api_key||'';$('tgId').value=d.telegram_id||'';$('mApi').classList.add('open');}
-async function genApi(){const d=await api('/api/create_api_key',{method:'POST'});if(d.success){$('apiKey').value=d.api_key;toast('تم توليد مفتاح جديد');}else toast(d.message,false);}
+async function genApi(){const d=await api('/api/create_api_key',{method:'POST'});if(d.success){$('apiKey').value=d.api_key;toast('تم توليد مفتاح');}else toast(d.message,false);}
 function copyApi(){$('apiKey').select();document.execCommand('copy');toast('تم النسخ');}
-async function linkTg(){const id=$('tgId').value.trim();if(!id){$('mApi').classList.add('open');return;}const d=await api('/api/link_telegram',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_id:id})});toast(d.message,d.success);}
+async function linkTg(){const id=($('tgId')&&$('tgId').value||'').trim();if(!id){$('mApi').classList.add('open');return;}const d=await api('/api/link_telegram',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_id:id})});toast(d.message,d.success);}
 
-/* ============ SETTINGS ============ */
 function openSettings(){$('mSettings').classList.add('open');markTheme(localStorage.getItem('bm_theme')||'dark');}
 async function changePass(){const c=$('curPass').value,n=$('newPass').value,n2=$('newPass2').value;if(!c||!n)return toast('أكمل الحقول',false);if(n!==n2)return toast('التأكيد غير متطابق',false);const d=await api('/api/user/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({current:c,new:n})});toast(d.message,d.success);if(d.success){$('curPass').value='';$('newPass').value='';$('newPass2').value='';}}
-function applyTheme(t){const mc=document.querySelector('meta[name="theme-color"]');document.documentElement.setAttribute('data-theme',t);if(mc)mc.setAttribute('content',t==='light'?'#f5f7fa':'#0b0f17');const tb=$('themeToggle');if(tb)tb.innerHTML=t==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';}
-function markTheme(t){document.querySelectorAll('.type-card[data-th]').forEach(c=>c.classList.toggle('selected',c.dataset.th===t));}
+function applyTheme(t){const mc=document.querySelector('meta[name="theme-color"]');document.documentElement.setAttribute('data-theme',t);if(mc)mc.setAttribute('content',t==='light'?'#fef7ff':'#101418');}
+function markTheme(t){var d=$('thDark'),l=$('thLight');if(d)d.classList.toggle('sel',t==='dark');if(l)l.classList.toggle('sel',t==='light');}
 function setTheme(t){localStorage.setItem('bm_theme',t);applyTheme(t);markTheme(t);}
 
-/* ============ AI CHAT ============ */
 function openAiChat(){$('mAi').classList.add('open');setTimeout(()=>$('aiInput').focus(),300);}
-async function chatSend(){const inp=$('aiInput');const q=inp.value.trim();if(!q)return;inp.value='';const wrap=$('aiMsgs');wrap.insertAdjacentHTML('beforeend','<div class="ai-msg u">'+esc(q)+'</div>');wrap.scrollTop=wrap.scrollHeight;const loading=document.createElement('div');loading.className='ai-msg a';loading.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري التفكير...';wrap.appendChild(loading);wrap.scrollTop=wrap.scrollHeight;const d=await api('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q})});loading.remove();const ans=d.answer||d.message||'—';wrap.insertAdjacentHTML('beforeend','<div class="ai-msg a">'+esc(ans).replace(/```([\s\S]*?)```/g,(_,c)=>'<pre>'+c+'</pre>').replace(/\n/g,'<br>')+'</div>');wrap.scrollTop=wrap.scrollHeight;}
+async function chatSend(){const inp=$('aiInput');const q=inp.value.trim();if(!q)return;inp.value='';const wrap=$('aiMsgs');wrap.insertAdjacentHTML('beforeend','<div class="aim u">'+esc(q)+'</div>');wrap.scrollTop=wrap.scrollHeight;const loading=document.createElement('div');loading.className='aim a';loading.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري التفكير...';wrap.appendChild(loading);wrap.scrollTop=wrap.scrollHeight;const d=await api('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q})});loading.remove();const ans=d.answer||d.message||'—';wrap.insertAdjacentHTML('beforeend','<div class="aim a">'+esc(ans).replace(/```([\s\S]*?)```/g,(_,c)=>'<pre>'+c+'</pre>').replace(/\n/g,'<br>')+'</div>');wrap.scrollTop=wrap.scrollHeight;}
 async function aiCode(){return chatSend();}
 
-/* ============ METRICS ============ */
-function setGauge(id,pct){const c=$('ring'+id);pct=Math.max(0,Math.min(100,Number(pct)||0));if(c)c.style.strokeDashoffset=(326.726*(1-pct/100)).toFixed(2);const v=$('g'+id);if(v)v.textContent=Math.round(pct)+'%';}
+function setGauge(id,pct){pct=Math.max(0,Math.min(100,Number(pct)||0));const el=$('ring'+id);if(el)el.style.width=pct+'%';const v=$('g'+id);if(v)v.textContent=Math.round(pct)+'%';}
 async function loadMetrics(){const d=await api('/api/system/metrics');setGauge('Cpu',d.cpu||0);setGauge('Mem',d.memory||0);setGauge('Disk',d.disk||0);}
 
-/* ============ DRAG DROP ============ */
-(function(){const m=$('dropMask');if(!m)return;['dragenter','dragover'].forEach(e=>m.addEventListener(e,ev=>{ev.preventDefault();m.classList.add('over');}));['dragleave','drop'].forEach(e=>m.addEventListener(e,ev=>{ev.preventDefault();m.classList.remove('over');}));m.addEventListener('drop',ev=>{if(ev.dataTransfer.files.length)uploadFileList(ev.dataTransfer.files);});})();
+(function(){const m=$('dropMask');if(!m)return;m.addEventListener('click',()=>document.getElementById('upInput').click());['dragenter','dragover'].forEach(e=>m.addEventListener(e,ev=>{ev.preventDefault();m.classList.add('over');}));['dragleave','drop'].forEach(e=>m.addEventListener(e,ev=>{ev.preventDefault();m.classList.remove('over');}));m.addEventListener('drop',ev=>{if(ev.dataTransfer.files.length)uploadFileList(ev.dataTransfer.files);});})();
+(function(){var s=localStorage.getItem('bm_theme')||'dark';applyTheme(s);markTheme(s);})();
 
-/* ============ THEME INIT ============ */
-(function(){var s=localStorage.getItem('bm_theme')||'dark';applyTheme(s);var b=$('themeToggle');b.addEventListener('click',function(){var c=localStorage.getItem('bm_theme')||'dark',n=c==='light'?'dark':'light';localStorage.setItem('bm_theme',n);applyTheme(n);markTheme(n);});})();
-
-/* ============ INSTALL PROMPT ============ */
 let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('installBtn').classList.add('show');});
-function installApp(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt=null;$('installBtn').classList.remove('show');}
-$('installBtn').addEventListener('click',installApp);
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;const b=$('installBtn');if(b)b.style.display='flex';});
+function installApp(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt=null;const b=$('installBtn');if(b)b.style.display='none';}
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{});}
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
 
-/* ============ BOOT ============ */
 (async function(){await loadMe();await loadServers();loadMetrics();setInterval(loadServers,15000);setInterval(loadMetrics,5000);})();
 </script>
 </body>

@@ -2,157 +2,89 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#0b0f17">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#101418">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=8">
-<link rel="shortcut icon" href="/static/favicon.ico?v=8">
-<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png?v=8">
+<link rel="icon" href="/static/favicon.ico">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="BATMAN Dev">
-<title>BATMAN Dev — دخول</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<title>BATMAN Dev</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --primary:#00c46a;--primary-2:#00a85a;--accent:#8b5cf6;
-  --bg:#0b0f17;--surface:#141a25;--surface-2:#1a2230;--surface-3:#202a3a;
-  --border:#222b3a;--text:#e6edf3;--muted:#8b95a7;--red:#ef4444;--warn:#f59e0b;
+  --primary:#7af0b4;--on-primary:#003918;
+  --primary-container:#005230;--on-primary-container:#a4f6c8;
+  --secondary:#c2b6ff;--secondary-container:#433786;--on-secondary-container:#e4dfff;
+  --error:#ffb4ab;--error-container:#93000a;--on-error-container:#ffdad6;
+  --bg:#101418;--s1:#171b1f;--s2:#1c2024;--s3:#1f2429;--s4:#222830;
+  --on-surface:#e1e3e7;--on-surface-v:#c1c7ce;--outline:#8b9198;--outline-v:#41474d;
+  --label:var(--on-surface);--label-2:var(--on-surface-v);--label-3:rgba(193,199,206,.55);
+  --separator:rgba(65,71,77,.6);
+  --safe-top:env(safe-area-inset-top);--safe-bot:env(safe-area-inset-bottom);
+  --el1:0 1px 2px rgba(0,0,0,.3),0 1px 3px 1px rgba(0,0,0,.15);
+  --el2:0 1px 2px rgba(0,0,0,.3),0 2px 6px 2px rgba(0,0,0,.15);
+  --el3:0 4px 8px 3px rgba(0,0,0,.15),0 1px 3px rgba(0,0,0,.3);
 }
-html[data-theme="light"]{--bg:#f5f7fa;--surface:#fff;--surface-2:#f0f3f7;--surface-3:#e8ecf2;--border:#e4e7eb;--text:#1a202c;--muted:#64748b}
-html,body{height:100%;overscroll-behavior:none}
-body{font-family:'Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;
-  min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:20px 16px calc(20px + env(safe-area-inset-bottom)) 16px}
-
-.brand{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:22px;text-align:center}
-.brand-logo{width:74px;height:74px;border-radius:18px;overflow:hidden;background:var(--surface);border:1px solid var(--border)}
-.brand-logo img{width:100%;height:100%;object-fit:cover;display:block}
-.brand-name{font-size:22px;font-weight:800;letter-spacing:.2px}
-.brand-name .a{color:var(--accent)}
-.brand-sub{color:var(--muted);font-size:13.5px;font-weight:600}
-
-.card{width:100%;max-width:420px;background:var(--surface);border:1px solid var(--border);
-  border-radius:18px;padding:22px 20px}
-
-.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-2);padding:5px;border-radius:12px;margin-bottom:20px;gap:5px}
-.tab{padding:13px 8px;border-radius:9px;font-weight:800;font-size:14.5px;cursor:pointer;text-align:center;
-  color:var(--muted);background:transparent;border:none;font-family:inherit;transition:.18s;min-height:44px}
-.tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.15)}
-
-label{display:block;font-size:13.5px;font-weight:700;margin:14px 0 7px}
-.in-wrap{position:relative}
-.in-wrap i{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
-input{width:100%;padding:14px 42px 14px 14px;background:var(--surface-2);border:1.5px solid var(--border);
-  border-radius:11px;color:var(--text);font-family:inherit;font-size:16px;transition:.15s;min-height:50px}
-input:focus{outline:none;border-color:var(--accent);background:var(--surface-3)}
-
-.eye{position:absolute;left:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;
-  color:var(--muted);cursor:pointer;width:36px;height:36px;display:grid;place-items:center;border-radius:8px;font-size:14px}
-.eye:active{background:var(--surface-3)}
-
-.bar{height:6px;border-radius:4px;background:var(--surface-3);margin-top:8px;overflow:hidden;display:none}
-.bar.show{display:block}
-.bar i{display:block;height:100%;width:0;background:var(--red);transition:.3s;border-radius:4px}
-.bar i.med{background:var(--warn)}
-.bar i.ok{background:var(--primary)}
-.strength{font-size:11.5px;color:var(--muted);font-weight:700;margin-top:6px;display:none}
-.strength.show{display:block}
-
-.btn{width:100%;border:none;font-family:inherit;font-weight:800;font-size:15.5px;cursor:pointer;
-  border-radius:12px;padding:15px;display:flex;align-items:center;justify-content:center;gap:8px;
-  background:var(--accent);color:#fff;margin-top:22px;transition:.15s;min-height:52px;letter-spacing:.2px}
-.btn:active{transform:scale(.98)}
-.btn:disabled{opacity:.6;cursor:wait}
-
-.msg{margin-top:14px;padding:11px 13px;border-radius:10px;font-size:13.5px;font-weight:700;
-  display:none;align-items:center;gap:8px}
-.msg.show{display:flex}
-.msg.ok{background:rgba(0,196,106,.1);color:var(--primary);border:1px solid rgba(0,196,106,.25)}
-.msg.err{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.25)}
-
-.foot{margin-top:18px;text-align:center;font-size:12.5px;color:var(--muted)}
-.foot a{color:var(--accent);text-decoration:none;font-weight:700}
-
-#themeToggle{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));left:18px;width:46px;height:46px;
-  border-radius:13px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;
-  display:grid;place-items:center;font-size:16px;box-shadow:0 4px 12px rgba(0,0,0,.18)}
-
-.admin-link{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));right:18px;color:var(--muted);
-  font-size:11.5px;text-decoration:none;background:var(--surface);border:1px solid var(--border);
-  padding:10px 13px;border-radius:11px;font-weight:700;display:inline-flex;align-items:center;gap:6px}
-.admin-link i{color:var(--accent);font-size:11px}
-
-@media (min-width:600px){
-  .card{padding:30px 28px}
-  .brand-logo{width:80px;height:80px}
-  .brand-name{font-size:26px}
+html[data-theme="light"]{
+  --bg:#fef7ff;--s1:#f7f2fa;--s2:#f1ecf4;--s3:#ebe6ee;--s4:#e8e3eb;
+  --on-surface:#1c1b1f;--on-surface-v:#49454f;--outline:#79747e;--outline-v:#cac4d0;
+  --primary:#006d3d;--on-primary:#fff;--primary-container:#9bf6c3;--on-primary-container:#00210e;
+  --secondary:#5e5891;--secondary-container:#e4dfff;--on-secondary-container:#19134d;
+  --error:#ba1a1a;--error-container:#ffdad6;--on-error-container:#410002;
+  --label:var(--on-surface);--label-2:var(--on-surface-v);--label-3:rgba(73,69,79,.5);
+  --separator:rgba(202,196,208,.7);
 }
+html,body{height:100%}
+body{font-family:'Roboto','Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--label);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:calc(var(--safe-top) + 24px) 16px calc(var(--safe-bot) + 24px);-webkit-font-smoothing:antialiased;font-size:14px;letter-spacing:.1px}
+.wrap{width:100%;max-width:420px;margin:auto 0;display:flex;flex-direction:column;align-items:stretch}
+.brand{text-align:center;margin-bottom:30px}
+.logo{width:84px;height:84px;border-radius:24px;background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);display:grid;place-items:center;margin:0 auto 18px;color:#003918;font-weight:700;font-size:34px;box-shadow:var(--el3)}
+.brand h1{font-size:28px;font-weight:500;letter-spacing:0;margin-bottom:6px;line-height:1.2}
+.brand p{font-size:14px;color:var(--label-2);font-weight:400;letter-spacing:.25px}
+.card{background:var(--s1);border-radius:28px;padding:8px 0 20px;box-shadow:var(--el1);overflow:hidden}
+.card-h{padding:18px 24px 12px}
+.card-h h2{font-size:18px;font-weight:500;letter-spacing:0}
+.card-h p{font-size:13px;color:var(--label-2);font-weight:400;margin-top:4px;letter-spacing:.25px}
+.field{position:relative;display:flex;align-items:center;gap:14px;padding:14px 22px;min-height:60px}
+.field + .field::before{content:"";position:absolute;top:0;right:22px;left:22px;height:1px;background:var(--separator)}
+.field .ic{width:24px;height:24px;display:grid;place-items:center;color:var(--label-2);flex:none;font-size:16px}
+.field-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.field label{font-size:12px;font-weight:500;color:var(--label-2);letter-spacing:.4px}
+.field input{width:100%;border:none;background:none;color:var(--label);font-family:inherit;font-size:16px;outline:none;text-align:right;padding:0;letter-spacing:.25px}
+.field input::placeholder{color:var(--label-3)}
+.btn{cursor:pointer;border:none;font-family:inherit;font-weight:500;font-size:15px;border-radius:99px;padding:0 24px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--on-primary);background:var(--primary);width:calc(100% - 32px);margin:18px 16px 0;height:48px;box-shadow:var(--el1);transition:.18s;letter-spacing:.1px}
+.btn:active{transform:scale(.97);box-shadow:var(--el2)}
+.btn-link{background:none;color:var(--primary);box-shadow:none;height:40px;margin-top:8px;font-weight:500;font-size:14px}
+.err{background:var(--error-container);color:var(--on-error-container);padding:14px 18px;border-radius:14px;font-size:13px;font-weight:500;display:none;align-items:center;gap:10px;margin:12px 16px 0;letter-spacing:.2px}
+.err.show{display:flex}
+.err i{font-size:16px}
+.foot{text-align:center;margin-top:24px;color:var(--label-3);font-size:12px;font-weight:400;letter-spacing:.4px}
 </style>
 </head>
 <body>
-
-<div class="brand">
-  <div class="brand-logo"><img src="/static/logo.png?v=8" alt="BATMAN Dev"></div>
-  <div class="brand-name">BATMAN <span class="a">Dev</span></div>
-  <div class="brand-sub">منصة استضافة البوتات</div>
-</div>
-
-<div class="card">
-  <div class="tabs" role="tablist">
-    <button class="tab active" id="tabLogin" onclick="swap('login')">دخول</button>
-    <button class="tab" id="tabReg" onclick="swap('reg')">حساب جديد</button>
+<div class="wrap">
+  <div class="brand">
+    <div class="logo">B</div>
+    <h1>BATMAN Dev</h1>
+    <p>استضافة البوتات والتطبيقات</p>
   </div>
-
-  <form id="fLogin" onsubmit="return doLogin(event)">
-    <label for="liUser">اسم المستخدم</label>
-    <div class="in-wrap"><i class="fas fa-user"></i><input id="liUser" autocomplete="username" required></div>
-    <label for="liPass">كلمة المرور</label>
-    <div class="in-wrap"><i class="fas fa-lock"></i><input id="liPass" type="password" autocomplete="current-password" required><button type="button" class="eye" onclick="toggleEye('liPass',this)" aria-label="إظهار"><i class="fas fa-eye"></i></button></div>
-    <button class="btn" type="submit" id="btnLogin"><i class="fas fa-arrow-left-long"></i> دخول</button>
-    <div class="msg" id="mLogin"><i class="fas fa-circle-exclamation"></i><span></span></div>
-  </form>
-
-  <form id="fReg" onsubmit="return doReg(event)" style="display:none">
-    <label for="rgUser">اسم المستخدم</label>
-    <div class="in-wrap"><i class="fas fa-user-plus"></i><input id="rgUser" autocomplete="username" required></div>
-    <label for="rgPass">كلمة المرور</label>
-    <div class="in-wrap"><i class="fas fa-lock"></i><input id="rgPass" type="password" autocomplete="new-password" required oninput="strength()"><button type="button" class="eye" onclick="toggleEye('rgPass',this)" aria-label="إظهار"><i class="fas fa-eye"></i></button></div>
-    <div class="bar" id="sBar"><i id="sBarFill"></i></div>
-    <div class="strength" id="sTxt"></div>
-    <label for="rgPass2">تأكيد كلمة المرور</label>
-    <div class="in-wrap"><i class="fas fa-lock"></i><input id="rgPass2" type="password" autocomplete="new-password" required></div>
-    <button class="btn" type="submit" id="btnReg" style="background:var(--primary)"><i class="fas fa-user-check"></i> إنشاء حساب</button>
-    <div class="msg" id="mReg"><i class="fas fa-circle-info"></i><span></span></div>
-  </form>
-
-  <div class="foot">الحساب الجديد ينتظر موافقة الإدارة</div>
+  <div class="card">
+    <div class="card-h"><h2>تسجيل الدخول</h2><p>أدخل بياناتك للمتابعة</p></div>
+    <div class="field"><div class="ic"><i class="fas fa-user"></i></div><div class="field-body"><label>اسم المستخدم</label><input id="user" autocapitalize="off" spellcheck="false" autocomplete="username" placeholder="username"></div></div>
+    <div class="field"><div class="ic"><i class="fas fa-lock"></i></div><div class="field-body"><label>كلمة المرور</label><input id="pass" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div></div>
+    <div class="err" id="err"><i class="fas fa-circle-exclamation"></i><span id="errMsg"></span></div>
+    <button class="btn" onclick="doLogin()"><i class="fas fa-arrow-left"></i> دخول</button>
+    <a class="btn btn-link" href="/admin/login"><i class="fas fa-user-shield"></i> دخول كأدمن</a>
+  </div>
+  <div class="foot">© BATMAN Dev — Powered by Material You</div>
 </div>
-
-<button id="themeToggle" type="button" aria-label="تبديل المظهر"><i class="fas fa-moon"></i></button>
-<a class="admin-link" href="/admin/login"><i class="fas fa-user-shield"></i> دخول الأدمن</a>
-
 <script>
-const $=id=>document.getElementById(id);
-function swap(t){const isL=t==='login';$('tabLogin').classList.toggle('active',isL);$('tabReg').classList.toggle('active',!isL);$('fLogin').style.display=isL?'block':'none';$('fReg').style.display=isL?'none':'block';}
-function toggleEye(id,btn){const inp=$(id);const ic=btn.querySelector('i');if(inp.type==='password'){inp.type='text';ic.className='fas fa-eye-slash';}else{inp.type='password';ic.className='fas fa-eye';}}
-function show(id,ok,msg){const el=$(id);el.className='msg show '+(ok?'ok':'err');el.querySelector('i').className=ok?'fas fa-circle-check':'fas fa-circle-exclamation';el.querySelector('span').textContent=msg;}
-function strength(){const v=$('rgPass').value;const b=$('sBar'),f=$('sBarFill'),t=$('sTxt');if(!v){b.classList.remove('show');t.classList.remove('show');return;}b.classList.add('show');t.classList.add('show');let s=0;if(v.length>=8)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;const pct=(s/4)*100;f.style.width=pct+'%';f.className=s>=3?'ok':(s>=2?'med':'');t.textContent=s>=3?'قوية ✔️':(s>=2?'متوسطة':'ضعيفة');t.style.color=s>=3?'var(--primary)':(s>=2?'var(--warn)':'var(--red)');}
-async function doLogin(e){e.preventDefault();const u=$('liUser').value.trim(),p=$('liPass').value;const btn=$('btnLogin');btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري...';try{const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});const d=await r.json();if(d.success){show('mLogin',true,'أهلاً بعودتك');location.href=d.is_admin?'/admin':'/dashboard';}else{show('mLogin',false,d.message||'خطأ في الدخول');}}catch(_){show('mLogin',false,'تعذر الاتصال بالخادم');}btn.disabled=false;btn.innerHTML='<i class="fas fa-arrow-left-long"></i> دخول';return false;}
-async function doReg(e){e.preventDefault();const u=$('rgUser').value.trim(),p=$('rgPass').value,p2=$('rgPass2').value;if(u.length<3)return show('mReg',false,'الاسم قصير جداً');if(p.length<6)return show('mReg',false,'كلمة المرور على الأقل 6 أحرف');if(p!==p2)return show('mReg',false,'كلمتا المرور غير متطابقتين');const btn=$('btnReg');btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري...';try{const r=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});const d=await r.json();show('mReg',d.success,d.message);if(d.success){setTimeout(()=>swap('login'),1500);}}catch(_){show('mReg',false,'تعذر الاتصال');}btn.disabled=false;btn.innerHTML='<i class="fas fa-user-check"></i> إنشاء حساب';return false;}
-
-(async function(){try{const r=await fetch('/api/current_user');const d=await r.json();if(d.success)location.href=d.is_admin?'/admin':'/dashboard';}catch(_){}})();
-
-(function(){var K='bm_theme',mc=document.querySelector('meta[name="theme-color"]');
-  function ap(t){document.documentElement.setAttribute('data-theme',t);if(mc)mc.setAttribute('content',t==='light'?'#f5f7fa':'#0b0f17');}
-  var s=localStorage.getItem(K)||'dark';ap(s);
-  var b=document.getElementById('themeToggle');b.innerHTML=s==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';
-  b.addEventListener('click',function(){var c=localStorage.getItem(K)||'dark',n=c==='light'?'dark':'light';localStorage.setItem(K,n);ap(n);b.innerHTML=n==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';});
-})();
-if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}
+(function(){var s=localStorage.getItem('bm_theme')||'dark';document.documentElement.setAttribute('data-theme',s);const mc=document.querySelector('meta[name="theme-color"]');if(mc)mc.setAttribute('content',s==='light'?'#fef7ff':'#101418');})();
+async function doLogin(){const u=document.getElementById('user').value.trim();const p=document.getElementById('pass').value;const err=document.getElementById('err');err.classList.remove('show');if(!u||!p){document.getElementById('errMsg').textContent='أكمل الحقول';err.classList.add('show');return;}try{const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});const d=await r.json();if(d.success){location.href='/dashboard';}else{document.getElementById('errMsg').textContent=d.message||'خطأ';err.classList.add('show');}}catch(e){document.getElementById('errMsg').textContent='خطأ اتصال';err.classList.add('show');}}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{});}
 </script>
 </body>
 </html>
