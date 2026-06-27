@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#040910">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16.png">
+<link rel="shortcut icon" href="/static/favicon.ico">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BATMAN Dev">
+<title>𝑩𝑨𝑻𝑴𝑨𝑵 𝑫𝒆𝒗𓃠 — لوحة التحكم</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html[data-theme="light"]{--bg:#eef1f8;--card:rgba(255,255,255,.92);--line:rgba(124,58,237,.16);--txt:#10182a;--muted:rgba(16,24,42,.55)}
+html[data-theme="light"] body{background:#eef1f8}
+html[data-theme="light"] .orb{opacity:.10}
+html[data-theme="light"] header{background:rgba(255,255,255,.82)}
+html[data-theme="light"] .btn-ghost{background:rgba(0,0,0,.04);color:var(--txt)}
+html[data-theme="light"] th,html[data-theme="light"] td{border-color:rgba(0,0,0,.07)}
+html[data-theme="light"] tr:hover td{background:rgba(124,58,237,.05)}
+html[data-theme="light"] .box{background:#fff}
+#themeToggle{position:fixed;bottom:18px;right:18px;z-index:99998;width:46px;height:46px;border-radius:14px;border:1px solid var(--line);cursor:pointer;font-size:17px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#7c3aed,#00e676);box-shadow:0 10px 28px rgba(124,58,237,.4);transition:.18s}
+#themeToggle:hover{transform:translateY(-3px) rotate(-8deg)}
+:root{--primary:#00e676;--primary-dark:#00b258;--accent:#7c3aed;--accent-light:#a855f7;
+--bg:#040910;--card:rgba(12,22,36,.78);--line:rgba(0,230,118,.14);--txt:#e6edf3;--muted:rgba(230,237,243,.45);
+--red:#ff5470;--amber:#ffb020;--blue:#38bdf8}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+html{scroll-behavior:smooth}
+.btn{position:relative;overflow:hidden}
+.pgfade{position:fixed;inset:0;z-index:99999;background:var(--bg);opacity:1;pointer-events:none;transition:opacity .55s ease}
+.pgfade.gone{opacity:0}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.22);transform:scale(0);animation:rip .6s ease-out;pointer-events:none}
+@keyframes rip{to{transform:scale(2.6);opacity:0}}
+@keyframes cardIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.boot .stat,.boot .srv{animation:cardIn .5s ease both}
+.boot .srv:nth-child(2),.boot .stat:nth-child(2){animation-delay:.06s}
+.boot .srv:nth-child(3),.boot .stat:nth-child(3){animation-delay:.12s}
+.boot .srv:nth-child(4),.boot .stat:nth-child(4){animation-delay:.18s}
+.boot .srv:nth-child(5),.boot .stat:nth-child(5){animation-delay:.24s}
+.boot .srv:nth-child(6),.boot .stat:nth-child(6){animation-delay:.3s}
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden}
+.grid{position:absolute;inset:-2px;background-image:linear-gradient(rgba(0,230,118,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,230,118,.03) 1px,transparent 1px);background-size:46px 46px;mask-image:radial-gradient(ellipse 90% 60% at 50% 0,#000 30%,transparent 100%)}
+.orb{position:absolute;border-radius:50%;filter:blur(130px);opacity:.16}
+.o1{width:520px;height:520px;background:radial-gradient(circle,#00e676,#003d1c);top:-180px;right:-140px}
+.o2{width:440px;height:440px;background:radial-gradient(circle,#7c3aed,#2e0a5e);bottom:-160px;left:-120px}
+header{position:sticky;top:0;z-index:50;background:rgba(6,12,20,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+.hwrap{max-width:1200px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.logo{display:flex;align-items:center;gap:11px;font-weight:900;font-size:19px}
+.logo .ic{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--accent));display:grid;place-items:center;color:#04210f;font-size:19px;box-shadow:0 6px 22px rgba(0,230,118,.4);overflow:hidden}
+.logo .ic img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:12px;display:block}
+@keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.logo .ic{animation:logoFloat 2.6s ease-in-out infinite}
+.logo span{background:linear-gradient(90deg,var(--primary),var(--accent-light));-webkit-background-clip:text;background-clip:text;color:transparent}
+.huser{display:flex;align-items:center;gap:12px}
+.pill{display:flex;align-items:center;gap:7px;padding:7px 13px;background:rgba(0,230,118,.08);border:1px solid var(--line);border-radius:11px;font-size:13px;font-weight:700}
+.pill i{color:var(--primary)}
+.btn{cursor:pointer;border:none;border-radius:11px;font-family:inherit;font-weight:700;font-size:14px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;transition:.18s;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#04210f;box-shadow:0 6px 20px rgba(0,230,118,.32)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,230,118,.45)}
+.btn-ghost{background:rgba(255,255,255,.05);color:var(--txt);border:1px solid var(--line)}
+.btn-ghost:hover{background:rgba(255,255,255,.1)}
+.btn-red{background:rgba(255,84,112,.13);color:var(--red);border:1px solid rgba(255,84,112,.3)}
+.btn-red:hover{background:rgba(255,84,112,.22)}
+.btn-sm{padding:7px 12px;font-size:13px}
+.wrap{position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:26px 22px 60px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:26px}
+.stat{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:18px;padding:20px 22px;position:relative;overflow:hidden}
+.stat::after{content:'';position:absolute;top:0;right:0;width:90px;height:90px;background:radial-gradient(circle,rgba(0,230,118,.13),transparent 70%)}
+.stat .lbl{color:var(--muted);font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.stat .val{font-size:28px;font-weight:900}
+.stat .val small{font-size:15px;color:var(--muted);font-weight:600}
+.bar{height:7px;border-radius:6px;background:rgba(255,255,255,.07);margin-top:12px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--primary),var(--accent-light));transition:.5s}
+.gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:20px}
+.gauge{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:20px;padding:18px 14px;text-align:center;position:relative;overflow:hidden}
+.gauge::after{content:'';position:absolute;top:0;right:0;width:90px;height:90px;background:radial-gradient(circle,rgba(124,58,237,.14),transparent 70%)}
+.gwrap{position:relative;width:118px;height:118px;margin:0 auto 12px}
+.gwrap svg{width:118px;height:118px;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:rgba(255,255,255,.07);stroke-width:9}
+.ring-fg{fill:none;stroke-width:9;stroke-linecap:round;stroke-dasharray:326.726;stroke-dashoffset:326.726;transition:stroke-dashoffset .9s cubic-bezier(.22,1,.36,1);filter:drop-shadow(0 0 6px currentColor)}
+.ring-fg.cpu{stroke:#a855f7;color:#a855f7}
+.ring-fg.mem{stroke:#00e676;color:#00e676}
+.ring-fg.disk{stroke:#38bdf8;color:#38bdf8}
+.g-center{position:absolute;inset:0;display:grid;place-items:center}
+.g-val{font-size:25px;font-weight:900;line-height:1}
+.g-lbl{color:var(--muted);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:2px}
+.g-lbl i{color:var(--primary)}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:14px;margin-bottom:24px}
+.qcard{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:18px;padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;color:var(--txt);text-decoration:none;font-family:inherit;font-weight:800;font-size:13px;transition:.2s}
+.qcard:hover{transform:translateY(-3px);border-color:rgba(124,58,237,.4)}
+.qi{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-size:19px;background:rgba(124,58,237,.14);color:var(--accent-light)}
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:60;display:none;align-items:center;justify-content:space-around;padding:9px 4px calc(9px + env(safe-area-inset-bottom));background:rgba(6,12,20,.94);backdrop-filter:blur(22px);border-top:1px solid var(--line)}
+.bnav button,.bnav a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:10px;font-weight:800;cursor:pointer;border:none;background:none;font-family:inherit;padding:4px 9px;border-radius:11px;transition:.16s;text-decoration:none}
+.bnav i{font-size:18px}
+.ai-msgs{display:flex;flex-direction:column;gap:10px;max-height:48vh;overflow-y:auto;padding:6px 2px;margin:6px 0 12px}
+.ai-b{padding:11px 14px;border-radius:14px;font-size:14px;line-height:1.7;max-width:92%;white-space:pre-wrap;word-break:break-word}
+.ai-b.u{align-self:flex-start;background:linear-gradient(135deg,rgba(124,58,237,.22),rgba(168,85,247,.13));border:1px solid rgba(168,85,247,.3)}
+.ai-b.a{align-self:flex-end;background:rgba(0,230,118,.07);border:1px solid var(--line)}
+.ai-b pre{background:rgba(0,0,0,.5);border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;direction:ltr;text-align:left}
+.ai-b code{font-family:'JetBrains Mono',monospace}
+.ai-row{display:flex;gap:8px;align-items:flex-end}
+.ai-row textarea{flex:1;background:rgba(0,0,0,.4);border:1px solid var(--line);border-radius:12px;color:var(--txt);font-family:inherit;font-size:16px;padding:11px 13px;resize:none;max-height:120px;min-height:46px;outline:none}
+.ai-row textarea:focus{border-color:rgba(0,230,118,.45)}
+.ai-send{flex:none;width:46px;height:46px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--primary));color:#fff;font-size:16px}
+.ai-typing{align-self:flex-end;color:var(--muted);font-size:13px;padding:2px 8px}
+.bnav .active,.bnav button:hover,.bnav a:hover{color:var(--primary)}
+html[data-theme="light"] .ring-bg{stroke:rgba(0,0,0,.08)}
+html[data-theme="light"] .bnav{background:rgba(255,255,255,.94)}
+@media(max-width:760px){.bnav{display:flex}.wrap{padding-bottom:92px}#themeToggle{bottom:80px}#pwaInstall{bottom:80px}
+.hwrap{padding:11px 15px}.logo{font-size:16px}.logo .ic{width:34px;height:34px;font-size:16px}
+.gauges{grid-template-columns:repeat(3,1fr);gap:10px}.gwrap{width:86px;height:86px}.gwrap svg{width:86px;height:86px}.g-val{font-size:18px}.g-lbl{font-size:11px}.gauge{padding:14px 6px;border-radius:16px}
+.qgrid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:1fr 1fr}.stat .val{font-size:23px}.servers{grid-template-columns:1fr}.section-h h2{font-size:18px}
+.srv{padding:16px}.srv-name{font-size:15px}}
+@media(max-width:380px){.gauges{gap:7px}.gwrap{width:74px;height:74px}.gwrap svg{width:74px;height:74px}.g-val{font-size:16px}.qcard{padding:14px 8px}}
+.section-h{display:flex;align-items:center;justify-content:space-between;margin:30px 0 16px;flex-wrap:wrap;gap:12px}
+.section-h h2{font-size:21px;font-weight:800;display:flex;align-items:center;gap:10px}
+.section-h h2 i{color:var(--primary)}
+.servers{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+.srv{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:18px;padding:20px;transition:.2s;position:relative}
+.srv:hover{border-color:rgba(0,230,118,.34);transform:translateY(-3px)}
+.srv,.stat{will-change:transform}
+.stat{transition:transform .15s ease-out}
+.srv .glow,.stat .glow{position:absolute;inset:0;border-radius:18px;pointer-events:none;opacity:0;transition:opacity .35s;background:radial-gradient(340px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.09),transparent 46%)}
+.srv:hover .glow,.stat:hover .glow{opacity:1}
+.srv-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.srv-name{font-size:17px;font-weight:800;display:flex;align-items:center;gap:9px}
+.srv-name .ti{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:15px}
+.ti.py{background:rgba(56,189,248,.14);color:var(--blue)}
+.ti.node{background:rgba(0,230,118,.14);color:var(--primary)}
+.badge{font-size:11.5px;font-weight:800;padding:5px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:5px}
+.badge.run{background:rgba(0,230,118,.14);color:var(--primary)}
+.badge.stop{background:rgba(255,84,112,.13);color:var(--red)}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.badge.run .dot{animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.srv-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;font-size:13px}
+.srv-meta div{color:var(--muted)}
+.srv-meta b{color:var(--txt);font-weight:700}
+.srv-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.icon-btn{cursor:pointer;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--txt);display:grid;place-items:center;transition:.16s;font-size:14px}
+.icon-btn:hover{background:rgba(0,230,118,.12);color:var(--primary)}
+.icon-btn.danger:hover{background:rgba(255,84,112,.16);color:var(--red)}
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty i{font-size:52px;opacity:.3;margin-bottom:16px;display:block}
+.modal{position:fixed;inset:0;z-index:200;background:rgba(2,6,12,.78);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px}
+.modal.open{display:flex}
+.box{width:100%;max-width:560px;max-height:90vh;overflow:auto;background:#0a1422;border:1px solid var(--line);border-radius:22px;padding:28px;animation:rise .35s cubic-bezier(.34,1.56,.64,1)}
+.box.wide{max-width:920px}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.box-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.box-h h3{font-size:19px;font-weight:800;display:flex;align-items:center;gap:9px}
+.box-h h3 i{color:var(--primary)}
+.x{cursor:pointer;width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);display:grid;place-items:center;transition:.16s}
+.x:hover{background:rgba(255,84,112,.14);color:var(--red)}
+label{display:block;font-size:13.5px;font-weight:700;margin:14px 0 7px;color:var(--txt)}
+input,select,textarea{width:100%;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;color:var(--txt);font-family:inherit;font-size:14.5px;transition:.16s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);background:rgba(0,230,118,.05)}
+select option{background:#0a1422}
+.types{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.type-c{cursor:pointer;padding:16px;border:1.5px solid var(--line);border-radius:14px;text-align:center;transition:.16s}
+.type-c:hover{border-color:rgba(0,230,118,.4)}
+.type-c.sel{border-color:var(--primary);background:rgba(0,230,118,.08)}
+.type-c i{font-size:26px;margin-bottom:8px;display:block}
+.type-c.py i{color:var(--blue)}.type-c.node i{color:var(--primary)}
+.type-c .type-img{width:34px;height:34px;object-fit:contain;margin-bottom:8px;display:inline-block;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
+@keyframes premBob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.08)}}
+.type-c i,.type-c .type-img{animation:premBob 1.8s ease-in-out infinite}
+.srv .ti{overflow:hidden}
+.srv .ti .ti-img{width:18px;height:18px;object-fit:contain;display:block}
+.type-c b{font-size:14px}
+.fm{display:grid;grid-template-columns:260px 1fr;gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;height:440px}
+.fm-list{border-left:1px solid var(--line);overflow:auto;background:rgba(0,0,0,.2)}
+.fm-item{display:flex;align-items:center;gap:9px;padding:10px 12px;cursor:pointer;font-size:13.5px;border-bottom:1px solid rgba(255,255,255,.04);transition:.12s}
+.fm-item:hover{background:rgba(0,230,118,.07)}
+.fm-item.active{background:rgba(0,230,118,.12);color:var(--primary)}
+.fm-item i{width:18px;text-align:center}
+.fm-item .fa-folder{color:var(--amber)}.fm-item .fa-file-zipper{color:var(--accent-light)}
+.fm-item .meta{margin-right:auto;font-size:11px;color:var(--muted)}
+.fm-edit{display:flex;flex-direction:column}
+.fm-edit .toolbar{display:flex;gap:7px;padding:9px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.15);flex-wrap:wrap}
+.fm-edit textarea{flex:1;border:none;border-radius:0;resize:none;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;background:#060d16}
+.fname{font-size:13px;color:var(--muted);padding:6px 10px;align-self:center;margin-left:auto}
+.console{background:#050b13;border:1px solid var(--line);border-radius:12px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;height:420px;overflow:auto;white-space:pre-wrap;color:#b9f6ca}
+.console.err{color:#ffb4c0}
+.tabs{display:flex;gap:8px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+.tab{cursor:pointer;padding:10px 16px;font-weight:700;font-size:14px;color:var(--muted);border-bottom:2px solid transparent;transition:.16s}
+.tab.active{color:var(--primary);border-color:var(--primary)}
+.plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.plan-c{border:1.5px solid var(--line);border-radius:16px;padding:20px;text-align:center;transition:.18s;position:relative}
+.plan-c:hover{border-color:rgba(0,230,118,.4);transform:translateY(-3px)}
+.plan-c.cur{border-color:var(--primary);background:rgba(0,230,118,.06)}
+.plan-c .pn{font-size:16px;font-weight:800;margin-bottom:6px}
+.plan-c .pp{font-size:24px;font-weight:900;color:var(--primary);margin:8px 0}
+.plan-c .pp small{font-size:13px;color:var(--muted);font-weight:600}
+.plan-c ul{list-style:none;text-align:right;margin:14px 0;font-size:13px}
+.plan-c li{padding:5px 0;color:var(--muted)}
+.plan-c li i{color:var(--primary);margin-left:7px}
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);z-index:500;background:#0a1422;border:1px solid var(--line);border-radius:14px;padding:14px 22px;font-weight:700;font-size:14px;box-shadow:0 14px 40px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;transition:.4s cubic-bezier(.34,1.56,.64,1);max-width:90%}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:rgba(0,230,118,.4)}.toast.ok i{color:var(--primary)}
+.toast.bad{border-color:rgba(255,84,112,.4)}.toast.bad i{color:var(--red)}
+.api-box{background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:12px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:13px;word-break:break-all;display:flex;align-items:center;gap:10px;margin-top:8px}
+.api-box code{flex:1;color:var(--primary)}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--primary);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(max-width:680px){.fm{grid-template-columns:1fr;height:auto}.fm-list{max-height:180px}.srv-actions{justify-content:center}}
+</style>
+</head>
+<body>
+<div class="bg"><div class="grid"></div><div class="orb o1"></div><div class="orb o2"></div></div>
+
+<header>
+  <div class="hwrap">
+    <div class="logo"><div class="ic"><img src="/static/logo.png" alt="BATMAN Dev"></div>𝑩𝑨𝑻𝑴𝑨𝑵 <span>𝑫𝒆𝒗𓃠</span></div>
+    <div class="huser">
+      <div class="pill"><i class="fas fa-user"></i><span id="uName">...</span></div>
+      <div class="pill" id="planPill"><i class="fas fa-gem"></i><span id="uPlan">free</span></div>
+      <button class="btn btn-ghost btn-sm" onclick="logout()"><i class="fas fa-right-from-bracket"></i></button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="qgrid">
+    <button class="qcard" onclick="openAiChat()"><div class="qi" style="background:rgba(168,85,247,.16);color:var(--accent-light)"><i class="fas fa-wand-magic-sparkles"></i></div><span>مساعد AI</span></button>
+    <button class="qcard" onclick="openCreate()"><div class="qi"><i class="fas fa-plus"></i></div><span>سيرفر جديد</span></button>
+    <button class="qcard" onclick="openPlans()"><div class="qi" style="background:rgba(0,230,118,.14);color:var(--primary)"><i class="fas fa-gem"></i></div><span>الخطط</span></button>
+    <button class="qcard" onclick="openApi()"><div class="qi" style="background:rgba(56,189,248,.14);color:var(--blue)"><i class="fas fa-robot"></i></div><span>API وتليجرام</span></button>
+    <a class="qcard" id="qAdmin" href="/admin" style="display:none"><div class="qi" style="background:rgba(255,176,32,.14);color:var(--amber)"><i class="fas fa-shield-halved"></i></div><span>لوحة الأدمن</span></a>
+  </div>
+  <div class="gauges">
+    <div class="gauge"><div class="gwrap"><svg viewBox="0 0 118 118"><circle class="ring-bg" cx="59" cy="59" r="52"></circle><circle class="ring-fg cpu" id="ringCpu" cx="59" cy="59" r="52"></circle></svg><div class="g-center"><div class="g-val" id="gCpu">0%</div></div></div><div class="g-lbl"><i class="fas fa-microchip"></i> المعالج</div></div>
+    <div class="gauge"><div class="gwrap"><svg viewBox="0 0 118 118"><circle class="ring-bg" cx="59" cy="59" r="52"></circle><circle class="ring-fg mem" id="ringMem" cx="59" cy="59" r="52"></circle></svg><div class="g-center"><div class="g-val" id="gMem">0%</div></div></div><div class="g-lbl"><i class="fas fa-memory"></i> الذاكرة</div></div>
+    <div class="gauge"><div class="gwrap"><svg viewBox="0 0 118 118"><circle class="ring-bg" cx="59" cy="59" r="52"></circle><circle class="ring-fg disk" id="ringDisk" cx="59" cy="59" r="52"></circle></svg><div class="g-center"><div class="g-val" id="gDisk">0%</div></div></div><div class="g-lbl"><i class="fas fa-hard-drive"></i> القرص</div></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="lbl"><i class="fas fa-server"></i> السيرفرات</div><div class="val"><span id="sUsed">0</span> <small>/ <span id="sTotal">0</span></small></div><div class="bar"><i id="sBar" style="width:0"></i></div></div>
+    <div class="stat"><div class="lbl"><i class="fas fa-hard-drive"></i> التخزين</div><div class="val"><span id="dUsed">0</span> <small>/ <span id="dTotal">0</span> MB</small></div><div class="bar"><i id="dBar" style="width:0"></i></div></div>
+    <div class="stat"><div class="lbl"><i class="fas fa-gem"></i> الخطة الحالية</div><div class="val" style="font-size:22px" id="planName">مجاني</div><button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="openPlans()"><i class="fas fa-arrow-up"></i> ترقية</button></div>
+  </div>
+
+  <div class="section-h">
+    <h2><i class="fas fa-cubes"></i> سيرفراتي</h2>
+    <div style="display:flex;gap:9px">
+      <button class="btn btn-ghost" onclick="openApi()"><i class="fas fa-robot"></i> بوت / API</button>
+      <button class="btn btn-primary" onclick="openCreate()"><i class="fas fa-plus"></i> سيرفر جديد</button>
+    </div>
+  </div>
+  <div id="serverList" class="servers"></div>
+</div>
+
+<div class="modal" id="mCreate">
+  <div class="box">
+    <div class="box-h"><h3><i class="fas fa-plus-circle"></i> إنشاء سيرفر</h3><div class="x" onclick="closeM('mCreate')"><i class="fas fa-xmark"></i></div></div>
+    <label>اسم السيرفر</label>
+    <input id="cName" placeholder="مثال: بوت التيليجرام">
+    <label>نوع السيرفر</label>
+    <div class="types">
+      <div class="type-c py sel" data-type="Python" onclick="selType(this)"><img src="/static/python.png" class="type-img" alt="Python"><b>Python</b></div>
+      <div class="type-c node" data-type="Node.js" onclick="selType(this)"><i class="fab fa-node-js"></i><b>Node.js</b></div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:22px" onclick="createServer()" id="createBtn"><i class="fas fa-rocket"></i> إنشاء</button>
+  </div>
+</div>
+
+<div class="modal" id="mManage">
+  <div class="box wide">
+    <div class="box-h"><h3><i class="fas fa-gears"></i> <span id="mgName">السيرفر</span></h3><div class="x" onclick="closeManage()"><i class="fas fa-xmark"></i></div></div>
+    <div class="tabs">
+      <div class="tab active" data-tab="files" onclick="switchTab('files')"><i class="fas fa-folder-tree"></i> الملفات</div>
+      <div class="tab" data-tab="console" onclick="switchTab('console')"><i class="fas fa-terminal"></i> الكونسول</div>
+      <div class="tab" data-tab="errors" onclick="switchTab('errors')"><i class="fas fa-bug"></i> الأخطاء</div>
+    </div>
+    <div id="tabFiles">
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('upInput').click()"><i class="fas fa-upload"></i> رفع</button>
+        <button class="btn btn-ghost btn-sm" onclick="newFile()"><i class="fas fa-file-circle-plus"></i> ملف جديد</button>
+        <button class="btn btn-ghost btn-sm" onclick="installDeps()"><i class="fas fa-box"></i> تثبيت المكتبات</button>
+        <input type="file" id="upInput" multiple style="display:none" onchange="uploadFiles()">
+      </div>
+      <div class="fm">
+        <div class="fm-list" id="fmList"></div>
+        <div class="fm-edit">
+          <div class="toolbar">
+            <button class="btn btn-ghost btn-sm" onclick="aiCode('explain')"><i class="fas fa-wand-magic-sparkles"></i> اشرح</button>
+            <button class="btn btn-ghost btn-sm" onclick="aiCode('fix')"><i class="fas fa-bug-slash"></i> صلّح</button>
+            <button class="btn btn-ghost btn-sm" onclick="aiCode('feature')"><i class="fas fa-plus"></i> زوّد ميزة</button>
+            <button class="btn btn-primary btn-sm" onclick="saveFile()"><i class="fas fa-floppy-disk"></i> حفظ</button>
+            <button class="btn btn-ghost btn-sm" onclick="setStartup()"><i class="fas fa-play"></i> ملف التشغيل</button>
+            <button class="btn btn-ghost btn-sm" onclick="renameFile()"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-red btn-sm" onclick="deleteFile()"><i class="fas fa-trash"></i></button>
+            <span class="fname" id="curFile">اختر ملف</span>
+          </div>
+          <textarea id="editor" placeholder="اختر ملف لعرض محتواه..." spellcheck="false"></textarea>
+        </div>
+      </div>
+    </div>
+    <div id="tabConsole" style="display:none">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button class="btn btn-ghost btn-sm" onclick="loadConsole()"><i class="fas fa-rotate"></i> تحديث</button></div>
+      <div class="console" id="consoleOut">...</div>
+    </div>
+    <div id="tabErrors" style="display:none">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button class="btn btn-ghost btn-sm" onclick="loadErrors()"><i class="fas fa-rotate"></i> تحديث</button></div>
+      <button class="btn btn-primary btn-sm" style="margin-bottom:10px" onclick="diagnoseErrors()"><i class="fas fa-stethoscope"></i> شخّص بالـ AI</button>
+      <div class="console err" id="errorsOut">...</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="mPlans">
+  <div class="box wide">
+    <div class="box-h"><h3><i class="fas fa-gem"></i> الخطط</h3><div class="x" onclick="closeM('mPlans')"><i class="fas fa-xmark"></i></div></div>
+    <div class="plan-grid" id="plansGrid"></div>
+  </div>
+</div>
+
+<div class="modal" id="mApi">
+  <div class="box">
+    <div class="box-h"><h3><i class="fas fa-robot"></i> بوت التحكم / API</h3><div class="x" onclick="closeM('mApi')"><i class="fas fa-xmark"></i></div></div>
+    <p style="color:var(--muted);font-size:13.5px;line-height:1.7">استخدم مفتاح الـ API للتحكم في سيرفراتك من بوت التيليجرام.</p>
+    <label>مفتاح API</label>
+    <div class="api-box"><code id="apiKey">لم يتم الإنشاء بعد</code><button class="icon-btn" onclick="copyApi()"><i class="fas fa-copy"></i></button></div>
+    <button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="genApi()"><i class="fas fa-key"></i> إنشاء / تجديد المفتاح</button>
+    <label style="margin-top:20px">ربط معرف تيليجرام</label>
+    <div style="display:flex;gap:8px"><input id="tgId" placeholder="Telegram ID"><button class="btn btn-primary" onclick="linkTg()">ربط</button></div>
+  </div>
+</div>
+
+<div class="modal" id="mAi">
+  <div class="box" style="max-width:560px">
+    <div class="box-h"><h3><i class="fas fa-wand-magic-sparkles"></i> مساعد BATMAN AI</h3><div class="x" onclick="closeM('mAi')"><i class="fas fa-xmark"></i></div></div>
+    <div class="ai-msgs" id="aiMsgs"></div>
+    <div class="ai-row">
+      <textarea id="aiInput" rows="1" placeholder="اسأل أي حاجة عن الكود أو البوتات أو الاستضافة..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend()}"></textarea>
+      <button class="ai-send" id="aiSendBtn" onclick="chatSend()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="fas fa-circle-check"></i><span id="toastMsg"></span></div>
+<nav class="bnav">
+  <button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-gauge-high"></i><span>لوحة</span></button>
+  <button onclick="openCreate()"><i class="fas fa-plus"></i><span>جديد</span></button>
+  <button onclick="openPlans()"><i class="fas fa-gem"></i><span>الخطط</span></button>
+  <button onclick="openAiChat()"><i class="fas fa-wand-magic-sparkles"></i><span>AI</span></button>
+  <button onclick="openApi()"><i class="fas fa-robot"></i><span>API</span></button>
+  <a id="bAdmin" href="/admin" style="display:none"><i class="fas fa-shield-halved"></i><span>الأدمن</span></a>
+</nav>
+
+<script>
+let ME=null, CURF=null, CURFILE=null, SERVERS=[], selectedType='Python';
+const $=id=>document.getElementById(id);
+function toast(msg,ok=true){const t=$('toast');$('toastMsg').textContent=msg;t.className='toast show '+(ok?'ok':'bad');t.querySelector('i').className=ok?'fas fa-circle-check':'fas fa-circle-exclamation';setTimeout(()=>t.className='toast',3200);}
+async function api(url,opt){const r=await fetch(url,opt);try{return await r.json();}catch(e){return{success:false,message:'خطأ بالاتصال'};}}
+function closeM(id){$(id).classList.remove('open');}
+async function logout(){await fetch('/api/logout',{method:'POST'});location.href='/login';}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+async function loadMe(){const d=await api('/api/current_user');if(!d.success){location.href='/login';return;}ME=d;$('uName').textContent=d.username;$('uPlan').textContent=d.plan;if(d.api_key)$('apiKey').textContent=d.api_key;if(d.telegram_id)$('tgId').value=d.telegram_id;if(d.is_admin||d.plan==='admin'){var qa=$('qAdmin');if(qa)qa.style.display='flex';var ba=$('bAdmin');if(ba)ba.style.display='flex';}}
+
+async function loadServers(){const d=await api('/api/servers');if(!d.success)return;SERVERS=d.servers;const s=d.stats;$('sUsed').textContent=s.used;$('sTotal').textContent=s.total;$('dUsed').textContent=s.disk_used;$('dTotal').textContent=s.disk_total;$('planName').textContent=s.plan;$('sBar').style.width=Math.min(100,s.total?s.used/s.total*100:0)+'%';$('dBar').style.width=Math.min(100,s.disk_total?s.disk_used/s.disk_total*100:0)+'%';renderServers();}
+
+function renderServers(){const el=$('serverList');if(!SERVERS.length){el.innerHTML='<div class="empty" style="grid-column:1/-1"><i class="fas fa-cube"></i><h3>لا توجد سيرفرات بعد</h3><p>أنشئ أول سيرفر لك</p></div>';return;}el.innerHTML=SERVERS.map(s=>{const run=s.status==='Running';const isNode=s.type==='Node.js';return `<div class="srv"><div class="srv-top"><div class="srv-name"><div class="ti ${isNode?'node':'py'}">${isNode?'<i class="fab fa-node-js"></i>':'<img src="/static/python.png" class="ti-img" alt="py">'}</div>${esc(s.title)}</div><span class="badge ${run?'run':'stop'}"><span class="dot"></span>${run?'يعمل':'متوقف'}</span></div><div class="srv-meta"><div>النوع: <b>${s.type}</b></div><div>البورت: <b>${s.port}</b></div><div>التشغيل: <b>${run?s.uptime:'--'}</b></div><div>المساحة: <b>${s.disk_used} MB</b></div></div><div class="srv-actions">${run?`<button class="icon-btn" title="إيقاف" onclick="act('${s.folder}','stop')"><i class="fas fa-stop"></i></button><button class="icon-btn" title="إعادة" onclick="act('${s.folder}','restart')"><i class="fas fa-rotate"></i></button>`:`<button class="icon-btn" title="تشغيل" onclick="act('${s.folder}','start')"><i class="fas fa-play"></i></button>`}<button class="icon-btn" title="إدارة" onclick="openManage('${s.folder}','${esc(s.title)}')"><i class="fas fa-gears"></i></button><button class="icon-btn" style="${s.auto_restart?'color:var(--primary);border-color:rgba(0,230,118,.4)':''}" title="${s.auto_restart?'التشغيل التلقائي: مُفعّل':'التشغيل التلقائي: متوقف'}" onclick="act('${s.folder}','toggle-restart')"><i class="fas fa-arrows-rotate"></i></button><button class="icon-btn danger" title="حذف" onclick="delServer('${s.folder}')"><i class="fas fa-trash"></i></button></div></div>`;}).join('');}
+
+async function act(f,a){toast('جاري...');const d=await api(`/api/server/action/${f}/${a}`,{method:'POST'});toast(d.message,d.success);loadServers();}
+async function delServer(f){if(!confirm('حذف السيرفر نهائيًا؟'))return;const d=await api(`/api/server/action/${f}/delete`,{method:'POST'});toast(d.message,d.success);loadServers();}
+
+function openCreate(){$('cName').value='';selType(document.querySelector('.type-c.py'));$('mCreate').classList.add('open');}
+function selType(el){document.querySelectorAll('.type-c').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');selectedType=el.dataset.type;}
+async function createServer(){const name=$('cName').value.trim();if(!name){toast('أدخل اسمًا',false);return;}const b=$('createBtn');b.innerHTML='<span class="spin"></span>';const d=await api('/api/server/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,server_type:selectedType})});b.innerHTML='<i class="fas fa-rocket"></i> إنشاء';toast(d.message,d.success);if(d.success){closeM('mCreate');loadServers();}}
+
+function openManage(f,name){CURF=f;$('mgName').textContent=name;switchTab('files');CURFILE=null;$('editor').value='';$('curFile').textContent='اختر ملف';loadFiles();$('mManage').classList.add('open');}
+function closeManage(){closeM('mManage');loadServers();}
+function switchTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===t));$('tabFiles').style.display=t==='files'?'block':'none';$('tabConsole').style.display=t==='console'?'block':'none';$('tabErrors').style.display=t==='errors'?'block':'none';if(t==='console')loadConsole();if(t==='errors')loadErrors();}
+
+async function loadFiles(){const files=await api(`/api/files/list/${CURF}`);const el=$('fmList');if(!Array.isArray(files)||!files.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">لا توجد ملفات</div>';return;}el.innerHTML=files.map(f=>{const ic=f.is_dir?'fa-folder':(f.is_zip?'fa-file-zipper':'fa-file-code');return `<div class="fm-item" onclick="openFile('${esc(f.name)}',${f.is_dir},${f.is_zip})"><i class="fas ${ic}"></i><span>${esc(f.name)}</span><span class="meta">${f.size}</span></div>`;}).join('');}
+async function openFile(name,isDir,isZip){if(isDir){toast('المجلدات غير قابلة للفتح',false);return;}if(isZip){if(confirm('فك ضغط '+name+'؟')){const d=await api(`/api/files/unzip/${CURF}/${encodeURIComponent(name)}`,{method:'POST'});toast(d.message,d.success);loadFiles();}return;}CURFILE=name;document.querySelectorAll('.fm-item').forEach(i=>i.classList.toggle('active',i.textContent.includes(name)));$('curFile').textContent=name;$('editor').value='جاري التحميل...';const d=await api(`/api/files/content/${CURF}/${encodeURIComponent(name)}`);$('editor').value=d.content||'';}
+async function saveFile(){if(!CURFILE){toast('اختر ملف أولًا',false);return;}const d=await api(`/api/files/save/${CURF}/${encodeURIComponent(CURFILE)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:$('editor').value})});toast(d.message,d.success);}
+async function setStartup(){if(!CURFILE){toast('اختر ملف أولًا',false);return;}const d=await api(`/api/server/set-startup/${CURF}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:CURFILE})});toast(d.message,d.success);}
+async function renameFile(){if(!CURFILE)return;const nn=prompt('الاسم الجديد:',CURFILE);if(!nn||nn===CURFILE)return;const d=await api(`/api/files/rename/${CURF}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({old_name:CURFILE,new_name:nn})});toast(d.message,d.success);if(d.success){CURFILE=nn;$('curFile').textContent=nn;loadFiles();}}
+async function deleteFile(){if(!CURFILE)return;if(!confirm('حذف '+CURFILE+'؟'))return;const d=await api(`/api/files/delete/${CURF}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({names:[CURFILE]})});toast(d.message,d.success);if(d.success){CURFILE=null;$('editor').value='';$('curFile').textContent='اختر ملف';loadFiles();}}
+async function newFile(){const n=prompt('اسم الملف الجديد:');if(!n)return;const d=await api(`/api/files/create/${CURF}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:n,content:''})});toast(d.message,d.success);if(d.success)loadFiles();}
+async function uploadFiles(){const inp=$('upInput');if(!inp.files.length)return;const fd=new FormData();for(const f of inp.files)fd.append('files[]',f);toast('جاري الرفع...');const r=await fetch(`/api/files/upload/${CURF}`,{method:'POST',body:fd});const d=await r.json();toast(d.message,d.success);inp.value='';loadFiles();}
+async function installDeps(){const d=await api(`/api/server/install/${CURF}`,{method:'POST'});toast(d.message,d.success);}
+async function loadConsole(){const d=await api(`/api/server/stats/${CURF}`);$('consoleOut').textContent=d.logs||'لا توجد مخرجات';$('consoleOut').scrollTop=$('consoleOut').scrollHeight;}
+async function loadErrors(){const d=await api(`/api/server/stats/${CURF}`);$('errorsOut').textContent=d.errors||'✅ لا توجد أخطاء';}
+
+async function openPlans(){const d=await api('/api/plans');const g=$('plansGrid');g.innerHTML=Object.entries(d.plans).filter(([k])=>k!=='admin').map(([k,p])=>`<div class="plan-c ${ME&&ME.plan===k?'cur':''}"><div class="pn">${p.name}</div><div class="pp">$${p.price}<small>/شهر</small></div><ul><li><i class="fas fa-hard-drive"></i> ${p.storage} MB تخزين</li><li><i class="fas fa-memory"></i> ${p.ram} MB رام</li><li><i class="fas fa-microchip"></i> ${p.cpu} CPU</li><li><i class="fas fa-server"></i> ${p.max_servers} سيرفر</li></ul>${ME&&ME.plan===k?'<button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center" disabled>الخطة الحالية</button>':`<button class="btn btn-primary btn-sm" style="width:100%;justify-content:center" onclick="upgrade('${k}')">ترقية</button>`}</div>`).join('');$('mPlans').classList.add('open');}
+async function upgrade(pid){const d=await api('/api/user/upgrade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan_id:pid})});toast(d.message,d.success);if(d.success){closeM('mPlans');await loadMe();loadServers();}}
+
+function openApi(){$('mApi').classList.add('open');}
+async function genApi(){const d=await api('/api/create_api_key',{method:'POST'});if(d.success){$('apiKey').textContent=d.api_key;toast(d.message);}else toast(d.message||'خطأ',false);}
+function copyApi(){const t=$('apiKey').textContent;if(t.includes('لم'))return;navigator.clipboard.writeText(t);toast('تم النسخ');}
+async function linkTg(){const id=$('tgId').value.trim();if(!id){toast('أدخل المعرف',false);return;}const d=await api('/api/link_telegram',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_id:id})});toast(d.message,d.success);}
+
+/* 3D tilt for cards: mouse (PC) + touch (mobile) */
+(function(){function apply(el,pt,max){if(!el.querySelector(':scope>.glow')){var g=document.createElement('div');g.className='glow';el.appendChild(g)}var r=el.getBoundingClientRect();var px=(pt.clientX-r.left)/r.width,py=(pt.clientY-r.top)/r.height;el.style.setProperty('--mx',(px*100)+'%');el.style.setProperty('--my',(py*100)+'%');el.style.transform='perspective(900px) rotateX('+((.5-py)*max)+'deg) rotateY('+((px-.5)*max)+'deg) translateY(-3px)'}function bind(sel,max){document.addEventListener('mousemove',function(e){var el=e.target.closest(sel);if(el)apply(el,e,max)});document.addEventListener('mouseout',function(e){var el=e.target.closest(sel);if(el&&!el.contains(e.relatedTarget))el.style.transform=''});document.addEventListener('touchmove',function(e){var t=e.touches[0];if(!t)return;var el=document.elementFromPoint(t.clientX,t.clientY);el=el&&el.closest(sel);if(el)apply(el,t,max)},{passive:true});document.addEventListener('touchend',function(){document.querySelectorAll(sel).forEach(function(el){el.style.transform=''})});}bind('.srv',7);bind('.stat',5);})();
+/* dark / light theme toggle */
+(function(){var K='bm_theme';var mc=document.querySelector('meta[name="theme-color"]');function ap(t){document.documentElement.setAttribute('data-theme',t);if(mc)mc.setAttribute('content',t==='light'?'#eef1f8':'#040910');}var s=localStorage.getItem(K)||'dark';ap(s);function mk(){var b=document.createElement('button');b.id='themeToggle';b.type='button';b.title='تبديل الوضع';b.innerHTML=(localStorage.getItem(K)||'dark')==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';b.addEventListener('click',function(){var c=localStorage.getItem(K)||'dark';var n=c==='light'?'dark':'light';localStorage.setItem(K,n);ap(n);b.innerHTML=n==='light'?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';if(window.drawChart)try{window.drawChart()}catch(e){}});document.body.appendChild(b);}if(document.body)mk();else document.addEventListener('DOMContentLoaded',mk);})();
+/* PWA: service worker + install prompt */
+(function(){if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}var st=document.createElement('style');st.textContent='@keyframes pwaPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}#pwaInstall:hover{filter:brightness(1.12)}';document.head.appendChild(st);var deferred=null;var btn=document.createElement('button');btn.id='pwaInstall';btn.type='button';btn.innerHTML='<i class="fa-solid fa-download"></i> ثبّت التطبيق';btn.style.cssText='position:fixed;bottom:18px;left:18px;z-index:99998;display:none;align-items:center;gap:8px;padding:11px 16px;border:none;border-radius:13px;cursor:pointer;font-family:inherit;font-weight:800;font-size:14px;color:#fff;background:linear-gradient(135deg,#7c3aed,#00e676);box-shadow:0 10px 30px rgba(124,58,237,.45);animation:pwaPulse 2.4s infinite';if(document.body)document.body.appendChild(btn);window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;btn.style.display='inline-flex';});btn.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.finally(function(){deferred=null;btn.style.display='none';});});window.addEventListener('appinstalled',function(){btn.style.display='none';});})();
+/* light anti-copy guard */
+(function(){document.addEventListener('contextmenu',function(e){e.preventDefault()});document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(k==='i'||k==='j'||k==='c'))||(e.ctrlKey&&(k==='u'||k==='s'))){e.preventDefault();return false;}});})();
+/* smooth page transitions + ripple + reveal */
+(function(){var f=document.createElement('div');f.className='pgfade';document.body.appendChild(f);requestAnimationFrame(function(){f.classList.add('gone')});setTimeout(function(){f.style.display='none'},650);window.__pageLeave=function(cb){f.style.display='block';void f.offsetWidth;f.classList.remove('gone');setTimeout(cb,420)};document.body.classList.add('boot');setTimeout(function(){document.body.classList.remove('boot')},2200);document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){var href=a.getAttribute('href');var ext=/^(https?:)?\/\//.test(href)&&a.host!==location.host;if(href&&href[0]!=='#'&&a.target!=='_blank'&&!ext){e.preventDefault();window.__pageLeave(function(){location.href=href});return}}var b=e.target.closest('.btn');if(b){var r=b.getBoundingClientRect();var rp=document.createElement('span');rp.className='ripple';var sz=Math.max(r.width,r.height);rp.style.width=rp.style.height=sz+'px';rp.style.left=(e.clientX-r.left-sz/2)+'px';rp.style.top=(e.clientY-r.top-sz/2)+'px';b.appendChild(rp);setTimeout(function(){rp.remove()},600)}});})();
+function setGauge(id,pct){var c=$('ring'+id);pct=Math.max(0,Math.min(100,Number(pct)||0));if(c)c.style.strokeDashoffset=(326.726*(1-pct/100)).toFixed(2);var v=$('g'+id);if(v)v.textContent=Math.round(pct)+'%';}
+async function loadMetrics(){var d=await api('/api/system/metrics');if(!d)return;setGauge('Cpu',d.cpu);setGauge('Mem',d.memory);setGauge('Disk',d.disk);}
+var AI_HISTORY=[];
+function aiEscape(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function aiRender(t){t=aiEscape(t);t=t.replace(/```([\s\S]*?)```/g,function(m,c){return '<pre><code>'+c.replace(/^\n/,'')+'</code></pre>';});t=t.replace(/`([^`]+)`/g,'<code>$1</code>');t=t.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>');return t;}
+function aiBubble(role,text,raw){var w=$('aiMsgs');var d=document.createElement('div');d.className='ai-b '+(role==='user'?'u':'a');d.innerHTML=raw?aiRender(text):aiEscape(text);w.appendChild(d);w.scrollTop=w.scrollHeight;return d;}
+function aiTyping(){var t=document.createElement('div');t.className='ai-typing';t.textContent='✍️ بيكتب...';$('aiMsgs').appendChild(t);$('aiMsgs').scrollTop=$('aiMsgs').scrollHeight;return t;}
+function openAiChat(){$('mAi').classList.add('open');if(!$('aiMsgs').dataset.init){$('aiMsgs').dataset.init='1';aiBubble('assistant','أهلًا 🦇 أنا مساعد BATMAN AI. اسألني عن الأكواد، البوتات، أو أي مشكلة في الاستضافة.',true);}setTimeout(function(){var i=$('aiInput');if(i)i.focus();},120);}
+async function aiAsk(payload,userLabel){openAiChat();if(userLabel)aiBubble('user',userLabel,false);var tip=aiTyping();var d=await api('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});tip.remove();if(!d.success){aiBubble('assistant','⚠️ '+(d.message||'خطأ'),false);return;}aiBubble('assistant',d.reply,true);}
+async function chatSend(){var inp=$('aiInput');var t=inp.value.trim();if(!t)return;inp.value='';aiBubble('user',t,false);var tip=aiTyping();var d=await api('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'chat',text:t,history:AI_HISTORY})});tip.remove();if(!d.success){aiBubble('assistant','⚠️ '+(d.message||'خطأ'),false);return;}aiBubble('assistant',d.reply,true);AI_HISTORY.push({role:'user',content:t});AI_HISTORY.push({role:'assistant',content:d.reply});}
+function aiCode(action){var code=$('editor').value;if(!code.trim()){toast('افتح ملف فيه كود الأول',false);return;}var labels={explain:'🧑‍💻 اشرح الكود',fix:'🩹 صلّح الأخطاء',feature:'✨ زوّد ميزة'};var extra='';if(action==='feature'){extra=prompt('اكتب الميزة اللي عايزها:')||'';if(!extra)return;}aiAsk({mode:'code',action:action,code:code,text:extra},labels[action]+(extra?(' — '+extra):''));}
+function diagnoseErrors(){var logs=($('errorsOut').textContent||'');if(!logs.trim()||logs.indexOf('لا توجد')>-1){toast('مفيش أخطاء لتشخيصها',false);return;}aiAsk({mode:'diagnose',logs:logs},'🩺 شخّص الأخطاء دي');}
+loadMe();loadServers();loadMetrics();setInterval(loadServers,12000);setInterval(loadMetrics,5000);
+</script>
+</body>
+</html>

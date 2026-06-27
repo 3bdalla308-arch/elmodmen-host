@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دخول الأدمن — 𝑩𝑨𝑻𝑴𝑨𝑵 𝑫𝒆𝒗𓃠</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#00e676;--accent:#a855f7;--bg:#040910}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:#e6edf3;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.18}
+.o1{width:480px;height:480px;background:radial-gradient(circle,#7c3aed,#2e0a5e);top:-140px;left:-120px}
+.o2{width:420px;height:420px;background:radial-gradient(circle,#00e676,#003d1c);bottom:-140px;right:-120px}
+.card{position:relative;z-index:10;width:360px;background:rgba(10,20,34,.82);backdrop-filter:blur(34px);border:1px solid rgba(0,230,118,.16);border-radius:24px;padding:40px 32px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:rise .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+.logo{text-align:center;margin-bottom:26px}
+.logo .ic{display:inline-flex;width:64px;height:64px;border-radius:18px;background:linear-gradient(145deg,rgba(168,85,247,.2),rgba(0,230,118,.15));border:1px solid rgba(168,85,247,.35);align-items:center;justify-content:center;color:var(--accent);font-size:26px;margin-bottom:12px}
+.logo h2{font-family:'Orbitron',sans-serif;font-size:1.05rem;letter-spacing:1px;background:linear-gradient(120deg,#a855f7,#00e676);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo p{font-size:.72rem;color:rgba(255,255,255,.4);letter-spacing:2px;margin-top:5px}
+.fg{margin-bottom:14px}
+.box{display:flex;align-items:center;background:rgba(0,0,0,.5);border:1px solid rgba(168,85,247,.18);border-radius:12px;transition:.3s}
+.box:focus-within{border-color:rgba(168,85,247,.5);box-shadow:0 0 0 3px rgba(168,85,247,.1)}
+.ic2{width:44px;text-align:center;color:rgba(168,85,247,.6)}
+input{flex:1;background:transparent;border:none;outline:none;color:#e6edf3;font-family:'Tajawal',sans-serif;font-size:.92rem;padding:13px 0}
+input::placeholder{color:rgba(255,255,255,.22)}
+button{width:100%;padding:13px;margin-top:8px;border:none;border-radius:12px;color:#fff;font-family:'Tajawal',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;background:linear-gradient(135deg,#7c3aed,#a855f7,rgba(0,230,118,.6));box-shadow:0 10px 26px rgba(124,58,237,.3);transition:.3s}
+button:hover{transform:translateY(-2px)}
+.err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#fca5a5;padding:10px 13px;border-radius:10px;font-size:.82rem;margin-bottom:14px;text-align:center}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+<form class="card" method="post">
+  <div class="logo"><div class="ic"><i class="fas fa-user-shield"></i></div><h2>ADMIN PANEL</h2><p>𝑩𝑨𝑻𝑴𝑨𝑵 𝑫𝒆𝒗𓃠</p></div>
+  __ERROR__
+  <div class="fg"><div class="box"><span class="ic2"><i class="fas fa-user"></i></span><input name="username" placeholder="اسم الأدمن"></div></div>
+  <div class="fg"><div class="box"><span class="ic2"><i class="fas fa-lock"></i></span><input name="password" type="password" placeholder="كلمة المرور"></div></div>
+  <button><i class="fas fa-right-to-bracket"></i> دخول الأدمن</button>
+</form>
+</body></html>
