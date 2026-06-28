@@ -177,6 +177,26 @@ body{font-family:'Roboto','Tajawal',system-ui,sans-serif;background:var(--groupe
   .sheet-h{top:0}
   .toast{bottom:24px}
 }
+
+/* Pro admin styles */
+.skel{background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);background-size:200% 100%;animation:sh 1.4s linear infinite;border-radius:14px}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-row{height:64px;margin:10px 16px;border-radius:18px}
+.mini-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 12px;margin-top:10px}
+@media (min-width:540px){.mini-stats{grid-template-columns:repeat(4,1fr)}}
+.mini{background:var(--s1);border-radius:18px;padding:14px;box-shadow:var(--el1)}
+.mini .l{font-size:11px;color:var(--label-2);font-weight:500;margin-bottom:6px;letter-spacing:.4px}
+.mini .v{font-size:22px;font-weight:500;letter-spacing:-.3px;line-height:1}
+.mini.rev .v{color:var(--primary)}
+.mini.run .v{color:var(--secondary)}
+.aud-row{display:flex;gap:14px;padding:14px 20px;align-items:center;position:relative;min-height:58px}
+.aud-row + .aud-row::before{content:"";position:absolute;top:0;right:74px;left:20px;height:1px;background:var(--separator)}
+.aud-row .ai{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--secondary-container);color:var(--on-secondary-container);flex:none;font-size:14px}
+.aud-row .ab{flex:1;min-width:0}
+.aud-row .ah{font-size:13px;color:var(--label);font-weight:500;letter-spacing:.1px}
+.aud-row .as{font-size:11px;color:var(--label-3);margin-top:3px;letter-spacing:.3px;direction:ltr;text-align:right}
+#planChart,#revChart,#newChart{width:100%;height:160px;display:block}
+
 </style>
 </head>
 <body>
@@ -225,6 +245,27 @@ body{font-family:'Roboto','Tajawal',system-ui,sans-serif;background:var(--groupe
   <div class="sec-h"><span class="lbl"><i class="fas fa-gem"></i> الخطط</span><button class="act" onclick="openPlan()"><i class="fas fa-plus"></i> خطة</button></div>
   <div id="plansList"></div>
 
+
+  <div class="mini-stats" id="miniStats"></div>
+
+  <div class="sec-h"><span class="lbl"><i class="fas fa-chart-line"></i> توزيع الخطط</span></div>
+  <div class="chart-card"><canvas id="planChart"></canvas></div>
+
+  <div class="sec-h"><span class="lbl"><i class="fas fa-coins"></i> الإيرادات الشهرية</span></div>
+  <div class="chart-card"><canvas id="revChart"></canvas></div>
+
+  <div class="sec-h"><span class="lbl"><i class="fas fa-user-plus"></i> مستخدمين جدد (7 أيام)</span></div>
+  <div class="chart-card"><canvas id="newChart"></canvas></div>
+
+  <div class="sec-h"><span class="lbl"><i class="fas fa-clipboard-list"></i> سجل التدقيق</span><button class="act" onclick="loadAudit()"><i class="fas fa-rotate"></i> تحديث</button></div>
+  <div id="auditList"></div>
+
+  <div class="sec-h"><span class="lbl"><i class="fas fa-ticket"></i> كوبونات خصم</span><button class="act" onclick="openCouponAdd()"><i class="fas fa-plus"></i> جديد</button></div>
+  <div id="couponList"></div>
+
+  <div class="sec-h"><span class="lbl"><i class="fas fa-database"></i> قاعدة البيانات</span></div>
+  <div class="group"><button class="row" onclick="location.href='/api/admin/db-backup'"><div class="ric" style="background:var(--primary-container);color:var(--on-primary-container)"><i class="fas fa-cloud-arrow-down"></i></div><div class="rbody"><div class="rtitle">تحميل نسخة احتياطية</div><div class="rsub">db.json بكل البيانات</div></div></button></div>
+
 </div>
 
 <button class="fab" onclick="openCreate()" aria-label="إضافة مستخدم"><i class="fas fa-user-plus"></i></button>
@@ -242,6 +283,9 @@ body{font-family:'Roboto','Tajawal',system-ui,sans-serif;background:var(--groupe
 <div class="modal" id="mEdit"><div class="sheet"><div class="sheet-h"><h3 id="edTitle">تعديل</h3><button class="x" onclick="closeM('mEdit')">إلغاء</button></div><div class="sec-h"><span class="lbl">الحصص</span></div><div class="group"><div class="field"><label>عدد البوتات</label><input id="edServers" type="number" inputmode="numeric"></div><div class="field"><label>التخزين (MB)</label><input id="edStorage" type="number" inputmode="numeric"></div><div class="field"><label>الخطة</label><select id="edPlan"><option value="free">Free</option><option value="basic">Basic</option><option value="pro">Pro</option><option value="premium">Premium</option></select></div></div><button class="btn btn-primary btn-block" onclick="saveUser()"><i class="fas fa-floppy-disk"></i> حفظ</button></div></div>
 
 <div class="modal" id="mPlan"><div class="sheet"><div class="sheet-h"><h3>خطة</h3><button class="x" onclick="closeM('mPlan')">إلغاء</button></div><div class="sec-h"><span class="lbl">تفاصيل</span></div><div class="group"><div class="field"><label>المعرف</label><input id="plId" placeholder="basic" autocapitalize="off" spellcheck="false"></div><div class="field"><label>الاسم</label><input id="plName"></div><div class="field"><label>السعر ($)</label><input id="plPrice" type="number" inputmode="decimal"></div><div class="field"><label>بوتات</label><input id="plServers" type="number" inputmode="numeric"></div><div class="field"><label>تخزين (MB)</label><input id="plStorage" type="number" inputmode="numeric"></div><div class="field"><label>RAM (MB)</label><input id="plRam" type="number" inputmode="numeric"></div><div class="field"><label>CPU</label><input id="plCpu" type="number" inputmode="numeric"></div></div><button class="btn btn-primary btn-block" onclick="addPlan()"><i class="fas fa-check"></i> حفظ</button></div></div>
+
+
+<div class="modal" id="mCoupon"><div class="sheet"><div class="sheet-h"><h3>كوبون جديد</h3><button class="x" onclick="closeM('mCoupon')">إلغاء</button></div><div class="sec-h"><span class="lbl">التفاصيل</span></div><div class="group"><div class="field"><label>الكود</label><input id="cpCode" placeholder="SAVE20" autocapitalize="characters"></div><div class="field"><label>الخصم %</label><input id="cpDisc" type="number" value="10" min="1" max="100" inputmode="numeric"></div><div class="field"><label>عدد الاستخدامات</label><input id="cpUses" type="number" value="10" min="1" inputmode="numeric"></div></div><button class="btn btn-primary btn-block" onclick="addCoupon()"><i class="fas fa-check"></i> إنشاء</button></div></div>
 
 <div class="toast" id="toast"><i class="fas fa-circle-check"></i><span id="toastMsg"></span></div>
 
@@ -285,7 +329,28 @@ function drawChart(hist){const ctx=$('resChart').getContext('2d');if(RES_CHART){
 (function(){var s=localStorage.getItem('bm_theme')||'dark';document.documentElement.setAttribute('data-theme',s);const mc=document.querySelector('meta[name="theme-color"]');if(mc)mc.setAttribute('content',s==='light'?'#fef7ff':'#101418');})();
 document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{});}
-(async function(){await loadAll();loadMetrics();setInterval(loadMetrics,5000);setInterval(loadPending,15000);})();
+(async function(){await loadAll();loadMetrics();loadAnalytics();loadAudit();loadCoupons();setInterval(loadMetrics,5000);setInterval(loadPending,15000);setInterval(loadAnalytics,60000);})();
+
+/* Admin Pro features */
+let PLAN_CHART=null, REV_CHART=null, NEW_CHART=null;
+function skel(c,n){const el=document.getElementById(c);if(!el)return;el.innerHTML=Array(n||3).fill('<div class="skel skel-row"></div>').join('');}
+async function loadAnalytics(){const d=await api('/api/admin/analytics');if(!d.success)return;const m=document.getElementById('miniStats');m.innerHTML=`
+  <div class="mini"><div class="l">إجمالي الإيراد</div><div class="v rev" style="color:var(--primary)">$${(d.totals.revenue||0).toFixed(0)}</div></div>
+  <div class="mini"><div class="l">البوتات</div><div class="v">${d.totals.servers||0}</div></div>
+  <div class="mini"><div class="l">شغّالة</div><div class="v run" style="color:var(--secondary)">${d.totals.running||0}</div></div>
+  <div class="mini"><div class="l">دفعات معلقة</div><div class="v" style="color:var(--warning)">${d.totals.pending_payments||0}</div></div>`;
+  drawPlan(d.plan_distribution||{});drawRev(d.revenue_months||[]);drawNew(d.new_users_days||[]);}
+function drawPlan(dist){const ctx=document.getElementById('planChart');if(!ctx)return;if(PLAN_CHART)PLAN_CHART.destroy();const labels=Object.keys(dist);const data=Object.values(dist);PLAN_CHART=new Chart(ctx,{type:'doughnut',data:{labels:labels,datasets:[{data:data,backgroundColor:['#7af0b4','#c2b6ff','#7fd2ff','#ffb868','#ffb4ab'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'var(--label-2)',font:{size:11}}}}}});}
+function drawRev(months){const ctx=document.getElementById('revChart');if(!ctx)return;if(REV_CHART)REV_CHART.destroy();REV_CHART=new Chart(ctx,{type:'bar',data:{labels:months.map(m=>m.month),datasets:[{label:'$',data:months.map(m=>m.revenue),backgroundColor:'rgba(122,240,180,.6)',borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'rgba(193,199,206,.32)',font:{size:10}},grid:{display:false}},y:{ticks:{color:'rgba(193,199,206,.32)',font:{size:10}},grid:{color:'rgba(255,255,255,.05)'}}}}});}
+function drawNew(days){const ctx=document.getElementById('newChart');if(!ctx)return;if(NEW_CHART)NEW_CHART.destroy();NEW_CHART=new Chart(ctx,{type:'line',data:{labels:days.map(d=>d.day.slice(5)),datasets:[{data:days.map(d=>d.count),borderColor:'#c2b6ff',backgroundColor:'rgba(194,182,255,.15)',fill:true,tension:.4,borderWidth:2,pointRadius:3,pointBackgroundColor:'#c2b6ff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'rgba(193,199,206,.32)',font:{size:10}},grid:{display:false}},y:{beginAtZero:true,ticks:{color:'rgba(193,199,206,.32)',font:{size:10},stepSize:1},grid:{color:'rgba(255,255,255,.05)'}}}}});}
+async function loadAudit(){skel('auditList',5);const d=await api('/api/admin/audit');const el=document.getElementById('auditList');if(!d.success||!d.audit.length){el.innerHTML='<div class="empty"><i class="fas fa-clipboard"></i><h4>لا يوجد سجل</h4></div>';return;}el.innerHTML='<div class="group">'+d.audit.slice(0,30).map(a=>`<div class="aud-row"><div class="ai"><i class="fas fa-clipboard-check"></i></div><div class="ab"><div class="ah">${esc(a.actor)} → ${esc(a.action)}${a.target?' — '+esc(a.target):''}</div><div class="as">${esc(a.at)} • ${esc(a.ip||'')}</div></div></div>`).join('')+'</div>';}
+async function loadCoupons(){const d=await api('/api/admin/coupons');const el=document.getElementById('couponList');const coups=d.coupons||{};if(!Object.keys(coups).length){el.innerHTML='<div class="empty"><i class="fas fa-ticket"></i><h4>لا توجد كوبونات</h4></div>';return;}el.innerHTML='<div class="group">'+Object.entries(coups).map(([code,c])=>`<div class="row"><div class="ric" style="background:var(--warning-container);color:var(--on-warning-container)"><i class="fas fa-ticket"></i></div><div class="rbody"><div class="rtitle">${esc(code)} — ${c.discount}%</div><div class="rsub">${c.uses||0}/${c.max_uses||0} استخدام</div></div><div class="racts"><button class="no" onclick="delCoupon('${esc(code)}')"><i class="fas fa-trash"></i></button></div></div>`).join('')+'</div>';}
+function openCouponAdd(){document.getElementById('cpCode').value='';document.getElementById('cpDisc').value=10;document.getElementById('cpUses').value=10;document.getElementById('mCoupon').classList.add('open');}
+async function addCoupon(){const code=document.getElementById('cpCode').value.trim().toUpperCase();if(!code)return toast('الكود مطلوب',false);const d=await api('/api/admin/coupons/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code,discount:+document.getElementById('cpDisc').value,max_uses:+document.getElementById('cpUses').value})});toast(d.message,d.success);if(d.success){closeM('mCoupon');loadCoupons();}}
+async function delCoupon(code){if(!confirm('حذف '+code+'؟'))return;const d=await api('/api/admin/coupons/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})});toast(d.message,d.success);loadCoupons();}
+function hap(ms){try{if(navigator.vibrate)navigator.vibrate(ms||8);}catch(e){}}
+document.addEventListener('click',e=>{const b=e.target.closest('button,.row');if(b)hap(6);},{passive:true});
+
 </script>
 </body>
 </html>

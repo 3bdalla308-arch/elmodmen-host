@@ -373,6 +373,45 @@ body{font-family:'Roboto','Tajawal',system-ui,sans-serif;
   .toast{bottom:24px}
   .CodeMirror{height:380px}
 }
+/* Pro features styles */
+.skel{background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);background-size:200% 100%;animation:sh 1.4s linear infinite;border-radius:14px}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-row{height:64px;margin:10px 16px;border-radius:18px}
+.ptr{position:fixed;top:0;left:0;right:0;height:60px;display:flex;align-items:flex-end;justify-content:center;pointer-events:none;z-index:30;transform:translateY(-60px);transition:transform .2s}
+.ptr.show{transform:translateY(0)}
+.ptr i{width:36px;height:36px;border-radius:50%;background:var(--s3);color:var(--primary);display:grid;place-items:center;box-shadow:var(--el2);font-size:14px;margin-bottom:10px;transition:transform .2s}
+.ptr.ready i{transform:rotate(180deg);background:var(--primary-container);color:var(--on-primary-container)}
+.ptr.loading i{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tpl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 12px}
+@media (min-width:540px){.tpl-grid{grid-template-columns:1fr 1fr 1fr}}
+.tpl{background:var(--s2);border-radius:18px;padding:16px;cursor:pointer;text-align:right;border:none;font-family:inherit;color:inherit;display:flex;flex-direction:column;gap:8px;transition:.18s;box-shadow:var(--el1)}
+.tpl:active{transform:scale(.97)}
+.tpl .tpl-ic{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:var(--secondary-container);color:var(--on-secondary-container);font-size:18px}
+.tpl .tpl-n{font-size:14px;font-weight:600;color:var(--label);letter-spacing:.1px}
+.tpl .tpl-d{font-size:11px;color:var(--label-2);line-height:1.4;letter-spacing:.2px}
+.tpl .tpl-t{font-size:10px;color:var(--primary);font-weight:600;letter-spacing:.4px}
+.env-row{display:grid;grid-template-columns:1fr 1fr 40px;gap:8px;padding:8px 16px;align-items:center}
+.env-row input{background:var(--s3);border:none;color:var(--label);padding:10px 12px;border-radius:10px;font-family:'Roboto Mono',monospace;font-size:13px;outline:none;min-width:0}
+.env-row .rm{width:38px;height:38px;border-radius:50%;background:var(--error-container);color:var(--on-error-container);border:none;cursor:pointer;font-size:13px}
+.usage-warn{background:var(--warning-container);color:var(--on-warning-container);padding:14px 18px;border-radius:14px;margin:10px 16px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;letter-spacing:.2px}
+.usage-warn i{font-size:18px;color:var(--warning)}
+.act-row{display:flex;gap:14px;padding:14px 20px;align-items:center;position:relative;min-height:60px}
+.act-row + .act-row::before{content:"";position:absolute;top:0;right:74px;left:20px;height:1px;background:var(--separator)}
+.act-row .ai{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--secondary-container);color:var(--on-secondary-container);flex:none}
+.act-row .ab{flex:1;min-width:0}
+.act-row .am{font-size:14px;color:var(--label);line-height:1.35;letter-spacing:.1px}
+.act-row .at{font-size:11px;color:var(--label-3);margin-top:3px;letter-spacing:.3px}
+.qr-box{background:#fff;padding:16px;border-radius:18px;display:grid;place-items:center;margin:14px 16px}
+.qr-box canvas,.qr-box img{max-width:200px;height:auto}
+.ob-card{padding:24px 22px;text-align:center}
+.ob-card i{font-size:48px;color:var(--primary);margin-bottom:14px}
+.ob-card h3{font-size:22px;font-weight:600;margin-bottom:8px;letter-spacing:0}
+.ob-card p{font-size:14px;color:var(--label-2);line-height:1.6;letter-spacing:.2px}
+.ob-dots{display:flex;gap:8px;justify-content:center;margin:14px 0}
+.ob-dots span{width:8px;height:8px;border-radius:50%;background:var(--outline-v);transition:.3s}
+.ob-dots span.on{background:var(--primary);width:24px;border-radius:99px}
+
 </style>
 </head>
 <body>
@@ -389,6 +428,8 @@ body{font-family:'Roboto','Tajawal',system-ui,sans-serif;
     </div>
     <span id="uName2" style="display:none"></span>
   </header>
+  <div class="usage-warn" id="usageWarn" style="display:none"></div>
+
 
   <div class="qrow">
     <button class="qpill tint" onclick="openCreate()"><i class="fas fa-plus-circle"></i> بوت جديد</button>
@@ -454,7 +495,7 @@ body{font-family:'Roboto','Tajawal',system-ui,sans-serif;
   <button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><div class="pill"><i class="fas fa-house"></i></div><span>الرئيسية</span></button>
   <button onclick="openAiChat()"><div class="pill"><i class="fas fa-robot"></i></div><span>AI</span></button>
   <button onclick="openPlans()"><div class="pill"><i class="fas fa-gem"></i></div><span>خطط</span></button>
-  <button onclick="openApi()"><div class="pill"><i class="fas fa-key"></i></div><span>API</span></button>
+  <button onclick="openActivity()"><div class="pill"><i class="fas fa-bell"></i></div><span>نشاط</span></button>
   <button onclick="openSettings()"><div class="pill"><i class="fas fa-gear"></i></div><span>المزيد</span></button>
 </nav>
 
@@ -474,10 +515,44 @@ body{font-family:'Roboto','Tajawal',system-ui,sans-serif;
 <div class="modal" id="mApi"><div class="sheet"><div class="sheet-h"><h3>API Key</h3><button class="x" onclick="closeM('mApi')">إغلاق</button></div><div class="sheet-body"><div class="sec-h"><span class="lbl">مفتاح API</span></div><div class="group"><div class="field-col"><label>المفتاح</label><input id="apiKey" readonly style="font-family:'Roboto Mono',Menlo,monospace;font-size:13px"></div><button class="row" onclick="copyApi()"><div class="ric" style="background:var(--tertiary-container);color:var(--on-tertiary-container)"><i class="fas fa-copy"></i></div><div class="rbody"><div class="rtitle">نسخ المفتاح</div></div></button><button class="row" onclick="genApi()"><div class="ric" style="background:var(--secondary-container);color:var(--on-secondary-container)"><i class="fas fa-arrows-rotate"></i></div><div class="rbody"><div class="rtitle">توليد مفتاح جديد</div></div></button></div><div class="sec-h"><span class="lbl">ربط تليجرام</span></div><div class="group"><div class="field"><label>ID</label><input id="tgId" placeholder="123456789" inputmode="numeric"></div></div><button class="btn btn-primary btn-block" onclick="linkTg()"><i class="fab fa-telegram"></i> ربط الحساب</button></div></div></div>
 
 <!-- Settings sheet -->
-<div class="modal" id="mSettings"><div class="sheet lg"><div class="sheet-h"><h3>الإعدادات</h3><button class="x" onclick="closeM('mSettings')">تم</button></div><div class="sheet-body"><div class="set-hero"><div class="sav" id="setAv">?</div><div style="flex:1;min-width:0"><div class="sn" id="setUser">—</div><div class="sp" id="setPlan">—</div></div></div><div class="sec-h"><span class="lbl">المظهر</span></div><div class="seg"><button id="thDark" onclick="setTheme('dark')"><i class="fas fa-moon"></i> داكن</button><button id="thLight" onclick="setTheme('light')"><i class="fas fa-sun"></i> فاتح</button></div><div class="sec-h"><span class="lbl">تغيير كلمة المرور</span></div><div class="group"><div class="field-col"><label>كلمة المرور الحالية</label><input id="curPass" type="password"></div><div class="field-col"><label>الجديدة</label><input id="newPass" type="password"></div><div class="field-col"><label>تأكيد</label><input id="newPass2" type="password"></div></div><button class="btn btn-primary btn-block" onclick="changePass()"><i class="fas fa-key"></i> تغيير كلمة المرور</button><div class="sec-h"><span class="lbl">الحساب</span></div><div class="group"><button class="row" id="installBtn" style="display:none" onclick="installApp()"><div class="ric" style="background:var(--tertiary-container);color:var(--on-tertiary-container)"><i class="fas fa-download"></i></div><div class="rbody"><div class="rtitle">تثبيت التطبيق</div><div class="rsub">تثبيت على الشاشة الرئيسية</div></div><i class="fas fa-chevron-left rch"></i></button><button class="row" onclick="logout()"><div class="ric" style="background:var(--error-container);color:var(--on-error-container)"><i class="fas fa-right-from-bracket"></i></div><div class="rbody"><div class="rtitle" style="color:var(--error)">تسجيل خروج</div></div></button></div></div></div></div>
+<div class="modal" id="mSettings"><div class="sheet lg"><div class="sheet-h"><h3>الإعدادات</h3><button class="x" onclick="closeM('mSettings')">تم</button></div><div class="sheet-body"><div class="set-hero"><div class="sav" id="setAv">?</div><div style="flex:1;min-width:0"><div class="sn" id="setUser">—</div><div class="sp" id="setPlan">—</div></div></div><div class="sec-h"><span class="lbl">المظهر</span></div><div class="seg"><button id="thDark" onclick="setTheme('dark')"><i class="fas fa-moon"></i> داكن</button><button id="thLight" onclick="setTheme('light')"><i class="fas fa-sun"></i> فاتح</button></div><div class="sec-h"><span class="lbl">تغيير كلمة المرور</span></div><div class="group"><div class="field-col"><label>كلمة المرور الحالية</label><input id="curPass" type="password"></div><div class="field-col"><label>الجديدة</label><input id="newPass" type="password"></div><div class="field-col"><label>تأكيد</label><input id="newPass2" type="password"></div></div><button class="btn btn-primary btn-block" onclick="changePass()"><i class="fas fa-key"></i> تغيير كلمة المرور</button><div class="sec-h"><span class="lbl">الحساب</span></div><div class="group"><button class="row" id="installBtn" style="display:none" onclick="installApp()"><div class="ric" style="background:var(--tertiary-container);color:var(--on-tertiary-container)"><i class="fas fa-download"></i></div><div class="rbody"><div class="rtitle">تثبيت التطبيق</div><div class="rsub">تثبيت على الشاشة الرئيسية</div></div><i class="fas fa-chevron-left rch"></i></button><button class="row" onclick="closeM('mSettings');openApi()"><div class="ric" style="background:var(--tertiary-container);color:var(--on-tertiary-container)"><i class="fas fa-key"></i></div><div class="rbody"><div class="rtitle">API Key</div><div class="rsub">للتكامل وبوت تيليجرام</div></div><i class="fas fa-chevron-left rch"></i></button><button class="row" onclick="closeM('mSettings');openActivity()"><div class="ric" style="background:var(--secondary-container);color:var(--on-secondary-container)"><i class="fas fa-bell"></i></div><div class="rbody"><div class="rtitle">النشاط</div><div class="rsub">آخر العمليات</div></div><i class="fas fa-chevron-left rch"></i></button><button class="row" onclick="closeM('mSettings');openTemplates()"><div class="ric" style="background:var(--primary-container);color:var(--on-primary-container)"><i class="fas fa-rocket"></i></div><div class="rbody"><div class="rtitle">قوالب جاهزة</div><div class="rsub">ابدأ بوت بنقرة</div></div><i class="fas fa-chevron-left rch"></i></button><button class="row" onclick="closeM('mSettings');openCron()"><div class="ric" style="background:var(--warning-container);color:var(--on-warning-container)"><i class="fas fa-clock-rotate-left"></i></div><div class="rbody"><div class="rtitle">جدولة المهام</div><div class="rsub">إعادة تشغيل دورية</div></div><i class="fas fa-chevron-left rch"></i></button><button class="row" onclick="closeM('mSettings');open2FA()"><div class="ric" style="background:var(--primary-container);color:var(--on-primary-container)"><i class="fas fa-shield-halved"></i></div><div class="rbody"><div class="rtitle">التحقق الثنائي</div><div class="rsub">حماية إضافية</div></div><i class="fas fa-chevron-left rch"></i></button><button class="row" onclick="closeM('mSettings');openSessions()"><div class="ric" style="background:var(--tertiary-container);color:var(--on-tertiary-container)"><i class="fas fa-desktop"></i></div><div class="rbody"><div class="rtitle">الجلسات</div><div class="rsub">الأجهزة المتصلة</div></div><i class="fas fa-chevron-left rch"></i></button><button class="row" onclick="closeM('mSettings');openAiGen()"><div class="ric" style="background:var(--secondary-container);color:var(--on-secondary-container)"><i class="fas fa-wand-magic-sparkles"></i></div><div class="rbody"><div class="rtitle">توليد كود بـ AI</div><div class="rsub">اوصف البوت وهيولده</div></div><i class="fas fa-chevron-left rch"></i></button><button class="row" onclick="redeemCoupon()"><div class="ric" style="background:var(--warning-container);color:var(--on-warning-container)"><i class="fas fa-ticket"></i></div><div class="rbody"><div class="rtitle">كوبون خصم</div><div class="rsub">لديك كود ترويجي؟</div></div><i class="fas fa-chevron-left rch"></i></button><button class="row" onclick="logout()"><div class="ric" style="background:var(--error-container);color:var(--on-error-container)"><i class="fas fa-right-from-bracket"></i></div><div class="rbody"><div class="rtitle" style="color:var(--error)">تسجيل خروج</div></div></button></div></div></div></div>
 
 <!-- AI chat sheet -->
 <div class="modal" id="mAi"><div class="sheet lg"><div class="sheet-h"><h3><i class="fas fa-robot" style="color:var(--secondary)"></i> مساعد AI</h3><button class="x" onclick="closeM('mAi')">إغلاق</button></div><div class="ai-msgs" id="aiMsgs"><div class="aim a">أهلاً! أنا مساعدك. اسألني عن بوتاتك أو أخطاء الكود.</div></div><div class="ai-in"><input id="aiInput" placeholder="اكتب رسالة..." onkeydown="if(event.key==='Enter')chatSend()"><button id="aiSendBtn" onclick="chatSend()"><i class="fas fa-arrow-up"></i></button></div></div></div>
+
+<!-- Pull-to-refresh indicator -->
+<div class="ptr" id="ptr"><i class="fas fa-arrow-down"></i></div>
+
+<!-- Activity feed sheet -->
+<div class="modal" id="mActivity"><div class="sheet lg"><div class="sheet-h"><h3><i class="fas fa-bell" style="color:var(--secondary)"></i> النشاط</h3><button class="x" onclick="closeM('mActivity')">إغلاق</button></div><div class="sec-h"><span class="lbl">آخر العمليات</span><button class="act" onclick="clearActivity()"><i class="fas fa-broom"></i> مسح</button></div><div id="actList"></div></div></div>
+
+<!-- Templates sheet -->
+<div class="modal" id="mTpl"><div class="sheet lg"><div class="sheet-h"><h3><i class="fas fa-rocket" style="color:var(--primary)"></i> قوالب جاهزة</h3><button class="x" onclick="closeM('mTpl')">إغلاق</button></div><div class="sec-h"><span class="lbl">اختر قالب وانشاء بوت بنقرة</span></div><div class="tpl-grid" id="tplGrid"></div></div></div>
+
+<!-- Template install confirm -->
+<div class="modal" id="mTplGo"><div class="sheet"><div class="sheet-h"><h3 id="tplGoTitle">قالب</h3><button class="x" onclick="closeM('mTplGo')">إلغاء</button></div><div class="sec-h"><span class="lbl">اسم البوت الجديد</span></div><div class="group"><div class="field"><label>الاسم</label><input id="tplGoName" placeholder="my-bot" autocapitalize="off" spellcheck="false"></div></div><button class="btn btn-primary btn-block" onclick="doInstallTpl()"><i class="fas fa-check"></i> إنشاء من القالب</button></div></div>
+
+<!-- Env vars editor -->
+<div class="modal" id="mEnv"><div class="sheet lg"><div class="sheet-h"><h3><i class="fas fa-key" style="color:var(--tertiary)"></i> متغيرات البيئة</h3><button class="x" onclick="closeM('mEnv')">إغلاق</button></div><div class="sec-h"><span class="lbl">.env</span><button class="act" onclick="addEnvRow()"><i class="fas fa-plus"></i> سطر</button></div><div id="envList"></div><button class="btn btn-primary btn-block" onclick="saveEnv()"><i class="fas fa-floppy-disk"></i> حفظ</button></div></div>
+
+<!-- Backup / Restore sheet -->
+<div class="modal" id="mBackup"><div class="sheet"><div class="sheet-h"><h3><i class="fas fa-cloud" style="color:var(--primary)"></i> النسخ الاحتياطي</h3><button class="x" onclick="closeM('mBackup')">إغلاق</button></div><div class="sec-h"><span class="lbl">عمليات</span></div><div class="group"><button class="row" onclick="doBackup()"><div class="ric" style="background:var(--primary-container);color:var(--on-primary-container)"><i class="fas fa-cloud-arrow-down"></i></div><div class="rbody"><div class="rtitle">تحميل نسخة احتياطية</div><div class="rsub">zip بكل الملفات</div></div></button><button class="row" onclick="document.getElementById('restoreInput').click()"><div class="ric" style="background:var(--tertiary-container);color:var(--on-tertiary-container)"><i class="fas fa-cloud-arrow-up"></i></div><div class="rbody"><div class="rtitle">استرجاع من ملف</div><div class="rsub">يستبدل الملفات الحالية</div></div></button><input type="file" id="restoreInput" accept=".zip" style="display:none" onchange="doRestore(this.files[0])"></div></div></div>
+
+<!-- 2FA sheet -->
+<div class="modal" id="m2FA"><div class="sheet lg"><div class="sheet-h"><h3><i class="fas fa-shield-halved" style="color:var(--primary)"></i> التحقق الثنائي</h3><button class="x" onclick="closeM('m2FA')">إغلاق</button></div><div id="twofaBody"></div></div></div>
+
+<!-- Sessions sheet -->
+<div class="modal" id="mSess"><div class="sheet lg"><div class="sheet-h"><h3><i class="fas fa-desktop" style="color:var(--secondary)"></i> الجلسات</h3><button class="x" onclick="closeM('mSess')">إغلاق</button></div><div class="sec-h"><span class="lbl">الأجهزة المتصلة</span></div><div id="sessList"></div></div></div>
+
+<!-- Cron sheet -->
+<div class="modal" id="mCron"><div class="sheet lg"><div class="sheet-h"><h3><i class="fas fa-clock-rotate-left" style="color:var(--warning)"></i> المهام المجدولة</h3><button class="x" onclick="closeM('mCron')">إغلاق</button></div><div class="sec-h"><span class="lbl">إضافة جديدة</span></div><div class="group"><div class="field"><label>البوت</label><select id="cronFolder" style="flex:1;border:none;background:none;color:var(--label);font-family:inherit;font-size:16px;outline:none;text-align:right"></select></div><div class="field"><label>الإجراء</label><select id="cronAction" style="flex:1;border:none;background:none;color:var(--label);font-family:inherit;font-size:16px;outline:none;text-align:right"><option value="restart">إعادة تشغيل</option><option value="start">تشغيل</option><option value="stop">إيقاف</option></select></div><div class="field"><label>كل (دقيقة)</label><input id="cronEvery" type="number" value="60" min="1" inputmode="numeric"></div></div><button class="btn btn-primary btn-block" onclick="addCron()"><i class="fas fa-plus"></i> إضافة</button><div class="sec-h"><span class="lbl">الحالية</span></div><div id="cronList"></div></div></div>
+
+<!-- AI helpers sheet (generate / optimize) -->
+<div class="modal" id="mAiGen"><div class="sheet lg"><div class="sheet-h"><h3><i class="fas fa-wand-magic-sparkles" style="color:var(--secondary)"></i> توليد كود</h3><button class="x" onclick="closeM('mAiGen')">إغلاق</button></div><div class="sec-h"><span class="lbl">اكتب وصف البوت بالعربية</span></div><div class="group"><div class="field-col"><textarea id="aiGenPrompt" rows="4" placeholder="بوت تيليجرام يرد بنكتة لو حد كتب /joke" style="background:var(--s3);border:none;color:var(--label);padding:12px;border-radius:10px;font-family:inherit;font-size:14px;outline:none;resize:vertical"></textarea></div></div><button class="btn btn-primary btn-block" onclick="doAiGen()"><i class="fas fa-bolt"></i> توليد</button><div class="sec-h" style="display:none" id="aiGenOutHead"><span class="lbl">النتيجة</span></div><pre id="aiGenOut" style="display:none;margin:0 16px;padding:14px;background:var(--s3);border-radius:14px;font-family:'Roboto Mono',monospace;font-size:12px;white-space:pre-wrap;color:var(--label);max-height:50vh;overflow:auto"></pre></div></div>
+
+<!-- Onboarding -->
+<div class="modal" id="mOnboard"><div class="sheet"><div class="sheet-h"><h3>أهلاً بك</h3><button class="x" onclick="skipOnboard()">تخطي</button></div><div id="obContent"></div><div class="ob-dots" id="obDots"><span class="on"></span><span></span><span></span></div><button class="btn btn-primary btn-block" id="obNext" onclick="nextOnboard()"><i class="fas fa-arrow-left"></i> التالي</button></div></div>
+
 
 <div class="toast" id="toast"><i class="fas fa-circle-check"></i><span id="toastMsg"></span></div>
 
@@ -546,7 +621,7 @@ function openSettings(){$('mSettings').classList.add('open');markTheme(localStor
 async function changePass(){const c=$('curPass').value,n=$('newPass').value,n2=$('newPass2').value;if(!c||!n)return toast('أكمل الحقول',false);if(n!==n2)return toast('التأكيد غير متطابق',false);const d=await api('/api/user/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({current:c,new:n})});toast(d.message,d.success);if(d.success){$('curPass').value='';$('newPass').value='';$('newPass2').value='';}}
 function applyTheme(t){const mc=document.querySelector('meta[name="theme-color"]');document.documentElement.setAttribute('data-theme',t);if(mc)mc.setAttribute('content',t==='light'?'#fef7ff':'#101418');}
 function markTheme(t){var d=$('thDark'),l=$('thLight');if(d)d.classList.toggle('sel',t==='dark');if(l)l.classList.toggle('sel',t==='light');}
-function setTheme(t){localStorage.setItem('bm_theme',t);applyTheme(t);markTheme(t);}
+function setTheme(t){try{localStorage.setItem('bm_theme_user_set','1');}catch(e){}localStorage.setItem('bm_theme',t);applyTheme(t);markTheme(t);}
 
 function openAiChat(){$('mAi').classList.add('open');setTimeout(()=>$('aiInput').focus(),300);}
 async function chatSend(){const inp=$('aiInput');const q=inp.value.trim();if(!q)return;inp.value='';const wrap=$('aiMsgs');wrap.insertAdjacentHTML('beforeend','<div class="aim u">'+esc(q)+'</div>');wrap.scrollTop=wrap.scrollHeight;const loading=document.createElement('div');loading.className='aim a';loading.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري التفكير...';wrap.appendChild(loading);wrap.scrollTop=wrap.scrollHeight;const d=await api('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q})});loading.remove();const ans=d.answer||d.message||'—';wrap.insertAdjacentHTML('beforeend','<div class="aim a">'+esc(ans).replace(/```([\s\S]*?)```/g,(_,c)=>'<pre>'+c+'</pre>').replace(/\n/g,'<br>')+'</div>');wrap.scrollTop=wrap.scrollHeight;}
@@ -564,7 +639,78 @@ function installApp(){if(!deferredPrompt)return;deferredPrompt.prompt();deferred
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{});}
 document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
 
-(async function(){await loadMe();await loadServers();loadMetrics();setInterval(loadServers,15000);setInterval(loadMetrics,5000);})();
+(async function(){await loadMe();await loadServers();loadMetrics();loadUsage();maybeOnboard();setInterval(loadServers,15000);setInterval(loadMetrics,5000);setInterval(loadUsage,30000);})();
+/* ========== Pro features JS ========== */
+// Haptic feedback
+function hap(ms){try{if(navigator.vibrate)navigator.vibrate(ms||10);}catch(e){}}
+document.addEventListener('click',e=>{const b=e.target.closest('button,.row,.tpl');if(b)hap(8);},{passive:true});
+// Auto theme (follow system if user never picked)
+(function(){try{if(!localStorage.getItem('bm_theme_user_set')){const mq=window.matchMedia('(prefers-color-scheme: light)');const apply=()=>{document.documentElement.setAttribute('data-theme',mq.matches?'light':'dark');const mc=document.querySelector('meta[name="theme-color"]');if(mc)mc.setAttribute('content',mq.matches?'#fef7ff':'#101418');};apply();mq.addEventListener('change',apply);}}catch(e){}})();
+// Skeletons
+function skel(container,rows){const el=document.getElementById(container);if(!el)return;el.innerHTML=Array(rows||3).fill('<div class="skel skel-row"></div>').join('');}
+// Pull to refresh
+(function(){let s=0,d=0,act=false,el=document.getElementById('ptr');const T=70;window.addEventListener('touchstart',e=>{if(window.scrollY>4)return;s=e.touches[0].clientY;act=true;},{passive:true});window.addEventListener('touchmove',e=>{if(!act)return;d=e.touches[0].clientY-s;if(d>0&&window.scrollY<=4){if(el){el.classList.add('show');if(d>T)el.classList.add('ready');else el.classList.remove('ready');}}},{passive:true});window.addEventListener('touchend',()=>{if(!act){return;}act=false;if(el&&d>T){el.classList.add('loading');hap(15);Promise.all([loadServers(),loadMe&&loadMe(),loadMetrics&&loadMetrics(),loadUsage&&loadUsage()]).finally(()=>{setTimeout(()=>{el.classList.remove('show','ready','loading');},400);});}else if(el){el.classList.remove('show','ready');}d=0;},{passive:true});})();
+
+// Activity feed
+async function openActivity(){document.getElementById('mActivity').classList.add('open');skel('actList',5);const d=await api('/api/activity');const el=document.getElementById('actList');if(!d.success||!d.activity.length){el.innerHTML='<div class="empty"><i class="fas fa-bell-slash"></i><h4>لا يوجد نشاط</h4></div>';return;}el.innerHTML='<div class="group">'+d.activity.map(a=>`<div class="act-row"><div class="ai"><i class="fas ${esc(a.icon||'fa-circle-info')}"></i></div><div class="ab"><div class="am">${esc(a.message)}</div><div class="at">${esc(a.at)}</div></div></div>`).join('')+'</div>';}
+async function clearActivity(){if(!confirm('مسح سجل النشاط؟'))return;await api('/api/activity/clear',{method:'POST'});openActivity();}
+
+// Usage warning
+let USAGE=null;
+async function loadUsage(){const d=await api('/api/usage');if(!d.success)return;USAGE=d;const w=document.getElementById('usageWarn');if(!w)return;if(d.warning){let parts=[];if(d.storage.pct>=80)parts.push(`التخزين ${d.storage.pct}%`);if(d.servers.pct>=80)parts.push(`البوتات ${d.servers.pct}%`);w.style.display='flex';w.innerHTML=`<i class="fas fa-triangle-exclamation"></i><span>تحذير: ${parts.join(' • ')} — فكر في الترقية</span>`;}else{w.style.display='none';}}
+
+// Templates picker
+let TPL_PICK=null;
+async function openTemplates(){document.getElementById('mTpl').classList.add('open');const d=await api('/api/templates');const g=document.getElementById('tplGrid');g.innerHTML=(d.templates||[]).map(t=>`<button class="tpl" onclick="pickTpl('${esc(t.id)}','${esc(t.name)}')"><div class="tpl-ic"><i class="fas ${esc(t.icon)}"></i></div><div class="tpl-n">${esc(t.name)}</div><div class="tpl-d">${esc(t.desc)}</div><div class="tpl-t">${esc(t.type)}</div></button>`).join('');}
+function pickTpl(id,name){TPL_PICK=id;document.getElementById('tplGoTitle').textContent=name;document.getElementById('tplGoName').value='';closeM('mTpl');document.getElementById('mTplGo').classList.add('open');}
+async function doInstallTpl(){const name=document.getElementById('tplGoName').value.trim();const d=await api('/api/templates/install',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({template:TPL_PICK,name:name})});toast(d.message,d.success);if(d.success){closeM('mTplGo');loadServers();}}
+
+// Env vars editor
+let ENV_FOLDER=null;
+async function openEnv(folder){ENV_FOLDER=folder;document.getElementById('mEnv').classList.add('open');skel('envList',3);const d=await api('/api/server/env/'+encodeURIComponent(folder));renderEnv((d.env||[]));}
+function renderEnv(pairs){const el=document.getElementById('envList');if(!pairs.length){pairs=[{key:'',value:''}];}el.innerHTML=pairs.map((p,i)=>`<div class="env-row"><input placeholder="KEY" value="${esc(p.key)}" id="ek_${i}"><input placeholder="value" value="${esc(p.value)}" id="ev_${i}"><button class="rm" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button></div>`).join('');}
+function addEnvRow(){const el=document.getElementById('envList');const i=Date.now();el.insertAdjacentHTML('beforeend',`<div class="env-row"><input placeholder="KEY" id="ek_${i}"><input placeholder="value" id="ev_${i}"><button class="rm" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button></div>`);}
+async function saveEnv(){const rows=document.querySelectorAll('#envList .env-row');const env=[];rows.forEach(r=>{const ins=r.querySelectorAll('input');if(ins[0].value.trim())env.push({key:ins[0].value,value:ins[1].value});});const d=await api('/api/server/env/'+encodeURIComponent(ENV_FOLDER),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({env:env})});toast(d.message,d.success);}
+
+// Backup/Restore
+let BK_FOLDER=null;
+function openBackup(folder){BK_FOLDER=folder;document.getElementById('mBackup').classList.add('open');}
+function doBackup(){if(!BK_FOLDER)return;window.location.href='/api/server/backup/'+encodeURIComponent(BK_FOLDER);hap(20);}
+async function doRestore(file){if(!file||!BK_FOLDER)return;const fd=new FormData();fd.append('file',file);const r=await fetch('/api/server/restore/'+encodeURIComponent(BK_FOLDER),{method:'POST',body:fd});const d=await r.json();toast(d.message,d.success);if(d.success){closeM('mBackup');loadServers();}}
+
+// 2FA
+async function open2FA(){document.getElementById('m2FA').classList.add('open');const s=await api('/api/2fa/status');const b=document.getElementById('twofaBody');if(s.enabled){b.innerHTML='<div class="empty" style="padding:30px"><i class="fas fa-circle-check" style="color:var(--primary);font-size:48px;margin-bottom:14px"></i><h4>مفعّل</h4><p>حسابك محمي بتحقق ثنائي</p></div><button class="btn" style="background:var(--error-container);color:var(--on-error-container);width:calc(100% - 32px);margin:18px 16px;height:48px;border-radius:99px;border:none;cursor:pointer;font-family:inherit;font-weight:500" onclick="disable2FA()"><i class="fas fa-shield-xmark"></i> إلغاء التفعيل</button>';}else{const d=await api('/api/2fa/setup',{method:'POST'});if(!d.success){b.innerHTML='<div class="empty"><h4>خطأ</h4></div>';return;}const qrUrl='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(d.otpauth);b.innerHTML=`<div class="sec-h"><span class="lbl">امسح الـ QR في Google Authenticator</span></div><div class="qr-box"><img src="${qrUrl}" alt="QR"></div><div class="sec-h"><span class="lbl">أو أدخل السر يدوياً</span></div><div class="group"><div class="field"><label>السر</label><input readonly value="${esc(d.secret)}" style="font-family:monospace;font-size:13px"></div></div><div class="sec-h"><span class="lbl">تأكيد الكود</span></div><div class="group"><div class="field"><label>الكود</label><input id="tfCode" inputmode="numeric" maxlength="6" placeholder="123456" style="font-family:monospace;font-size:20px;letter-spacing:4px"></div></div><button class="btn btn-primary btn-block" onclick="verify2FA()"><i class="fas fa-check"></i> تفعيل</button>`;}}
+async function verify2FA(){const d=await api('/api/2fa/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:document.getElementById('tfCode').value})});toast(d.message,d.success);if(d.success){closeM('m2FA');}}
+async function disable2FA(){if(!confirm('إلغاء التحقق الثنائي؟'))return;const d=await api('/api/2fa/disable',{method:'POST'});toast(d.message,d.success);if(d.success){closeM('m2FA');}}
+
+// Sessions
+async function openSessions(){document.getElementById('mSess').classList.add('open');skel('sessList',3);const d=await api('/api/sessions');const el=document.getElementById('sessList');if(!d.success||!d.sessions.length){el.innerHTML='<div class="empty"><i class="fas fa-desktop"></i><h4>لا توجد جلسات</h4></div>';return;}el.innerHTML='<div class="group">'+d.sessions.map(s=>{const dev=/Mobile|Android|iPhone/i.test(s.ua||'')?'fa-mobile-screen':'fa-desktop';return `<div class="row"><div class="ric" style="background:var(--${s.current?'primary':'tertiary'}-container);color:var(--on-${s.current?'primary':'tertiary'}-container)"><i class="fas ${dev}"></i></div><div class="rbody"><div class="rtitle">${s.current?'<span style="color:var(--primary)">⚫ الجلسة الحالية</span>':esc((s.ua||'').slice(0,40))}</div><div class="rsub">${esc(s.ip||'')} • ${esc(s.at)}</div></div>${s.current?'':`<div class="racts"><button class="no" onclick="revokeSess('${esc(s.sid)}')" title="إنهاء"><i class="fas fa-xmark"></i></button></div>`}</div>`;}).join('')+'</div>';}
+async function revokeSess(sid){const d=await api('/api/sessions/revoke',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sid:sid})});toast(d.message,d.success);openSessions();}
+
+// Cron
+async function openCron(){document.getElementById('mCron').classList.add('open');const sel=document.getElementById('cronFolder');sel.innerHTML=(SERVERS||[]).map(s=>`<option value="${esc(s.folder)}">${esc(s.name)}</option>`).join('');const d=await api('/api/cron/list');const el=document.getElementById('cronList');if(!d.jobs.length){el.innerHTML='<div class="empty"><i class="fas fa-clock-rotate-left"></i><h4>مفيش مهام</h4></div>';return;}el.innerHTML='<div class="group">'+d.jobs.map(j=>`<div class="row"><div class="ric" style="background:var(--warning-container);color:var(--on-warning-container)"><i class="fas fa-clock"></i></div><div class="rbody"><div class="rtitle">${esc(j.action)} — ${esc(j.server_name)}</div><div class="rsub">كل ${Math.round(j.every/60)} دقيقة</div></div><div class="racts"><button class="no" onclick="delCron('${esc(j.id)}')"><i class="fas fa-trash"></i></button></div></div>`).join('')+'</div>';}
+async function addCron(){const d=await api('/api/cron/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({folder:document.getElementById('cronFolder').value,action:document.getElementById('cronAction').value,every_seconds:(+document.getElementById('cronEvery').value||60)*60})});toast(d.message,d.success);if(d.success)openCron();}
+async function delCron(id){const d=await api('/api/cron/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})});toast(d.message,d.success);openCron();}
+
+// AI helpers
+async function openAiGen(){document.getElementById('mAiGen').classList.add('open');document.getElementById('aiGenPrompt').value='';document.getElementById('aiGenOut').style.display='none';document.getElementById('aiGenOutHead').style.display='none';}
+async function doAiGen(){const p=document.getElementById('aiGenPrompt').value.trim();if(!p)return toast('اكتب وصف',false);const out=document.getElementById('aiGenOut');document.getElementById('aiGenOutHead').style.display='block';out.style.display='block';out.textContent='…';const d=await api('/api/ai/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:p})});out.textContent=d.answer||d.message||'خطأ';}
+
+// Trial
+async function startTrial(planId){if(!confirm('تفعيل تجريبي 7 أيام على '+planId+'؟'))return;const d=await api('/api/user/start-trial',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:planId})});toast(d.message,d.success);if(d.success){loadMe();loadUsage();}}
+
+// Coupon
+async function redeemCoupon(){const code=prompt('أدخل كود الخصم:');if(!code)return;const d=await api('/api/user/redeem-coupon',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})});toast(d.message,d.success);}
+
+// Onboarding
+const OB_STEPS=[{i:'fa-rocket',t:'أهلاً في BATMAN Dev',p:'بانل استضافة بوتاتك وتطبيقاتك على خوادمنا. أسرع طريقة تبدأ بيها: جرب قالب جاهز.'},{i:'fa-cube',t:'بوتات أسرع',p:'Python • Node.js • PHP • Go • Java • Bash. رفع ملفات، تعديل مباشر، سجل حي، متغيرات بيئة، ونسخ احتياطي.'},{i:'fa-wand-magic-sparkles',t:'مساعد AI',p:'توليد كود، تشخيص أخطاء، وتحسين الأداء بنقرة.'}];
+let OB_I=0;
+function showOnboard(){const s=OB_STEPS[OB_I];document.getElementById('obContent').innerHTML=`<div class="ob-card"><i class="fas ${s.i}"></i><h3>${s.t}</h3><p>${s.p}</p></div>`;document.querySelectorAll('#obDots span').forEach((d,i)=>d.className=i===OB_I?'on':'');const b=document.getElementById('obNext');b.innerHTML=OB_I===OB_STEPS.length-1?'<i class="fas fa-check"></i> ابدأ':'<i class="fas fa-arrow-left"></i> التالي';}
+function nextOnboard(){OB_I++;if(OB_I>=OB_STEPS.length){finishOnboard();return;}showOnboard();}
+async function finishOnboard(){closeM('mOnboard');await api('/api/prefs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({onboarding_done:true})});}
+function skipOnboard(){finishOnboard();}
+async function maybeOnboard(){const d=await api('/api/prefs');if(!d.onboarding_done){OB_I=0;showOnboard();document.getElementById('mOnboard').classList.add('open');}}
+
 </script>
 </body>
 </html>

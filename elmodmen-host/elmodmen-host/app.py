@@ -594,6 +594,11 @@ def api_login():
     session.permanent = True
     user["last_login"] = _now()
     save_db(db)
+    try:
+        from app_pro import track_login, log_activity
+        track_login(username)
+        log_activity(username, "login", "تسجيل دخول ناجح")
+    except Exception: pass
     return jsonify(success=True, redirect="/admin" if user.get("is_admin") else "/dashboard",
                    is_admin=bool(user.get("is_admin")))
 
@@ -1530,6 +1535,12 @@ def bot_pending():
 def health():
     return jsonify(status="ok", psutil=HAS_PSUTIL)
 
+
+# Pro extensions (activity, audit, 2FA, templates, env, backup, AI helpers, cron, uptime)
+try:
+    import app_pro  # noqa: F401
+except Exception as _e:
+    print("⚠️ app_pro load failed:", _e)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
